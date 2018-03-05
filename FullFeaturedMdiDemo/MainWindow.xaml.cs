@@ -883,7 +883,7 @@ namespace FullFeaturedMdiDemo
         private void QueriesView_OnValidateItemContextMenu(object sender, MetadataStructureItemMenuEventArgs e)
         {
             e.Menu.AddItem("Copy SQL", Execute_SqlExpression, false, true, null,
-                ((MetadataObject) e.MetadataItem.MetadataItem).Expression);
+                ((MetadataObject) e.MetadataStructureItem.MetadataItem).Expression);
         }
 
         private static void Execute_SqlExpression(object sender, EventArgs eventArgs)

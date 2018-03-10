@@ -1,0 +1,9 @@
+﻿<Window x:Class="ExpressionEditorDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:expressionEditorDemo="clr-namespace:ExpressionEditorDemo"
+        Title="Expression Editor Demo" Height="350" Width="525" >
+    <Grid>
+        <expressionEditorDemo:View x:Name="ExpressionEditor" />
+    </Grid>
+</Window>

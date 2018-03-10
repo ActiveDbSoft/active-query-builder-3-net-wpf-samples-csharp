@@ -34,6 +34,13 @@ namespace FullFeaturedDemo.Connection.FrameConnection
             set { SetConnectionString(value); }
         }
 
+        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+
+        public void SetServerType(string serverType)
+        {
+
+        }
+
         public OracleConnectionFrame(string connectionString)
         {
             InitializeComponent();

@@ -31,6 +31,13 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
             set { tbXmlFile.Text = value; }
         }
 
+        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+
+        public void SetServerType(string serverType)
+        {
+
+        }
+
         public XmlFileFrame(string xmlFilePath)
         {
             InitializeComponent();

@@ -29,6 +29,13 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
             set { SetConnectionString(value); }
         }
 
+        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+
+        public void SetServerType(string serverType)
+        {
+            
+        }
+
         public MSSQLConnectionFrame(string connectionString)
         {
             InitializeComponent();

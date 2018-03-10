@@ -10,8 +10,10 @@
 
 using System;
 using System.Data.Odbc;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using ActiveQueryBuilder.Core;
 
 namespace FullFeaturedMdiDemo.Connection.FrameConnection
 {
@@ -33,6 +35,13 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
             set { SetConnectionString(value); }
         }
 
+        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+
+        public void SetServerType(string serverType)
+        {
+
+        }
+
         public ODBCConnectionFrame(string connectionString)
         {
             InitializeComponent();
@@ -44,7 +53,7 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
         {
             try
             {
-                var builder = new OdbcConnectionStringBuilder {ConnectionString = tbConnectionString.Text};
+                var builder = new OdbcConnectionStringBuilder { ConnectionString = tbConnectionString.Text };
                 _connectionString = builder.ConnectionString;
             }
             catch
@@ -84,7 +93,7 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, App.Name);
+                MessageBox.Show(e.Message, Assembly.GetEntryAssembly().GetName().Name);
                 return false;
             }
             finally
@@ -93,6 +102,36 @@ namespace FullFeaturedMdiDemo.Connection.FrameConnection
             }
 
             return true;
+        }
+
+        public void DoSyntaxDetected(Type syntaxType)
+        {
+            if (OnSyntaxProviderDetected != null)
+            {
+                OnSyntaxProviderDetected(syntaxType);
+            }
+        }
+
+        private void btnTest_Click(object sender, RoutedEventArgs e)
+        {
+            var metadataProvider = new ODBCMetadataProvider { Connection = new OdbcConnection(ConnectionString) };
+            Type syntaxProviderType = null;
+
+            try
+            {
+                syntaxProviderType = Helpers.AutodetectSyntaxProvider(metadataProvider);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error");
+            }
+
+            DoSyntaxDetected(syntaxProviderType);
+        }
+
+        private void tbConnectionString_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {            
+            btnTest.IsEnabled = tbConnectionString.Text != string.Empty;
         }
     }
 }

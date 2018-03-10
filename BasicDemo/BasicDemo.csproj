@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FECD7A6F-62B9-43C8-BC8C-6CF8C4E2C8F9}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BasicDemo</RootNamespace>
+    <AssemblyName>BasicDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ActiveQueryBuilder.Core">
+		<HintPath>..\packages\ActiveQueryBuilder.Core.3.4.7.1084\lib\net\ActiveQueryBuilder.Core.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.EventMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.Core.3.4.7.1084\lib\net\ActiveQueryBuilder.EventMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.MSSQLMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.MSSQLMetadataProvider.3.4.7.1084\lib\net\ActiveQueryBuilder.MSSQLMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.ODBCMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.ODBCMetadataProvider.3.4.7.1084\lib\net\ActiveQueryBuilder.ODBCMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.OLEDBMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.OLEDBMetadataProvider.3.4.7.1084\lib\net\ActiveQueryBuilder.OLEDBMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.OracleNativeMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.OracleNativeMetadataProvider.3.4.7.1084\lib\net\ActiveQueryBuilder.OracleNativeMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.UniversalMetadataProvider">
+		<HintPath>..\packages\ActiveQueryBuilder.UniversalMetadataProvider.3.4.7.1084\lib\net\ActiveQueryBuilder.UniversalMetadataProvider.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.View">
+		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.4.7.1084\lib\net\ActiveQueryBuilder.View.dll</HintPath>
+	</Reference>
+    <Reference Include="ActiveQueryBuilder.View.WPF">
+		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.4.7.1084\lib\net\ActiveQueryBuilder.View.WPF.dll</HintPath>
+	</Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="Common\CustomUpDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\ErrorBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConnectionWindow\AccessConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionWindow\MSSQLConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionWindow\ODBCConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionWindow\OLEDBConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnectionWindow\OracleConnectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\DatabaseSchemaViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\GeneralPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\MiscellaneousPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\OfflineModePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\PanesVisibilityPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\QueryBuilderPropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\SqlFormattingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\SqlSyntaxPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QueryParametersWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QueryStatisticsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\CustomUpDown.xaml.cs">
+      <DependentUpon>CustomUpDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ErrorBox.xaml.cs">
+      <DependentUpon>ErrorBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionWindow\AccessConnectionWindow.xaml.cs">
+      <DependentUpon>AccessConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionWindow\MSSQLConnectionWindow.xaml.cs">
+      <DependentUpon>MSSQLConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionWindow\ODBCConnectionWindow.xaml.cs">
+      <DependentUpon>ODBCConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionWindow\OLEDBConnectionWindow.xaml.cs">
+      <DependentUpon>OLEDBConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnectionWindow\OracleConnectionWindow.xaml.cs">
+      <DependentUpon>OracleConnectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\DatabaseSchemaViewPage.xaml.cs">
+      <DependentUpon>DatabaseSchemaViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\GeneralPage.xaml.cs">
+      <DependentUpon>GeneralPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\GroupLabel.cs" />
+    <Compile Include="PropertiesForm\MiscellaneousPage.xaml.cs">
+      <DependentUpon>MiscellaneousPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\OfflineModePage.xaml.cs">
+      <DependentUpon>OfflineModePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\PanesVisibilityPage.xaml.cs">
+      <DependentUpon>PanesVisibilityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\QueryBuilderPropertiesWindow.xaml.cs">
+      <DependentUpon>QueryBuilderPropertiesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\SqlFormattingPage.xaml.cs">
+      <DependentUpon>SqlFormattingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\SqlSyntaxPage.xaml.cs">
+      <DependentUpon>SqlSyntaxPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QueryParametersWindow.xaml.cs">
+      <DependentUpon>QueryParametersWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="QueryStatisticsWindow.xaml.cs">
+      <DependentUpon>QueryStatisticsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

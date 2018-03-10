@@ -15,8 +15,13 @@ using System.Text;
 
 namespace FullFeaturedDemo.Connection
 {
+    public delegate void SyntaxProviderDetected(Type syntaxType);
+
     interface IConnectionFrame
-    {
+    {        
+        event SyntaxProviderDetected OnSyntaxProviderDetected;
+        void SetServerType(string serverType);        
+
         string ConnectionString { set; get; }
         bool TestConnection();
     }

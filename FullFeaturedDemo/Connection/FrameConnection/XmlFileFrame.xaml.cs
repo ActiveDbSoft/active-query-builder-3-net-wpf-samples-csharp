@@ -18,7 +18,7 @@ namespace FullFeaturedDemo.Connection.FrameConnection
     /// <summary>
     /// Interaction logic for XmlFileFrame.xaml
     /// </summary>
-    public partial class XmlFileFrame :IConnectionFrame
+    public partial class XmlFileFrame : IConnectionFrame
     {
         private OpenFileDialog _openFileDialog1;
         public XmlFileFrame()
@@ -30,6 +30,13 @@ namespace FullFeaturedDemo.Connection.FrameConnection
         {
             get { return tbXmlFile.Text; }
             set { tbXmlFile.Text = value; }
+        }
+
+        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+
+        public void SetServerType(string serverType)
+        {
+
         }
 
         public XmlFileFrame(string xmlFilePath)

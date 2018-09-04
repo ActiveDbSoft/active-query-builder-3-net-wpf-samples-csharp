@@ -99,10 +99,16 @@ namespace FullFeaturedMdiDemo
 
         private readonly ContentWindowChild _content;
 
+        public ContentWindowChild ContentControl
+        {
+            get { return _content; }
+        }
+
         public ChildWindow(SQLContext sqlContext)
         {
             _content = new ContentWindowChild(sqlContext);
             Children.Add(_content);
+
 
             Loaded+=delegate
             {

@@ -92,7 +92,7 @@ namespace FullFeaturedDemo
             {
                 BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(1),
-                Background = Brushes.LightPink,
+                Background = Brushes.LightGreen,
                 Padding = new Thickness(5),
                 Margin = new Thickness(0, 0, 0, 2)
             };
@@ -798,18 +798,20 @@ namespace FullFeaturedDemo
             BorderErrorFast.Visibility = Visibility.Collapsed;
             if (_transformerSql == null) return;
 
-            if (QBuilder.ActiveUnionSubQuery == null || QBuilder.SleepMode)
+            var activeUnionSubQuery = QBuilder.ActiveUnionSubQuery;
+            if (activeUnionSubQuery == null || QBuilder.SleepMode)
             {
                 SetTextRichTextBox("", BoxSqlCurrentSubQuery);
                 _transformerSql.Query = null;
                 return;
             }
 
-            //var sql =  QBuilder.ActiveUnionSubQuery.GetResultSQL(_sqlFormattingOptions);
-            var sql = QBuilder.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(_sqlFormattingOptions);
+            var parentSubQuery = activeUnionSubQuery.ParentSubQuery;
 
-            _transformerSql.Query = new SQLQuery(QBuilder.ActiveUnionSubQuery.SQLContext) { SQL = sql };
+            var sqlForDataPreview = parentSubQuery.GetSqlForDataPreview();
+            _transformerSql.Query = new SQLQuery(activeUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
 
+            var sql = parentSubQuery.GetResultSQL(_sqlFormattingOptions);
             SetTextRichTextBox(sql, BoxSqlCurrentSubQuery);
         }
 

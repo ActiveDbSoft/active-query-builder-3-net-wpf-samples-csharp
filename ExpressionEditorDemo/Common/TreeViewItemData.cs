@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Windows.Media;
+using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.Annotations;
 
 namespace ExpressionEditorDemo.Common
@@ -23,7 +23,7 @@ namespace ExpressionEditorDemo.Common
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region Private variables
-        private ImageSource _imageSource;
+        private CImage _imageSource;
         private string _text;
         private int _level;
         private string _tooltip;
@@ -89,7 +89,7 @@ namespace ExpressionEditorDemo.Common
 
         public object Tag { set; get; }
 
-        public ImageSource ImageSource
+        public CImage ImageSource
         {
             set
             {

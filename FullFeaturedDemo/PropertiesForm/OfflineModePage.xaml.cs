@@ -62,7 +62,6 @@ namespace FullFeaturedDemo.PropertiesForm
             bEditMetadata.Click += buttonEditMetadata_Click;
             bSaveToXML.Click += buttonSaveToXML_Click;
             bLoadFromXML.Click += buttonLoadFromXML_Click;
-            bLoadMetadata.Click += buttonLoadMetadata_Click;
         }
 
         public void ApplyChanges()
@@ -92,27 +91,6 @@ namespace FullFeaturedDemo.PropertiesForm
         {
             Modified = true;
             UpdateMode();
-        }
-
-        private void buttonLoadMetadata_Click(object sender, EventArgs e)
-        {
-            _metadataContainerCopy.BeginUpdate();
-
-            try
-            {
-                MetadataContainerLoadForm f = new MetadataContainerLoadForm(_metadataContainerCopy, false);
-
-                if (f.ShowDialog() == true)
-                {
-                    Modified = true;
-                    cbOfflineMode.IsChecked = true;
-                }
-
-            }
-            finally
-            {
-                _metadataContainerCopy.EndUpdate();
-            }
         }
 
         private void UpdateMode()

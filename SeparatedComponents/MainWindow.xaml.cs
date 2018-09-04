@@ -158,7 +158,8 @@ namespace SeparatedComponents
 
         private void SqlTextEditor_OnTextChanged(object sender, EventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            if (ErrorBox != null)
+                ErrorBox.Message = string.Empty;
         }
     }
 }

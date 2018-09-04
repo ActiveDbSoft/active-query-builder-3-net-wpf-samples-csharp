@@ -181,7 +181,7 @@ namespace ExpressionEditorDemo
         public object TextEditorFont
         {
             get { return _sqlTextEditor.Font; }
-            set { _sqlTextEditor.Font = value; }
+            set { _sqlTextEditor.Font = Common.Helpers.ToCFont(value); }
         }
 
         public bool TextEditorAutoIndent
@@ -369,7 +369,7 @@ namespace ExpressionEditorDemo
             _mapTreeItems = new Dictionary<MetadataStructureItem, object>();
         }
 
-        private void _sqlTextEditor_PreProcessDragDrop(object source, DragEventArgs eventArgs, ref bool handled)
+        private void _sqlTextEditor_PreProcessDragDrop(object source, DragEventArgs eventArgs)
         {
             var metadataDragObject = View.GetDragObject<MetadataDragObject>(eventArgs.Data);
 
@@ -386,7 +386,7 @@ namespace ExpressionEditorDemo
                     InsertTextIntoEditor(text);
             }
 
-            handled = true;
+            eventArgs.Handled = true;
         }
 
         public void ReloadMetadata()
@@ -830,7 +830,7 @@ namespace ExpressionEditorDemo
 
             if ((e.Button & CMouseButtons.Left) != CMouseButtons.Left) return;
 
-            if (!View.ShouldBeginDrag(e.X, e.Y)) return;
+            if (!View.ShouldBeginDrag((int) e.X, (int) e.Y)) return;
 
             var text = ((AdvancedKeywordInfo)tag).Template;
 

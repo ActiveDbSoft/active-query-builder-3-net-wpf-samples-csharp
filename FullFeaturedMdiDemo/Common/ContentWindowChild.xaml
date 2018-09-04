@@ -40,6 +40,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="190"/>
                     </Grid.RowDefinitions>
@@ -83,8 +84,12 @@
 
                         </StackPanel>
                     </Border>
-
-                    <Grid Grid.Row="1">
+                    <Border x:Name="pnlParamsError" Visibility="Collapsed" BorderThickness="1" BorderBrush="Black" Grid.Row="1">
+                        <Grid Background="Pink" Height="25">
+                            <TextBlock x:Name="lbParamsError"  Background="Pink" VerticalAlignment="Center" Margin="5, 0, 0, 0" Text=""></TextBlock>
+                        </Grid>
+                    </Border>
+                    <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
@@ -96,13 +101,16 @@
                                 <RowDefinition/>
                                 <RowDefinition Height="150"/>
                             </Grid.RowDefinitions>
-                            
-                            <queryView:QueryView.ExpressionEditor>
-                                <expressionEditor:ExpressionEditor/>
-                            </queryView:QueryView.ExpressionEditor>
 
-                            <dockManager:DockManager Grid.Row="0">
-                                <dockManager:DockPanel Title="strPropertiesBarCaption" x:Name="DockPanelPropertiesBar" Position="Right">
+                            <queryView:QueryView.AddObjectDialog>
+                                <queryView:AddObjectDialog/>
+                            </queryView:QueryView.AddObjectDialog>
+
+                            <queryView:QueryView.ExpressionEditor>
+                                <expressionEditor:ExpressionEditor x:Name="ExpressionEditor"/>
+                            </queryView:QueryView.ExpressionEditor>
+                            <dockManager:DockManager x:Name="DockManager" Grid.Row="0">
+                                <dockManager:DockPanel Title="Properties" x:Name="DockPanelPropertiesBar" Position="Right">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                         <queryView:PropertiesBar/>
                                     </ScrollViewer>
@@ -110,7 +118,7 @@
 
                                 <queryView:DesignPaneControl x:Name="DPaneControl"/>
 
-                                <dockManager:DockPanel Title="strSubQueryStructureBarCaption" x:Name="DockPanelSubQueryNavBar" Position="Left">
+                                <dockManager:DockPanel Title="SubQuery Structure" x:Name="DockPanelSubQueryNavBar" Position="Left">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                                         <navigationBar:SubQueryNavBar/>
                                     </ScrollViewer>
@@ -118,12 +126,12 @@
                             </dockManager:DockManager>
 
                             <GridSplitter Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,0" Height="2"  HorizontalAlignment="Stretch"  Background="Transparent" Style="{x:Null}" Panel.ZIndex="9999"/>
-                            <queryView:QueryColumnListControl Grid.Row="1"/>
+                            <queryView:QueryColumnListControl x:Name="ColumnListControl" Grid.Row="1"/>
                         </queryView:QueryView>
                     </Grid>
 
-                    <GridSplitter Grid.Row="2" VerticalAlignment="Top" Margin="0,0,0,0" Height="2"  HorizontalAlignment="Stretch"  Background="Transparent" Style="{x:Null}"/>
-                    <Grid Grid.Row="2" Margin="0,3,0,0">
+                    <GridSplitter Grid.Row="3" VerticalAlignment="Top" Margin="0,0,0,0" Height="2"  HorizontalAlignment="Stretch"  Background="Transparent" Style="{x:Null}"/>
+                    <Grid Grid.Row="3" Margin="0,3,0,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
@@ -150,9 +158,9 @@
                                          x:Name="BoxSql" 
                                          Background="#535353" 
                                          Foreground="White" 
-                                         TextPadding="5,5,0,0"
+                                         Padding="5,5,0,0"
                                          FontFamily="Courier New"
-                                         KeywordColor="#FFFF9700"
+                                         KeywordBrush="#FFFF9700"
                                          LostKeyboardFocus="BoxSql_OnLostKeyboardFocus" 
                                          TextChanged="BoxSql_OnTextChanged"/>
                                     
@@ -176,9 +184,9 @@
                                         LostKeyboardFocus="BoxSqlCurrentSubQuery_OnLostKeyboardFocus" 
                                         Background="#535353" 
                                         Foreground="White" 
-                                        TextPadding="5,5,0,0"
+                                        Padding="5,5,0,0"
                                         FontFamily="Courier New"
-                                        KeywordColor="#FFFF9700"
+                                        KeywordBrush="#FFFF9700"
                                         TextChanged="BoxSql_OnTextChanged">
                                         </expressionEditor:SqlTextEditor>
 

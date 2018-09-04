@@ -9,7 +9,7 @@
         </Grid.RowDefinitions>
         <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" x:Name="GridData" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Parameter Name" Width="auto" IsReadOnly="True" Binding="{Binding ParametrName}"/>
+                <DataGridTextColumn Header="Parameter Name" Width="auto" IsReadOnly="True" Binding="{Binding ParameterName}"/>
                 <DataGridTextColumn Header="Data Type" Width="auto" IsReadOnly="True" Binding="{Binding DataType}"/>
                 <DataGridTextColumn Header="Value" Width="*" Binding="{Binding Value, Mode=TwoWay}"/>
             </DataGrid.Columns>

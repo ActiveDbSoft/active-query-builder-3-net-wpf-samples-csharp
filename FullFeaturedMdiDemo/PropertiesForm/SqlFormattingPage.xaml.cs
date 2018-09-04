@@ -22,24 +22,19 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
         private readonly SqlBuilderOptionsPages _page = SqlBuilderOptionsPages.MainQuery;
         private readonly SQLBuilderSelectFormat _format;
-        private readonly SQLFormattingOptions _sqlFormattingOptions;
-
-        public bool Modified { get; set; }
+        private readonly SQLFormattingOptions _sqlFormattingOptions;        
 
         public SqlFormattingPage(SqlBuilderOptionsPages page, SQLFormattingOptions sqlFormattingOptions)
         {
-            Modified = false;
             _page = page;
             _sqlFormattingOptions = sqlFormattingOptions;
 
-            _format = new SQLBuilderSelectFormat(null);
-
             if (_page == SqlBuilderOptionsPages.MainQuery)
-                _format.Assign(_sqlFormattingOptions.MainQueryFormat);
+                _format = _sqlFormattingOptions.MainQueryFormat;
             else if (_page == SqlBuilderOptionsPages.DerievedQueries)
-                _format.Assign(_sqlFormattingOptions.DerivedQueryFormat);
+                _format = _sqlFormattingOptions.DerivedQueryFormat;
             else if (_page == SqlBuilderOptionsPages.ExpressionSubqueries)
-                _format.Assign(_sqlFormattingOptions.ExpressionSubQueryFormat);
+                _format = _sqlFormattingOptions.ExpressionSubQueryFormat;
 
             InitializeComponent();
 
@@ -80,7 +75,6 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             cbNewLineAfterGroupItem.Checked += Changed;
             cbNewLineAfterGroupItem.Unchecked += Changed;
             updownWhereIndent.ValueChanged += Changed;
-            //updownWhereIndent.TextChanged += Changed;
             cbNewLineWhereRest.Checked += checkNewLineWhereRest_CheckedChanged;
             cbNewLineWhereRest.Unchecked += checkNewLineWhereRest_CheckedChanged;
             cbNewLineWhereTop.Checked += checkNewLineWhereTop_CheckedChanged;
@@ -96,6 +90,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             cbNewLineAfterKeywords.Checked += Changed;
             cbNewLineAfterKeywords.Unchecked += Changed;
             cbPartsOnNewLines.Checked += Changed;
+            cbPartsOnNewLines.Unchecked += Changed;
             cbPartsOnNewLines.Unloaded += Changed;
         }
 
@@ -111,7 +106,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             if (sender != null)
             {
-                Modified = true;
+                ApplyChanges();
             }
         }
 
@@ -121,7 +116,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             if (sender != null)
             {
-                Modified = true;
+                ApplyChanges();
             }
         }
 
@@ -131,7 +126,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             if (sender != null)
             {
-                Modified = true;
+                ApplyChanges();
             }
         }
 
@@ -147,19 +142,17 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             if (sender != null)
             {
-                Modified = true;
+                ApplyChanges();
             }
         }
 
         private void Changed(object sender, EventArgs e)
         {
-            Modified = true;
+            ApplyChanges();
         }
 
-        public void ApplyChanges()
+        private void ApplyChanges()
         {
-            if (!Modified) return;
-
             _format.MainPartsFromNewLine = cbPartsOnNewLines.IsChecked.HasValue && cbPartsOnNewLines.IsChecked.Value;
             _format.NewLineAfterPartKeywords = cbNewLineAfterKeywords.IsChecked.HasValue && cbNewLineAfterKeywords.IsChecked.Value;
             _format.IndentInPart = updownPartIndent.Value;

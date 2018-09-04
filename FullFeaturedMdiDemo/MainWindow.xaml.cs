@@ -28,7 +28,6 @@ using System.Windows.Threading;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View;
 using FullFeaturedMdiDemo.Common;
-using FullFeaturedMdiDemo.Connection;
 using FullFeaturedMdiDemo.MdiControl;
 using FullFeaturedMdiDemo.PropertiesForm;
 using Microsoft.Win32;
@@ -86,7 +85,7 @@ namespace FullFeaturedMdiDemo
             {
                 BorderBrush = Brushes.Black,
                 BorderThickness = new Thickness(1),
-                Background = Brushes.LightPink,
+                Background = Brushes.LightGreen,
                 Padding = new Thickness(5),
                 Margin = new Thickness(0, 0, 0, 2)
             };
@@ -200,7 +199,7 @@ namespace FullFeaturedMdiDemo
                                      ((ChildWindow)MdiContainer1.ActiveChild).CanShowProperties();
             MenuItemAddObject.IsEnabled = MdiContainer1.ActiveChild != null &&
                                           ((ChildWindow)MdiContainer1.ActiveChild).CanAddObject();
-            MenuItemProperties.IsEnabled = (_sqlFormattingOptions != null && _sqlContext != null);
+            MenuItemProperties.IsEnabled = MdiContainer1.ActiveChild != null;
 
             foreach (var item in MetadataItemMenu.Items.Cast<FrameworkElement>().Where(x => x is MenuItem).ToList())
             {
@@ -255,88 +254,47 @@ namespace FullFeaturedMdiDemo
             window.SaveQueryEvent -= Window_SaveQueryEvent;
             window.SaveAsInFileEvent -= Window_SaveAsInFileEvent;
             window.SaveAsNewUserQueryEvent -= Window_SaveAsNewUserQueryEvent;
-        }
+        } 
 
-        private void InitializeSqlContext()
+        private bool InitializeSqlContext()
         {
             try
             {
                 Mouse.OverrideCursor = Cursors.Wait;
 
-                BaseMetadataProvider metadataProvaider = null;
-
-				// create new SqlConnection object using the connections string from the connection form
-                if (!_selectedConnection.IsXmlFile)
+                // setup the query builder with metadata and syntax providers
+                if (_selectedConnection.IsXmlFile)
                 {
-                    switch (_selectedConnection.ConnectionType)
+                    _sqlContext = new SQLContext
                     {
-                        case ConnectionTypes.MSSQL:
-                            metadataProvaider = new MSSQLMetadataProvider
-                            {
-                                Connection = new SqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.MSAccess:
-                            metadataProvaider = new OLEDBMetadataProvider
-                            {
-                                Connection = new OleDbConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.Oracle:
-                            // previous version of this demo uses deprecated System.Data.OracleClient
-                            // current version uses Oracle.ManagedDataAccess.Client which doesn't support "Integrated Security" setting
-                            var updatedConnectionString = Regex.Replace(_selectedConnection.ConnectionString,
-                                "Integrated Security=.*?;", "");
-
-                            metadataProvaider = new OracleNativeMetadataProvider
-                            {
-                                Connection = new OracleConnection(updatedConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.MySQL:
-                            metadataProvaider = new MySQLMetadataProvider
-                            {
-                                Connection = new MySqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.PostgreSQL:
-                            metadataProvaider = new PostgreSQLMetadataProvider
-                            {
-                                Connection = new NpgsqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.OLEDB:
-                            metadataProvaider = new OLEDBMetadataProvider
-                            {
-                                Connection = new OleDbConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.ODBC:
-                            metadataProvaider = new ODBCMetadataProvider
-                            {
-                                Connection = new OdbcConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        SyntaxProvider = _selectedConnection.ConnectionDescriptor.SyntaxProvider,
+                        LoadingOptions = { OfflineMode = true }
+                    };
+					
+                    try
+                    {
+                        _sqlContext.MetadataContainer.ImportFromXML(_selectedConnection.XMLPath);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        _sqlContext = _selectedConnection.ConnectionDescriptor.GetSqlContext();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
                     }
                 }
 
-				// setup the query builder with metadata and syntax providers
-                _sqlContext = new SQLContext
-                {
-                    MetadataProvider = metadataProvaider,
-                    SyntaxProvider = _selectedConnection.SyntaxProvider,
-                    LoadingOptions =
-                    {
-                        OfflineMode = (metadataProvaider == null)
-                    },
-                };
-
-                if (metadataProvaider == null)
-                    _sqlContext.MetadataContainer.ImportFromXML(_selectedConnection.ConnectionString);
-
-                TextBlockConnectionName.Text = _selectedConnection.ConnectionName;
+                TextBlockConnectionName.Text = _selectedConnection.Name;
 
                 DatabaseSchemaView1.SQLContext = _sqlContext;
                 DatabaseSchemaView1.InitializeDatabaseSchemaTree();
@@ -358,6 +316,8 @@ namespace FullFeaturedMdiDemo
                 }
                 Mouse.OverrideCursor = null;
             }
+
+            return true;
         }
 
         #region Executed commands
@@ -426,7 +386,8 @@ namespace FullFeaturedMdiDemo
             if (cf.ShowDialog() != true) return;
             _selectedConnection = cf.SelectedConnection;
 
-            InitializeSqlContext();
+            if (!InitializeSqlContext())
+                return;
 
             if (string.IsNullOrEmpty(_selectedConnection.UserQueries)) return;
 
@@ -552,7 +513,9 @@ namespace FullFeaturedMdiDemo
 
         private void MenuItemProperties_OnClick(object sender, RoutedEventArgs e)
         {
-            var propWindow = new QueryPropertiesWindow(_sqlContext, _sqlFormattingOptions);
+            if (MdiContainer1.ActiveChild == null) return;
+            var window = (ChildWindow)MdiContainer1.ActiveChild;
+            var propWindow = new QueryPropertiesWindow(window, DatabaseSchemaView1.Options);
             propWindow.ShowDialog();
         }
 

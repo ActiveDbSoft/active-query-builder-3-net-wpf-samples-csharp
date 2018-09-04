@@ -20,19 +20,15 @@ namespace FullFeaturedMdiDemo.PropertiesForm
     [ToolboxItem(false)]
     public partial class GeneralPage
     {
-        private readonly SQLFormattingOptions _sqlFormattingOptions;
-
-        public bool Modified { get; set; }
+        private readonly SQLFormattingOptions _sqlFormattingOptions;        
 
         public GeneralPage()
         {
-            Modified = false;
             InitializeComponent();
         }
 
         public GeneralPage(SQLFormattingOptions sqlFormattingOptions)
         {
-            Modified = false;
             _sqlFormattingOptions = sqlFormattingOptions;
 
             InitializeComponent();
@@ -57,24 +53,22 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
         void comboKeywordsCasing_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Modified = true;
+            ApplyChanges();
         }
 
         private void checkWordWrap_CheckedChanged(object sender, EventArgs e)
         {
             updownRightMargin.IsEnabled = cbWordWrap.IsChecked.HasValue && cbWordWrap.IsChecked.Value;
-            Modified = true;
+            ApplyChanges();
         }
 
         private void updownRightMargin_ValueChanged(object sender, EventArgs e)
         {
-            Modified = true;
+            ApplyChanges();
         }
 
         public void ApplyChanges()
         {
-            if (!Modified) return;
-
             if (cbWordWrap.IsChecked.HasValue && cbWordWrap.IsChecked.Value)
             {
                 _sqlFormattingOptions.RightMargin = updownRightMargin.Value;

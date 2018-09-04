@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Design;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -19,8 +20,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using ActiveQueryBuilder.Core;
+using ActiveQueryBuilder.Core.ResourceManager;
 using ActiveQueryBuilder.View;
 using ActiveQueryBuilder.View.DatabaseSchemaView;
 using ActiveQueryBuilder.View.EventHandlers.MetadataStructureItems;
@@ -28,8 +29,12 @@ using ActiveQueryBuilder.View.ExpressionEditor;
 using ActiveQueryBuilder.View.MetadataStructureView;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.Annotations;
+using ActiveQueryBuilder.View.WPF.ResourceManager;
 using ExpressionEditorDemo.Common;
+using Color = System.Windows.Media.Color;
 using Helpers = ActiveQueryBuilder.View.WPF.Helpers;
+using Point = System.Windows.Point;
+using Size = System.Windows.Size;
 
 namespace ExpressionEditorDemo
 {
@@ -444,12 +449,12 @@ namespace ExpressionEditorDemo
 
             var il = new ImageList();
 
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.field, ImageFormat.Png));		// 0
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.table, ImageFormat.Png));		// 1
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.view, ImageFormat.Png));		// 2
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.procedure, ImageFormat.Png));	// 3
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.synonym, ImageFormat.Png));	// 4
-            il.Images.Add(Helpers.GetImageSource(Properties.Resources.function, ImageFormat.Png));	// 5
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.Metadata.Field.Value);            // 0
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.Metadata.UserTable.Value);        // 1
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.Metadata.UserView.Value);         // 2
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.Metadata.UserProcedure.Value);    // 3
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.Metadata.UserSynonym.Value);      // 4
+            il.Images.Add(ActiveQueryBuilder.View.WPF.Images.TextEditor.Function.Value);       // 5
 
             SetImageList(il);
 
@@ -471,11 +476,11 @@ namespace ExpressionEditorDemo
         {
             DockPanelDatabaseShema.Title = Helpers.Localizer.GetString("strDatabaseSchemaPanelTitle",
                 Helpers.ConvertLanguageFromNative(Language),
-                Constants.strDatabaseSchemaPanelTitle);
+                LocalizableConstantsUI.strDatabaseSchemaPanelTitle);
 
             DockPanelSqlContext.Title = Helpers.Localizer.GetString("strSqlContextPanelTitle",
                 Helpers.ConvertLanguageFromNative(Language),
-                Constants.strSqlContextPanelTitle);
+                LocalizableConstantsUI.strSqlContextPanelTitle);
         }
 
         private void LanguaheChanged(object sender, EventArgs e)

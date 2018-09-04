@@ -8,12 +8,20 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
+using ActiveQueryBuilder.Core.PropertiesEditors;
+using ActiveQueryBuilder.View;
+using ActiveQueryBuilder.View.PropertiesEditors;
+using ActiveQueryBuilder.View.WPF;
+using ActiveQueryBuilder.View.WPF.ExpressionEditor;
+using ActiveQueryBuilder.View.WPF.QueryView;
 
 namespace FullFeaturedMdiDemo.PropertiesForm
 {
@@ -22,112 +30,132 @@ namespace FullFeaturedMdiDemo.PropertiesForm
     /// </summary>
     public partial class QueryPropertiesWindow
     {
+        private readonly Dictionary<TextBlock, Grid> _linkToPageGeneral = new Dictionary<TextBlock, Grid>();
+        private readonly Dictionary<TextBlock, UserControl> _linkToPageFormatting = new Dictionary<TextBlock, UserControl>();
 
-        private TextBlock _currentSelectedLink;
-        private readonly SqlSyntaxPage _sqlSyntaxPage;
-        private readonly OfflineModePage _offlineModePage;
-        private readonly GeneralPage _generalPage;
-        private readonly SqlFormattingPage _mainQueryPage;
-        private readonly SqlFormattingPage _derievedQueriesPage;
-        private readonly SqlFormattingPage _expressionSubqueriesPage;
+        private readonly UserControl _sqlGenerationControl;
+        private readonly TextEditorOptions _textEditorOptions = new TextEditorOptions();
+        private readonly SqlTextEditorOptions _textEditorSqlOptions = new SqlTextEditorOptions();
+        private readonly ChildWindow _childWindow;
 
-        [DefaultValue(false)]
-        [Browsable(false)]
-        public bool Modified
-        {
-            get
-            {
-                return _sqlSyntaxPage.Modified || _offlineModePage.Modified || _generalPage.Modified ||
-                        _mainQueryPage.Modified || _derievedQueriesPage.Modified || _expressionSubqueriesPage.Modified;
-            }
-            set
-            {
-                buttonApply.IsEnabled = value;
-                _sqlSyntaxPage.Modified = value;
-                _offlineModePage.Modified = value;
-
-                _generalPage.Modified = value;
-                _mainQueryPage.Modified = value;
-                _derievedQueriesPage.Modified = value;
-                _expressionSubqueriesPage.Modified = value;
-            }
-        }
+        private TextBlock _currentGeneralSelectedLink;
+        private TextBlock _currentFormattingSelectedLink;
 
         public QueryPropertiesWindow()
         {
             InitializeComponent();
         }
-
-        public QueryPropertiesWindow(SQLContext sqlContext, SQLFormattingOptions sqlFormattingOptions)
+        
+        public QueryPropertiesWindow(ChildWindow childWindow, DatabaseSchemaViewOptions schemaViewOptions)
         {
             InitializeComponent();
 
-            BaseSyntaxProvider syntaxProvider = sqlContext.SyntaxProvider != null
-                ? sqlContext.SyntaxProvider.Clone()
-                : new GenericSyntaxProvider();
+            _childWindow = childWindow;
 
-            _sqlSyntaxPage = new SqlSyntaxPage(sqlContext, syntaxProvider);
-            _offlineModePage = new OfflineModePage(sqlContext);
+            linkAddObject.Visibility = Visibility.Collapsed;
 
+            _linkToPageFormatting.Add(linkGeneral, new GeneralPage(childWindow.SqlFormattingOptions));
+            _linkToPageFormatting.Add(linkMainQuery, new SqlFormattingPage(SqlBuilderOptionsPages.MainQuery, childWindow.SqlFormattingOptions));
+            _linkToPageFormatting.Add(linkDerievedQueries, new SqlFormattingPage(SqlBuilderOptionsPages.DerievedQueries, childWindow.SqlFormattingOptions));
+            _linkToPageFormatting.Add(linkExpressionSubqueries, new SqlFormattingPage(SqlBuilderOptionsPages.ExpressionSubqueries, childWindow.SqlFormattingOptions));
+            
+            _sqlGenerationControl = new SqlGenerationPage(childWindow.SqlGenerationOptions, childWindow.SqlFormattingOptions);
+            _linkToPageGeneral.Add(linkBehavior, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.BehaviorOptions)));
+            _linkToPageGeneral.Add(linkSchemaView, GetPropertyPage(new ObjectProperties(schemaViewOptions)));
+            _linkToPageGeneral.Add(linkDesignPane, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DesignPaneOptions)));
+            _linkToPageGeneral.Add(linkVisual, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.VisualOptions)));
+            //_linkToPageGeneral.Add(linkAddObject, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.)));
+            _linkToPageGeneral.Add(linkDatasource, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DataSourceOptions)));
+            _linkToPageGeneral.Add(linkMetadataLoading, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.MetadataLoadingOptions)));
+            _linkToPageGeneral.Add(linkMetadataStructure, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.MetadataStructureOptions)));
+            _linkToPageGeneral.Add(linkQueryColumnList, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.QueryColumnListOptions)));
+            _linkToPageGeneral.Add(linkQueryNavBar, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.QueryNavBarOptions)));
+            _linkToPageGeneral.Add(linkUserInterface, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.UserInterfaceOptions)));
+            _linkToPageGeneral.Add(linkExpressionEditor, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.ExpressionEditorOptions)));
 
-            _generalPage = new GeneralPage(sqlFormattingOptions);
-            _mainQueryPage = new SqlFormattingPage(SqlBuilderOptionsPages.MainQuery, sqlFormattingOptions);
-            _derievedQueriesPage = new SqlFormattingPage(SqlBuilderOptionsPages.DerievedQueries, sqlFormattingOptions);
-            _expressionSubqueriesPage = new SqlFormattingPage(SqlBuilderOptionsPages.ExpressionSubqueries, sqlFormattingOptions);
+            _textEditorOptions.Assign(childWindow.ContentControl.TextEditorOptions);
+            _textEditorOptions.Updated += TextEditorOptionsOnUpdated;
+            _linkToPageGeneral.Add(linkTextEditor, GetPropertyPage(new ObjectProperties(_textEditorOptions)));
 
-            // Activate the first page
-            UIElement_OnMouseLeftButtonUp(linkSqlSyntax, null);
+            _textEditorSqlOptions.Assign(childWindow.ContentControl.TextEditorSqlOptions);
+            _textEditorSqlOptions.Updated += TextEditorOptionsOnUpdated;
+            _linkToPageGeneral.Add(linkTextEditorSql, GetPropertyPage(new ObjectProperties(_textEditorSqlOptions)));
+
+            GeneralLinkClick(linkGeneration, null);
+            FormattingLinkClick(linkGeneral, null);
         }
 
-        private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void TextEditorOptionsOnUpdated(object sender, EventArgs eventArgs)
         {
-            if (_currentSelectedLink != null)
-                _currentSelectedLink.Foreground = Brushes.Black;
-
-            if (Equals(sender, linkSqlSyntax)) SwitchPage(_sqlSyntaxPage);
-            else if (Equals(sender, linkOfflineMode)) SwitchPage(_offlineModePage);
-            else if (Equals(sender, linkGeneral)) SwitchPage(_generalPage);
-            else if (Equals(sender, linkMainQuery)) SwitchPage(_mainQueryPage);
-            else if (Equals(sender, linkDerievedQueries)) SwitchPage(_derievedQueriesPage);
-            else if (Equals(sender, linkExpressionSubqueries)) SwitchPage(_expressionSubqueriesPage);
-
-            _currentSelectedLink = (TextBlock)sender;
-            _currentSelectedLink.Foreground = Brushes.Blue;
+            _childWindow.ContentControl.TextEditorOptions = _textEditorOptions;
+            _childWindow.ContentControl.TextEditorSqlOptions = _textEditorSqlOptions;
         }
 
-        private void SwitchPage(UserControl page)
+        private Grid GetPropertyPage(ObjectProperties propertiesObject)
         {
-            panelPages.Children.Clear();
+            var propertiesContainer = PropertiesFactory.GetPropertiesContainer(propertiesObject);
+
+            // create property page control
+            var propertyPage = new PropertiesBar();
+
+            // set properties to property page
+            var propertiesControl = (IPropertiesControl)propertyPage;
+            propertiesControl.SetProperties(propertiesContainer);
+
+            return propertyPage;
+        }
+
+        private void GeneralLinkClick(object sender, MouseButtonEventArgs e)
+        {
+            if (_currentGeneralSelectedLink != null)
+                _currentGeneralSelectedLink.Foreground = Brushes.Black;
+
+            _currentGeneralSelectedLink = (TextBlock)sender;
+            _currentGeneralSelectedLink.Foreground = Brushes.Blue;
+
+            if (Equals(_currentGeneralSelectedLink, linkGeneration))
+            {
+                gridGeneral.Children.Clear();
+                _sqlGenerationControl.Margin = new Thickness(10, 10, 0, 0);
+                gridGeneral.Children.Add(_sqlGenerationControl);
+                return;
+            }
+
+            SwitchGeneralPage(_linkToPageGeneral[_currentGeneralSelectedLink]);
+        }
+
+        private void SwitchGeneralPage(Grid page)
+        {
+            gridGeneral.Children.Clear();
             page.Margin = new Thickness(10, 10, 0, 0);
-            panelPages.Children.Add(page);
+            gridGeneral.Children.Add(page);
         }
 
-        public void ApplyChanges()
+        private void SwitchFormattingPage(UserControl page)
         {
-            _sqlSyntaxPage.ApplyChanges();
-            _offlineModePage.ApplyChanges();
-            _generalPage.ApplyChanges();
-            _mainQueryPage.ApplyChanges();
-            _derievedQueriesPage.ApplyChanges();
-            _expressionSubqueriesPage.ApplyChanges();
-
-            Modified = false;
+            gridFormatting.Children.Clear();
+            page.Margin = new Thickness(10, 10, 0, 0);
+            gridFormatting.Children.Add(page);
         }
 
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
-        {
-            ApplyChanges();
-            DialogResult = false;
-        }
-
-        private void ButtonApply_OnClick(object sender, RoutedEventArgs e)
-        {
-            ApplyChanges();
+        {            
+            DialogResult = true;
         }
 
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void FormattingLinkClick(object sender, MouseButtonEventArgs e)
+        {
+            if (_currentFormattingSelectedLink != null)
+                _currentFormattingSelectedLink.Foreground = Brushes.Black;
+
+            _currentFormattingSelectedLink = (TextBlock)sender;
+            _currentFormattingSelectedLink.Foreground = Brushes.Blue;
+            SwitchFormattingPage(_linkToPageFormatting[_currentFormattingSelectedLink]);
         }
     }
 }

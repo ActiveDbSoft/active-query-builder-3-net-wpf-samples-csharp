@@ -18,6 +18,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.Core.QueryTransformer;
+using ActiveQueryBuilder.View;
+using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
 
@@ -36,6 +38,95 @@ namespace FullFeaturedMdiDemo.Common
         private readonly Timer _timerStartingExecuteSql;
 
         private string _sql;
+
+        public BehaviorOptions BehaviorOptions
+        {
+            get { return SqlQuery.BehaviorOptions; }
+            set { SqlQuery.BehaviorOptions = value; }
+        }
+
+        public DataSourceOptions DataSourceOptions
+        {
+            get { return (DataSourceOptions)DPaneControl.DataSourceOptions; }
+            set { DPaneControl.DataSourceOptions = value; }
+        }
+
+        public DesignPaneOptions DesignPaneOptions
+        {
+            get { return DPaneControl.Options; }
+            set { DPaneControl.Options = value; }
+        }
+
+        public QueryNavBarOptions QueryNavBarOptions
+        {
+            get { return NavigationBar.Options; }
+            set { NavigationBar.Options = value; }
+        }
+
+        public MetadataLoadingOptions MetadataLoadingOptions
+        {
+            get { return SqlContext.LoadingOptions; }
+            set { SqlContext.LoadingOptions = value; }
+        }
+
+        public MetadataStructureOptions MetadataStructureOptions
+        {
+            get { return SqlContext.MetadataStructureOptions; }
+            set { SqlContext.MetadataStructureOptions = value; }
+        }
+
+        /*
+        public AddObjectDialogOptions AddObjectDialogOptions
+        {
+            get { return QueryView; }
+            set { QueryView.AddObjectDialog.Options = value; }
+        }*/
+
+        public UserInterfaceOptions UserInterfaceOptions
+        {
+            get { return QView.UserInterfaceOptions; }
+            set { QView.UserInterfaceOptions = value; }
+        }
+
+        public ExpressionEditorOptions ExpressionEditorOptions
+        {
+            get { return ExpressionEditor.Options; }
+            set { ExpressionEditor.Options = value; }
+        }
+
+        public TextEditorOptions TextEditorOptions
+        {
+            get { return BoxSql.Options; }
+            set
+            {
+                ExpressionEditor.TextEditorOptions = value;
+                BoxSql.Options = value;
+                BoxSqlCurrentSubQuery.Options = value;
+            }
+        }
+
+        public SqlTextEditorOptions TextEditorSqlOptions
+        {
+            get { return BoxSql.SqlOptions; }
+            set
+            {
+                ExpressionEditor.TextEditorSqlOptions = value;
+                BoxSql.SqlOptions = value;
+                BoxSqlCurrentSubQuery.SqlOptions = value;
+            }
+        }
+
+        public VisualOptions VisualOptions
+        {
+            get { return DockManager.Options; }
+            set { DockManager.Options = value; }
+        }
+
+        public QueryColumnListOptions QueryColumnListOptions
+        {
+            get { return ColumnListControl.Options; }
+            set { ColumnListControl.Options = value; }
+        }
 
         public bool IsModified
         {
@@ -61,10 +152,33 @@ namespace FullFeaturedMdiDemo.Common
             }
         }
 
-        public SQLFormattingOptions SqlFormattingOptions { set; get; }
+        private SQLFormattingOptions _sqlFormattingOptions;
+        public SQLFormattingOptions SqlFormattingOptions
+        {
+            get { return _sqlFormattingOptions; }
+            set
+            {
+                if (_sqlFormattingOptions != null)
+                    _sqlFormattingOptions.Updated -= SqlFormattingOptionsOnUpdated;
 
+                _sqlFormattingOptions = value;
 
-        public SQLGenerationOptions SqlGenerationOptions { get; set; }
+                if (_sqlFormattingOptions != null)
+                    _sqlFormattingOptions.Updated += SqlFormattingOptionsOnUpdated;
+                CBuilder.QueryTransformer.SQLGenerationOptions = value;
+            }
+        }
+
+        private void SqlFormattingOptionsOnUpdated(object sender, EventArgs eventArgs)
+        {
+            BoxSql.Text = FormattedQueryText;
+        }
+
+        public SQLGenerationOptions SqlGenerationOptions
+        {
+            get { return QueryView.SQLGenerationOptions; }
+            set { QueryView.SQLGenerationOptions = value; }
+        }
 
         public QueryView QueryView
         {
@@ -101,14 +215,28 @@ namespace FullFeaturedMdiDemo.Common
             SqlQuery.QueryRoot.AllowSleepMode = true;
             SqlQuery.QueryAwake += SqlQueryOnQueryAwake;
             SqlQuery.SleepModeChanged += SqlQuery_SleepModeChanged;
-
+            NavigationBar.QueryView = QueryView;
             QueryView.Query = SqlQuery;
+
+            QueryView.ActiveUnionSubQueryChanged += QueryView_ActiveUnionSubQueryChanged;
+
             BoxSql.Query = SqlQuery;
             BoxSqlCurrentSubQuery.Query = SqlQuery;
+            BoxSqlCurrentSubQuery.ActiveUnionSubQuery = QueryView.ActiveUnionSubQuery;
+
+            QueryView.ActiveUnionSubQueryChanged += delegate
+            {
+                BoxSqlCurrentSubQuery.ActiveUnionSubQuery = QueryView.ActiveUnionSubQuery;
+            };
 
             _transformerSql = new QueryTransformer();
 
             _timerStartingExecuteSql = new Timer(TimerStartingExecuteSql_Elapsed);
+
+            CBuilder.QueryTransformer = new QueryTransformer
+            {
+                Query = SqlQuery
+            };
 
             // Options to present the formatted SQL query text to end-user
             // Use names of virtual objects, do not replace them with appropriate derived tables
@@ -120,12 +248,6 @@ namespace FullFeaturedMdiDemo.Common
 
             NavigationBar.QueryView = QueryView;
             NavigationBar.Query = SqlQuery;
-
-            CBuilder.QueryTransformer = new QueryTransformer
-            {
-                Query = SqlQuery,
-                SQLGenerationOptions = SqlFormattingOptions
-            };
 
             CBuilder.QueryTransformer.SQLUpdated += QueryTransformer_SQLUpdated;
 
@@ -145,6 +267,11 @@ namespace FullFeaturedMdiDemo.Common
             UpdateStateButtons();
         }
 
+        private void QueryView_ActiveUnionSubQueryChanged(object sender, EventArgs e)
+        {
+            SetSqlTextCurrentSubQuery();
+        }
+
         private void SqlQuery_SQLUpdated(object sender, EventArgs e)
         {
             IsModified = _sql != QueryText;
@@ -154,12 +281,40 @@ namespace FullFeaturedMdiDemo.Common
             SetSqlTextCurrentSubQuery();
 
             UpdateStateButtons();
+            CheckParameters();
 
             if (!TabItemFastResult.IsSelected || CheckBoxAutoRefreash.IsChecked == false) return;
 
-            _timerStartingExecuteSql.Change(600, Timeout.Infinite);
+            _timerStartingExecuteSql.Change(600, Timeout.Infinite);            
+        }
 
-            
+        private void CheckParameters()
+        {
+            if (Helpers.CheckParameters(SqlContext.MetadataProvider, SqlContext.SyntaxProvider, SqlQuery.QueryParameters))
+                HideParametersErrorPanel();
+            else
+            {
+                var acceptableFormats =
+                    Helpers.GetAcceptableParametersFormats(SqlContext.MetadataProvider, SqlContext.SyntaxProvider);
+                ShowParametersErrorPanel(acceptableFormats);
+            }
+        }
+
+        private void ShowParametersErrorPanel(List<string> acceptableFormats)
+        {
+            var formats = acceptableFormats.Select(x =>
+            {
+                var s = x.Replace("n", "<number>");
+                return s.Replace("s", "<name>");
+            });
+
+            lbParamsError.Text = "Unsupported parameter notation detected. For this type of connection and database server use " + string.Join(", ", formats);
+            pnlParamsError.Visibility = Visibility.Visible;
+        }
+
+        private void HideParametersErrorPanel()
+        {
+            pnlParamsError.Visibility = Visibility.Collapsed;
         }
 
         public void OpenExecuteTab()
@@ -548,11 +703,11 @@ namespace FullFeaturedMdiDemo.Common
                 return;
             }
 
-            //var sql =  QBuilder.ActiveUnionSubQuery.GetResultSQL(_sqlFormattingOptions);
+
+            var sqlForDataPreview = QueryView.ActiveUnionSubQuery.ParentSubQuery.GetSqlForDataPreview();
+            _transformerSql.Query = new SQLQuery(QueryView.ActiveUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
+
             var sql = QueryView.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(SqlFormattingOptions);
-
-            _transformerSql.Query = new SQLQuery(QueryView.ActiveUnionSubQuery.SQLContext) { SQL = sql };
-
             BoxSqlCurrentSubQuery.Text = sql;
         }
 

@@ -10,6 +10,7 @@
 
 using System.Windows;
 using ActiveQueryBuilder.Core;
+using ActiveQueryBuilder.View.WPF;
 using FullFeaturedMdiDemo.Properties;
 
 namespace FullFeaturedMdiDemo
@@ -27,6 +28,8 @@ namespace FullFeaturedMdiDemo
 
         public App()
         {
+            var i = ControlFactory.Instance; // force call static constructor of control factory
+
             //if new version, import upgrade from previous version
             if (Settings.Default.CallUpgrade)
             {
@@ -37,13 +40,22 @@ namespace FullFeaturedMdiDemo
             if (Settings.Default.Connections != null)
             {
                 Connections = Settings.Default.Connections;
+                Connections.RemoveObsoleteConnectionInfos();
+                Connections.RestoreData();
             }
 
             if (Settings.Default.XmlFiles != null)
             {
                 XmlFiles = Settings.Default.XmlFiles;
-            }
+                XmlFiles.RemoveObsoleteConnectionInfos();
+                XmlFiles.RestoreData();
+            }            
+        }
 
+        private void App_OnExit(object sender, ExitEventArgs e)
+        {
+            Connections.SaveData();
+            XmlFiles.SaveData();
             Settings.Default.Connections = Connections;
             Settings.Default.XmlFiles = XmlFiles;
             Settings.Default.Save();

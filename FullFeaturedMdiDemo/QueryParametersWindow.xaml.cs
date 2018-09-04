@@ -39,7 +39,7 @@ namespace FullFeaturedMdiDemo
             {
                 var p = _command.Parameters[i];
 
-                _source.Add(new DataGridItem(p.ParameterName, p.DbType, ""));
+                _source.Add(new DataGridItem(p.ParameterName, p.DbType, p.Value));
             }
             GridData.ItemsSource = _source;
         }
@@ -48,11 +48,13 @@ namespace FullFeaturedMdiDemo
         {
             for (var i = 0; i < _command.Parameters.Count; i++)
                 _command.Parameters[i].Value = _source[i].Value;
+
+            DialogResult = true;
         }
 
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
         {
-            Close();
+            DialogResult = false;
         }
     }
 

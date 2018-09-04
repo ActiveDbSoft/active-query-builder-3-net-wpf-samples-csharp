@@ -8,6 +8,8 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -22,6 +24,175 @@ namespace FullFeaturedMdiDemo.Common
 {
     public static class Helpers
     {
+        public static readonly List<Type> ConnectionDescriptorList = new List<Type>
+        {
+            typeof(MSAccessConnectionDescriptor),
+            typeof(ExcelConnectionDescriptor),
+            typeof(MSSQLConnectionDescriptor),
+            typeof(MSSQLAzureConnectionDescriptor),
+            typeof(MySQLConnectionDescriptor),
+            typeof(OracleNativeConnectionDescriptor),
+            typeof(PostgreSQLConnectionDescriptor),
+            typeof(ODBCConnectionDescriptor),
+            typeof(OLEDBConnectionDescriptor),
+            typeof(SQLiteConnectionDescriptor),
+            typeof(FirebirdConnectionDescriptor)
+        };
+
+        public static readonly List<string> ConnectionDescriptorNames = new List<string>
+        {
+            "MS Access",
+            "Excel",
+            "MS SQL Server",
+            "MS SQL Server Azure",
+            "MySQL",
+            "Oracle Native",
+            "PostgreSQL",
+            "Generic ODBC Connection",
+            "Generic OLEDB Connection",
+            "SQLite",
+            "Firebird"
+        };
+
+        private const string AtNameParamFormat = "@s";
+        private const string ColonNameParamFormat = ":s";
+        private const string QuestionParamFormat = "?";
+        private const string QuestionNumberParamFormat = "?n";
+        private const string QuestionNameParamFormat = "?s";
+
+        public static List<string> GetAcceptableParametersFormats(BaseMetadataProvider metadataProvider,
+            BaseSyntaxProvider syntaxProvider)
+        {
+            if (metadataProvider is MSSQLMetadataProvider)
+            {
+                return new List<string> { AtNameParamFormat };
+            }
+
+            if (metadataProvider is OracleNativeMetadataProvider)
+            {
+                return new List<string> { ColonNameParamFormat };
+            }
+
+            if (metadataProvider is PostgreSQLMetadataProvider)
+            {
+                return new List<string> { ColonNameParamFormat };
+            }
+
+            if (metadataProvider is MySQLMetadataProvider)
+            {
+                return new List<string> { AtNameParamFormat, QuestionParamFormat, QuestionNumberParamFormat, QuestionNameParamFormat };
+            }
+
+            if (metadataProvider is OLEDBMetadataProvider)
+            {
+                if (syntaxProvider is MSAccessSyntaxProvider)
+                {
+                    return new List<string> { AtNameParamFormat, ColonNameParamFormat, QuestionParamFormat };
+                }
+
+                if (syntaxProvider is MSSQLSyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+
+                if (syntaxProvider is OracleSyntaxProvider)
+                {
+                    return new List<string> { ColonNameParamFormat, QuestionParamFormat, QuestionNumberParamFormat };
+                }
+
+                if (syntaxProvider is DB2SyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+            }
+
+            if (metadataProvider is ODBCMetadataProvider)
+            {
+                if (syntaxProvider is MSAccessSyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+
+                if (syntaxProvider is MSSQLSyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+
+                if (syntaxProvider is MySQLSyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+
+                if (syntaxProvider is PostgreSQLSyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+
+                if (syntaxProvider is OracleSyntaxProvider)
+                {
+                    return new List<string> { ColonNameParamFormat, QuestionParamFormat, QuestionNumberParamFormat };
+                }
+
+                if (syntaxProvider is DB2SyntaxProvider)
+                {
+                    return new List<string> { QuestionParamFormat };
+                }
+            }
+
+            return new List<string>();
+        }
+
+        public static bool CheckParameters(BaseMetadataProvider metadataProvider, BaseSyntaxProvider syntaxProvider, ParameterList parameters)
+        {
+            var acceptableFormats =
+                GetAcceptableParametersFormats(metadataProvider, syntaxProvider);
+
+            if (acceptableFormats.Count == 0)
+                return true;
+
+            foreach (var parameter in parameters)
+            {
+                if (!acceptableFormats.Any(x => IsSatisfiesFormat(parameter.FullName, x)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool IsSatisfiesFormat(string name, string format)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(format))
+                return false;
+
+            if (format[0] != name[0])
+                return false;
+
+            var lastChar = format.Last();
+            if (lastChar == '?')
+                return name == format;
+
+            if (lastChar == 's')
+                return name.Length > 1 && Char.IsLetter(name[1]);
+
+            if (lastChar == 'n')
+            {
+                if (name.Length == 1)
+                    return false;
+
+                foreach (var c in name)
+                {
+                    if (!Char.IsDigit(c))
+                        return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         public enum SourceType
         {
             File,
@@ -97,7 +268,7 @@ namespace FullFeaturedMdiDemo.Common
         {
             if (string.IsNullOrWhiteSpace(text)) return text;
 
-            var properties = typeof(Constants).GetFields();
+            var properties = typeof(LocalizableConstantsUI).GetFields();
 
             var property = properties.FirstOrDefault(prop => prop.Name == text);
 

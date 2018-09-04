@@ -1,11 +1,13 @@
 ﻿{
   "dependencies": {
+    "FirebirdSql.Data.FirebirdClient": "6.0.0",    
     "MySql.Data": "6.9.11",
-    "Npgsql": "3.2.6",
-    "Oracle.ManagedDataAccess": "12.2.1100"
+    "Npgsql": "4.0.1",
+    "Oracle.ManagedDataAccess": "12.2.1100",
+    "System.Data.SQLite.Core": "1.0.108"
   },
   "frameworks": {
-    "net45": {}
+    "net452": {}
   },
   "runtimes": {
     "win": {},

@@ -26,10 +26,7 @@ namespace ExpressionEditorDemo.Common
             if (font == null)
                 return null;
 
-            return new CFont(font.FontFamily.Name, font.Size, font.Bold, font.Italic)
-            {
-                LineSpacing = font.Height / font.Size
-            };
+            return new CFont(font.FontFamily.Name, font.Size, font.Bold, font.Italic);
         }
     }
 }

@@ -36,6 +36,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
+using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
 namespace FullFeaturedDemo
 {
@@ -88,52 +89,68 @@ namespace FullFeaturedDemo
             _timerStartingExecuteSql = new Timer(TimerStartingExecuteSql_Elapsed);
 
             // DEMO WARNING
-            var trialNoticePanel = new Border
+            if (BuildInfo.GetEdition() == BuildInfo.Edition.Trial)
             {
-                BorderBrush = Brushes.Black,
-                BorderThickness = new Thickness(1),
-                Background = Brushes.LightGreen,
-                Padding = new Thickness(5),
-                Margin = new Thickness(0, 0, 0, 2)
-            };
-            trialNoticePanel.SetValue(Grid.RowProperty, 1);
-
-            var label = new TextBlock
-            {
-                Text = @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            var button = new Button
-            {
-                Background = Brushes.Transparent,
-                Padding = new Thickness(0),
-                BorderThickness = new Thickness(0),
-                Cursor = Cursors.Hand,
-                Margin = new Thickness(0, 0, 5, 0),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Center,
-                Content = new Image
+                var trialNoticePanel = new Border
                 {
-                    Source = ActiveQueryBuilder.View.WPF.Helpers.GetImageSource(Properties.Resources.cancel, ImageFormat.Png),
-                    Stretch = Stretch.None
-                }
-            };
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Background = Brushes.LightGreen,
+                    Padding = new Thickness(5),
+                    Margin = new Thickness(0, 0, 0, 2)
+                };
+                trialNoticePanel.SetValue(Grid.RowProperty, 1);
 
-            button.Click += delegate
-             {
-                 GridRoot.Visibility = Visibility.Collapsed;
-             };
+                var label = new TextBlock
+                {
+                    Text =
+                        @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
 
-            trialNoticePanel.Child = label;
-            GridRoot.Children.Add(trialNoticePanel);
-            GridRoot.Children.Add(button);
+                var button = new Button
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(0),
+                    BorderThickness = new Thickness(0),
+                    Cursor = Cursors.Hand,
+                    Margin = new Thickness(0, 0, 5, 0),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Content = new Image
+                    {
+                        Source = ActiveQueryBuilder.View.WPF.Helpers.GetImageSource(Properties.Resources.cancel,
+                            ImageFormat.Png),
+                        Stretch = Stretch.None
+                    }
+                };
+
+                button.Click += delegate { GridRoot.Visibility = Visibility.Collapsed; };
+
+                trialNoticePanel.Child = label;
+                GridRoot.Children.Add(trialNoticePanel);
+                GridRoot.Children.Add(button);
+            }
 
             QBuilder.SQLQuery.QueryRoot.AllowSleepMode = true;
 
             QBuilder.SleepModeChanged += SqlQuery_SleepModeChanged;
             QBuilder.QueryAwake += SqlQuery_QueryAwake;
+        }
+
+        bool _shown;
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (_shown)
+                return;
+
+            _shown = true;
+
+            CommandNew_OnExecuted(this, null);
         }
 
         private static void SqlQuery_QueryAwake(QueryRoot sender, ref bool abort)

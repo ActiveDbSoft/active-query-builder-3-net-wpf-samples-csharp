@@ -24,6 +24,7 @@ using BasicDemo.PropertiesForm;
 using Microsoft.Win32;
 using Helpers = ActiveQueryBuilder.View.Helpers;
 using Timer = System.Timers.Timer;
+using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
 namespace BasicDemo
 {
@@ -45,50 +46,55 @@ namespace BasicDemo
 			sqlTextEditor1.QueryProvider = queryBuilder;
 
             // DEMO WARNING
-            var grid = new Grid();
-
-            var trialNoticePanel = new Border
+            if (BuildInfo.GetEdition() == BuildInfo.Edition.Trial)
             {
-                BorderBrush = Brushes.Black,
-                BorderThickness = new Thickness(1),
-                Background = Brushes.LightGreen,
-                Padding = new Thickness(5),
-                Margin = new Thickness(0, 0, 0, 2)
-            };
-            trialNoticePanel.SetValue(Grid.RowProperty, 0);
+                var grid = new Grid();
 
-            var label = new TextBlock
-            {
-                Text = @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            var button = new Button
-            {
-                Background = Brushes.Transparent,
-                Padding = new Thickness(0),
-                BorderThickness = new Thickness(0),
-                Cursor = Cursors.Hand,
-                Margin = new Thickness(0, 0, 5, 0),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Center,
-                Content = new Image
+                var trialNoticePanel = new Border
                 {
-                    Source = Properties.Resources.cancel.GetImageSource(),
-                    Stretch = Stretch.None
-                }
-            };
-            
-            button.Click += delegate { PanelNotifications.Children.Remove(grid); };
-            
-            button.SetValue(Grid.RowProperty, 0);
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Background = Brushes.LightGreen,
+                    Padding = new Thickness(5),
+                    Margin = new Thickness(0, 0, 0, 2)
+                };
+                trialNoticePanel.SetValue(Grid.RowProperty, 0);
 
-            trialNoticePanel.Child = label;
-            grid.Children.Add(trialNoticePanel);
-            grid.Children.Add(button);
+                var label = new TextBlock
+                {
+                    Text =
+                        @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
 
-            PanelNotifications.Children.Add(grid);
+                var button = new Button
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(0),
+                    BorderThickness = new Thickness(0),
+                    Cursor = Cursors.Hand,
+                    Margin = new Thickness(0, 0, 5, 0),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Content = new Image
+                    {
+                        Source = Properties.Resources.cancel.GetImageSource(),
+                        Stretch = Stretch.None
+                    }
+                };
+
+                button.Click += delegate { PanelNotifications.Children.Remove(grid); };
+
+                button.SetValue(Grid.RowProperty, 0);
+
+                trialNoticePanel.Child = label;
+                grid.Children.Add(trialNoticePanel);
+                grid.Children.Add(button);
+
+                PanelNotifications.Children.Add(grid);
+            }
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

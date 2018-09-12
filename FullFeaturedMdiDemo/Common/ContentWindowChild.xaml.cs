@@ -808,7 +808,7 @@ namespace FullFeaturedMdiDemo.Common
             if (!TabItemData.IsSelected) return;
 
             BorderBlockPagination.Visibility = Visibility.Visible;
-            DataGridResult.FillDataGrid(BoxSql.Text);
+            DataGridResult.FillDataGrid(CBuilder.SQL);
         }
 
         private void TabControlSqlText_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

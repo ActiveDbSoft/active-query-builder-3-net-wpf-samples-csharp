@@ -35,6 +35,7 @@ using MySql.Data.MySqlClient;
 using Npgsql;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using ActiveQueryBuilder.View.EventHandlers.MetadataStructureItems;
+using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
 namespace FullFeaturedMdiDemo
 {
@@ -81,60 +82,71 @@ namespace FullFeaturedMdiDemo
             menuItem.IsChecked = true;
 
             // DEMO WARNING
-            var trialNoticePanel = new Border
+            if (BuildInfo.GetEdition() == BuildInfo.Edition.Trial)
             {
-                BorderBrush = Brushes.Black,
-                BorderThickness = new Thickness(1),
-                Background = Brushes.LightGreen,
-                Padding = new Thickness(5),
-                Margin = new Thickness(0, 0, 0, 2)
-            };
-            trialNoticePanel.SetValue(Grid.RowProperty, 1);
-
-            var label = new TextBlock
-            {
-                Text = @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top
-            };
-
-            var button = new Button
-            {
-                Background = Brushes.Transparent,
-                Padding = new Thickness(0),
-                BorderThickness = new Thickness(0),
-                Cursor = Cursors.Hand,
-                Margin = new Thickness(0, 0, 5, 0),
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Center,
-                Content = new Image
+                var trialNoticePanel = new Border
                 {
-                    Source = ActiveQueryBuilder.View.WPF.Helpers.GetImageSource(Properties.Resources.cancel),
-                    Stretch = Stretch.None
-                }
-            };
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Background = Brushes.LightGreen,
+                    Padding = new Thickness(5),
+                    Margin = new Thickness(0, 0, 0, 2)
+                };
+                trialNoticePanel.SetValue(Grid.RowProperty, 1);
 
-            button.Click += delegate
-            {
-                GridRoot.Visibility = Visibility.Collapsed;
-            };
+                var label = new TextBlock
+                {
+                    Text =
+                        @"Generation of random aliases for the query output columns is the limitation of the trial version. The full version is free from this behavior.",
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top
+                };
 
-            trialNoticePanel.Child = label;
-            GridRoot.Children.Add(trialNoticePanel);
-            GridRoot.Children.Add(button);
+                var button = new Button
+                {
+                    Background = Brushes.Transparent,
+                    Padding = new Thickness(0),
+                    BorderThickness = new Thickness(0),
+                    Cursor = Cursors.Hand,
+                    Margin = new Thickness(0, 0, 5, 0),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Content = new Image
+                    {
+                        Source = ActiveQueryBuilder.View.WPF.Helpers.GetImageSource(Properties.Resources.cancel),
+                        Stretch = Stretch.None
+                    }
+                };
+
+                button.Click += delegate { GridRoot.Visibility = Visibility.Collapsed; };
+
+                trialNoticePanel.Child = label;
+                GridRoot.Children.Add(trialNoticePanel);
+                GridRoot.Children.Add(button);
+            }
+
+        }
+
+        bool _shown;
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (_shown)
+                return;
+
+            _shown = true;
+
+            CommandNew_OnExecuted(this, null);
         }
 
         private void MdiContainer1_ActiveWindowChanged(object sender, EventArgs args)
         {
             var window = MdiContainer1.ActiveChild as ChildWindow;
 
-            if (window == null)
-            {
-                QueriesView.QueryView = null;
-                QueriesView.SQLQuery = null;
-            }
-            else
-            {
+            if (window != null)
+            { 
                 QueriesView.QueryView = window.QueryView;
                 QueriesView.SQLQuery = window.SqlQuery;
             }
@@ -268,7 +280,8 @@ namespace FullFeaturedMdiDemo
                     _sqlContext = new SQLContext
                     {
                         SyntaxProvider = _selectedConnection.ConnectionDescriptor.SyntaxProvider,
-                        LoadingOptions = { OfflineMode = true }
+                        LoadingOptions = { OfflineMode = true },
+                        MetadataStructureOptions = {AllowFavourites = true}
                     };
 					
                     try
@@ -286,6 +299,7 @@ namespace FullFeaturedMdiDemo
                     try
                     {
                         _sqlContext = _selectedConnection.ConnectionDescriptor.GetSqlContext();
+                        _sqlContext.MetadataStructureOptions.AllowFavourites = true;
                     }
                     catch (Exception e)
                     {
@@ -592,6 +606,9 @@ namespace FullFeaturedMdiDemo
 
         private void DatabaseSchemaView_OnItemDoubleClick(object sender, MetadataStructureItem clickeditem)
         {
+            if (clickeditem.MetadataItem == null)
+                return;
+
             // Adding a table to the currently active query.
             var objectMetadata = (MetadataType.ObjectMetadata & clickeditem.MetadataItem.Type) != 0;
             var obj = (MetadataType.Objects & clickeditem.MetadataItem.Type) != 0;

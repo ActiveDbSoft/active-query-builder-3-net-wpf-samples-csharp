@@ -52,7 +52,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiveQueryBuilder.Core">
-		<HintPath>..\packages\ActiveQueryBuilder.Core.3.5.2.1105\lib\net\ActiveQueryBuilder.Core.dll</HintPath>
+		<HintPath>..\packages\ActiveQueryBuilder.Core.3.5.3.1106\lib\net\ActiveQueryBuilder.Core.dll</HintPath>
 	</Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

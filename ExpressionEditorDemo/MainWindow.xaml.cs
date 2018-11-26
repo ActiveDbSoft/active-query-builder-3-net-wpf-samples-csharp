@@ -8,8 +8,20 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using ActiveQueryBuilder.Core;
 
 namespace ExpressionEditorDemo
@@ -17,12 +29,11 @@ namespace ExpressionEditorDemo
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-
 
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendLine("Select Person.Address.AddressLine1,");
@@ -38,9 +49,9 @@ namespace ExpressionEditorDemo
             sqlContext.MetadataContainer.ImportFromXML("AdventureWorks2014.xml");
             var query = new SQLQuery(sqlContext) { SQL = sqlBuilder.ToString() };
 
-            ExpressionEditor.Query = query;
-            ExpressionEditor.ActiveUnionSubQuery = query.QueryRoot.FirstSelect();
-            ExpressionEditor.Expression = "Person.Address.AddressLine1";
+            EditorControl.Query = query;
+            EditorControl.ActiveUnionSubQuery = query.QueryRoot.FirstSelect();
+            EditorControl.Expression = "Person.Address.AddressLine1";
         }
     }
 }

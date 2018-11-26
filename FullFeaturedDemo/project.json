@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "MySql.Data": "6.9.11",
+    "MySql.Data": "6.9.12",
     "Npgsql": "4.0.1",
     "Oracle.ManagedDataAccess": "12.2.1100"
   },

@@ -39,7 +39,7 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _stringToUnderscore = value;
-                OnPropertyChanged("StringToUnderscore");
+                OnPropertyChanged(nameof(StringToUnderscore));
             }
             get { return _stringToUnderscore; }
         }
@@ -50,7 +50,7 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _isSelected = value;
-                OnPropertyChanged("IsSelected");
+                OnPropertyChanged(nameof(IsSelected));
             }
         }
 
@@ -59,12 +59,12 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _isEditing = value;
-                OnPropertyChanged("IsEditing");
+                OnPropertyChanged(nameof(IsEditing));
             }
             get { return _isEditing; }
         }
 
-        public string TextBeforeEdit { get { return _textBeforeEditing; } }
+        public string TextBeforeEdit => _textBeforeEditing;
 
         public IComparer ItemSorter
         {
@@ -81,7 +81,7 @@ namespace ExpressionEditorDemo.Common
                 foreach (var treeViewItemData in Items)
                     treeViewItemData.ItemSorter = value;
 
-                OnPropertyChanged("ItemSorter");
+                OnPropertyChanged(nameof(ItemSorter));
             }
         }
 
@@ -94,7 +94,7 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _imageSource = value;
-                OnPropertyChanged("ImageSource");
+                OnPropertyChanged(nameof(ImageSource));
             }
             get { return _imageSource; }
         }
@@ -109,7 +109,7 @@ namespace ExpressionEditorDemo.Common
                     _textBeforeEditing = value;
 
                 _text = value;
-                OnPropertyChanged("Text");
+                OnPropertyChanged(nameof(Text));
             }
             get { return _text; }
         }
@@ -119,7 +119,7 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _tooltip = value;
-                OnPropertyChanged("ToolTip");
+                OnPropertyChanged(nameof(ToolTip));
             }
             get { return _tooltip; }
         }
@@ -131,7 +131,7 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _isExpanded = value;
-                OnPropertyChanged("IsExpanded");
+                OnPropertyChanged(nameof(IsExpanded));
             }
             get { return _isExpanded; }
         }
@@ -141,12 +141,12 @@ namespace ExpressionEditorDemo.Common
             set
             {
                 _level = value;
-                OnPropertyChanged("Level");
+                OnPropertyChanged(nameof(Level));
             }
             get { return _level; }
         }
 
-        public ObservableCollection<TreeViewItemData> Items { get; private set; }
+        public ObservableCollection<TreeViewItemData> Items { get; }
 
         public TreeViewItemData()
         {
@@ -156,7 +156,7 @@ namespace ExpressionEditorDemo.Common
 
         private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("Items");
+            OnPropertyChanged(nameof(Items));
             if (e.Action != NotifyCollectionChangedAction.Add) return;
 
             var childItems = e.NewItems;
@@ -172,12 +172,12 @@ namespace ExpressionEditorDemo.Common
         protected virtual void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public override string ToString()
         {
-            return string.Format("[{0}]", Text);
+            return $"[{Text}]";
         }
     }
 }

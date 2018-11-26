@@ -56,14 +56,14 @@ namespace ExpressionEditorDemo.Common
         {
             var current = dependencyObject as CustomTextBlock;
 
-            if (current == null) return;
+            if(current == null) return;
 
             current.RecalculationSelectionAreas();
         }
 
         public string StringToUnderscore
         {
-            get { return (string)GetValue(StringToUnderscoreProperty); }
+            get { return (string) GetValue(StringToUnderscoreProperty); }
             set { SetValue(StringToUnderscoreProperty, value); }
         }
 

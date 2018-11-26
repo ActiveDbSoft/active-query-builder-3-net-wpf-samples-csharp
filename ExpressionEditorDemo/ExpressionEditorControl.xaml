@@ -1,14 +1,15 @@
-﻿<UserControl x:Class="ExpressionEditorDemo.View"
+﻿<UserControl x:Class="ExpressionEditorDemo.ExpressionEditorControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:dockManager="clr-namespace:ActiveQueryBuilder.View.WPF.CommonControls.DockManager;assembly=ActiveQueryBuilder.View.WPF"
+             xmlns:databaseSchemaView="clr-namespace:ActiveQueryBuilder.View.WPF.DatabaseSchemaView;assembly=ActiveQueryBuilder.View.WPF"
              xmlns:expressionEditor="clr-namespace:ActiveQueryBuilder.View.WPF.ExpressionEditor;assembly=ActiveQueryBuilder.View.WPF"
              xmlns:common="clr-namespace:ExpressionEditorDemo.Common"
-             xmlns:databaseSchemaView="clr-namespace:ActiveQueryBuilder.View.WPF.DatabaseSchemaView;assembly=ActiveQueryBuilder.View.WPF"
+             xmlns:expressionEditorDemo="clr-namespace:ExpressionEditorDemo"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" x:ClassModifier="internal">
+             d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <common:IsNullOrEmptyToVisibilityConverter x:Key="IsNullOrEmptyToVisibilityConverter"/>
     </UserControl.Resources>
@@ -16,21 +17,26 @@
     <Grid Background="{x:Static SystemColors.ControlBrush}" x:Name="GridRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <dockManager:DockManager>
-            <dockManager:DockPanel Title="Title1" x:Name="DockPanelDatabaseShema">
-                <databaseSchemaView:DatabaseSchemaView  x:Name="TreeObjects"  ViewMode="Tree" Margin="5,0"/>
+        <dockManager:DockManager Margin="5">
+            <dockManager:DockPanel Title="Title1" x:Name="DockPanelDatabaseShema" 
+                                   IsFixed="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type expressionEditorDemo:ExpressionEditorControl}}, Path=ObjectsTreePinned}">
+                <databaseSchemaView:DatabaseSchemaView  x:Name="TreeObjects" ItemDoubleClick="TreeObjects_OnItemDoubleClick" ViewMode="Tree" Margin="5,0"/>
             </dockManager:DockPanel>
 
-            <dockManager:DockPanel Title="Title2" x:Name="DockPanelSqlContext" AutoHide="False">
+            <dockManager:DockPanel Title="Title2" x:Name="DockPanelSqlContext" 
+                                   IsFixed="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type expressionEditorDemo:ExpressionEditorControl}}, Path=QueryObjectsTreePinned}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <databaseSchemaView:DatabaseSchemaView x:Name="TreeQueryObjects" Grid.Row="0" Margin="5,0,5,8" ViewMode="Tree"/>
+                    <databaseSchemaView:DatabaseSchemaView x:Name="TreeQueryObjects" Grid.Row="0" Margin="5,0,5,8" 
+                                                           ItemDoubleClick="TreeQueryObjects_OnItemDoubleClick" ViewMode="Tree"/>
 
                     <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,0,0,3" Height="2"  Grid.Row="0" Background="LightGray"/>
 
@@ -54,22 +60,25 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Image Source="/ActiveQueryBuilder.View.WPF;component/Resources/find.png" Grid.Column="0"  
+                                <Image Source="Resources/find.png" Grid.Column="0"  
                                        RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" VerticalAlignment="Center" Stretch="None"/>
 
-                                <TextBox Grid.Column="1" Height="20" Margin="5,0" x:Name="TbFilterForFunctions" TextChanged="TbFilterForFunctions_OnTextChanged"/>
+                                <TextBox Grid.Column="1" Height="21" Margin="5,0" x:Name="TbFilterForFunctions" TextChanged="TbFilterForFunctions_OnTextChanged"
+                                         TextOptions.TextFormattingMode="Display"  VerticalAlignment="Center" VerticalContentAlignment="Center" KeyDown="TbFilterForFunctions_OnKeyDown"/>
 
-                                <ToggleButton Grid.Column="2" Width="21" Height="20" x:Name="cbFilterFunctions">
+                                <ToggleButton Grid.Column="2" Width="21" Height="20" x:Name="CbFilterFunctions" Checked="CbFilterFunctions_OnChange" Unchecked="CbFilterFunctions_OnChange">
                                     <ToggleButton.Content>
-                                        <Image Source="/ActiveQueryBuilder.View.WPF;component/Resources/filter.png" 
+                                        <Image Source="Resources/filter.png" 
                                                Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                                     </ToggleButton.Content>
                                 </ToggleButton>
                             </Grid>
 
-                            <common:TreeViewMod Grid.Row="1" Margin="0,6,0,0" x:Name="TreeFunctions">
+                            <common:TreeViewMod Grid.Row="1" Margin="0,6,0,0" x:Name="TreeFunctions" FocusVisualStyle="{x:Null}">
                                 <common:TreeViewMod.Resources>
                                     <Style TargetType="ListBoxItem">
+                                        <Setter Property="Focusable" Value="False"/>
+                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                                         <EventSetter Event="PreviewMouseDown" Handler="TreeFunctions_MouseDown"/>
                                         <EventSetter Event="MouseUp" Handler="TreeFunctions_MouseUp"/>
                                         <EventSetter Event="MouseMove" Handler="TreeFunctions_MouseMove"/>
@@ -95,20 +104,25 @@
                                     </DataTemplate>
                                 </common:TreeViewMod.ItemTemplate>
                             </common:TreeViewMod>
-
                         </Grid>
                     </Grid>
 
                 </Grid>
             </dockManager:DockPanel>
-            <Grid x:Name="PART_content" Margin="0,3,3,3">
+
+            <Grid x:Name="PartContent" Margin="0,3,3,3">
                 <Grid.Resources>
                     <Style TargetType="expressionEditor:SqlTextEditor">
                         <Setter Property="FontFamily" Value="Courier New"/>
                         <Setter Property="FontSize" Value="12"/>
                     </Style>
                 </Grid.Resources>
+                <expressionEditor:SqlTextEditor x:Name="SqlEditor" PreProcessDragDrop="TextEditor_PreProcessDragDrop" Padding="5"/>
             </Grid>
         </dockManager:DockManager>
+
+        <Border x:Name="PnlNotification" Visibility="Collapsed" Grid.Row="1">
+            <TextBlock x:Name="LbNotification" TextWrapping="WrapWithOverflow" Background="LightGoldenrodYellow" Padding="5, 5, 5, 5" Text=""/>
+        </Border>
     </Grid>
 </UserControl>

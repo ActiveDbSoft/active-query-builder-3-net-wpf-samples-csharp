@@ -8,43 +8,27 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using ActiveQueryBuilder.View;
 using ActiveQueryBuilder.View.ExpressionEditor;
 
 namespace ExpressionEditorDemo.Common
 {
-    class TreeViewMod : ListBox, ITreeViewMod
+    class TreeViewMod: ListBox, ITreeViewMod
     {
-        public event EventHandler SuperMouseDoubleClick;
-        public void Dispose()
-        {
-
-        }
-
-        protected override void OnPreviewMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-            OnSuperMouseDoubleClick();
-        }
-
         public CDragDropEffects DoDragDrop(string text, CDragDropEffects effects)
         {
-            return (CDragDropEffects)DragDrop.DoDragDrop(this, text, (DragDropEffects)effects);
+            return (CDragDropEffects) DragDrop.DoDragDrop(this, text, (DragDropEffects) effects);
         }
 
         public void Invalidate()
         {
-
+            
         }
-
-        protected virtual void OnSuperMouseDoubleClick()
+        public void Dispose()
         {
-            var handler = SuperMouseDoubleClick;
-            if (handler != null) handler(this, EventArgs.Empty);
+            
         }
     }
 }

@@ -315,6 +315,7 @@ namespace FullFeaturedMdiDemo
 
                 QueriesView.SQLContext = _sqlContext;
                 QueriesView.SQLQuery = new SQLQuery(_sqlContext);
+		QueriesView.Initialize();
 
                 if (MdiContainer1.Children.Count > 0)
                 {
@@ -779,7 +780,7 @@ namespace FullFeaturedMdiDemo
                     continue;
                 }
 
-                var atItem = QueriesView.SelectedItem ?? QueriesView.MetadataStructure;
+                var atItem = QueriesView.FocusedItem ?? QueriesView.MetadataStructure;
 
                 if (!UserQueries.IsFolder(atItem))
                     atItem = atItem.Parent;
@@ -877,22 +878,22 @@ namespace FullFeaturedMdiDemo
 
         private void MenuItemExecuteUserQuery_OnClick(object sender, RoutedEventArgs e)
         {
-            if (QueriesView.SelectedItem == null) return;
+            if (QueriesView.FocusedItem == null) return;
 
-            var window = CreateChildWindow(QueriesView.SelectedItem.MetadataItem.Name);
+            var window = CreateChildWindow(QueriesView.FocusedItem.MetadataItem.Name);
 
-            window.UserMetadataStructureItem = QueriesView.SelectedItem;
+            window.UserMetadataStructureItem = QueriesView.FocusedItem;
             window.SqlSourceType = Common.Helpers.SourceType.UserQueries;
             MdiContainer1.Children.Add(window);
             MdiContainer1.ActiveChild = window;
 
-            window.QueryText = ((MetadataObject)QueriesView.SelectedItem.MetadataItem).Expression.Trim('(', ')');
+            window.QueryText = ((MetadataObject)QueriesView.FocusedItem.MetadataItem).Expression.Trim('(', ')');
             window.OpenExecuteTab();
         }
 
         private void QueriesView_OnSelectedItemChanged(object sender, EventArgs e)
         {
-            MenuItemExecuteUserQuery.IsEnabled = QueriesView.SelectedItem != null && !QueriesView.SelectedItem.IsFolder();
+            MenuItemExecuteUserQuery.IsEnabled = QueriesView.FocusedItem != null && !QueriesView.FocusedItem.IsFolder();
         }
     }
 }

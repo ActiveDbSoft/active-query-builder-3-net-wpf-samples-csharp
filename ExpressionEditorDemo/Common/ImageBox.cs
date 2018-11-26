@@ -14,7 +14,7 @@ using ActiveQueryBuilder.View.WPF;
 
 namespace ExpressionEditorDemo.Common
 {
-    internal class ImageBox : UserControl
+    internal class ImageBox: UserControl
     {
         public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
             "Source", typeof(CImage), typeof(ImageBox), new PropertyMetadata(default(CImage), SourcePropertyChanged));
@@ -22,8 +22,8 @@ namespace ExpressionEditorDemo.Common
         private static void SourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var self = d as ImageBox;
-
-            if (self == null) return;
+            
+            if(self == null) return;
 
             var cimage = e.NewValue as CImage;
 
@@ -32,7 +32,7 @@ namespace ExpressionEditorDemo.Common
 
         public CImage Source
         {
-            get { return (CImage)GetValue(SourceProperty); }
+            get { return (CImage) GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
     }

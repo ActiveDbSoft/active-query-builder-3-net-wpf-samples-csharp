@@ -1,7 +1,7 @@
 ﻿//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2018 Active Database Software              //
+//       Copyright © 2006-2019 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -16,7 +16,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 
@@ -262,23 +261,6 @@ namespace FullFeaturedMdiDemo.Common
 
                 return table.DefaultView;
             }
-        }
-
-        public static string GetLocalizedText(string text, XmlLanguage lang)
-        {
-            if (string.IsNullOrWhiteSpace(text)) return text;
-
-            var properties = typeof(LocalizableConstantsUI).GetFields();
-
-            var property = properties.FirstOrDefault(prop => prop.Name == text);
-
-            if (property == null) return text;
-
-            var constValue = property.GetValue(null).ToString();
-
-            return ActiveQueryBuilder.Core.Helpers.Localizer.GetString(property.Name,
-                ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(lang),
-                constValue);
         }
     }
 

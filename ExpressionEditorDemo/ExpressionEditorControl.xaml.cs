@@ -1,7 +1,7 @@
 ﻿//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2018 Active Database Software              //
+//       Copyright © 2006-2019 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -212,7 +212,13 @@ namespace ExpressionEditorDemo
         }
 
         public static readonly DependencyProperty ObjectsTreePinnedProperty = DependencyProperty.Register(
-            "DatabaseSchemaViewPanelPinned", typeof(bool), typeof(ExpressionEditorControl), new PropertyMetadata(false));
+            "DatabaseSchemaViewPanelPinned", typeof(bool), typeof(ExpressionEditorControl), new PropertyMetadata(false, DsvPanelPinnedChanged));
+
+        private static void DsvPanelPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = (ExpressionEditorControl)d;
+            self.DockPanelDatabaseShema.AutoHide = !(bool)e.NewValue;
+        }
 
         public bool ObjectsTreePinned
         {
@@ -221,7 +227,13 @@ namespace ExpressionEditorDemo
         }
 
         public static readonly DependencyProperty QueryObjectsTreePinnedProperty = DependencyProperty.Register(
-            "SqlContexPanelPinned", typeof(bool), typeof(ExpressionEditorControl), new PropertyMetadata(true));
+            "SqlContexPanelPinned", typeof(bool), typeof(ExpressionEditorControl), new PropertyMetadata(true, ScPanelPinnedChanged));
+
+        private static void ScPanelPinnedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = (ExpressionEditorControl)d;
+            self.DockPanelSqlContext.AutoHide = !(bool)e.NewValue;
+        }
 
         public bool QueryObjectsTreePinned
         {
@@ -271,6 +283,9 @@ namespace ExpressionEditorDemo
             Assign(_options);
             AssignSqlTextEditorOptions(_textEditorSqlOptions);
             AssignTextEditorOptions(_textEditorOptions);
+
+            DockPanelSqlContext.AutoHide = !QueryObjectsTreePinned;
+            DockPanelDatabaseShema.AutoHide = !ObjectsTreePinned;
         }
 
         public void InsertMetadataItemNameIntoEditor(MetadataItem metadataItem)

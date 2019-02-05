@@ -1,7 +1,7 @@
 ﻿//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2018 Active Database Software              //
+//       Copyright © 2006-2019 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -11,16 +11,15 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View;
 using ActiveQueryBuilder.View.NavigationBar;
 using ActiveQueryBuilder.View.QueryView;
+using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.QueryView;
 using QueryColumnListItem = ActiveQueryBuilder.Core.QueryColumnListItem;
 
@@ -110,9 +109,6 @@ namespace InterfaceCustomizationDemo
             if (root == null || list == null) return;
 
             var customItemTemplate = (DataTemplate)FindResource("CustomFieldTemplate");
-
-            root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
             list.ItemTemplate = customItemTemplate;
             list.SetValue(Grid.RowProperty, 1);
@@ -223,8 +219,48 @@ namespace InterfaceCustomizationDemo
             }
             else if (queryelement is QueryColumnListItem) // QueryColumnListControl context menu
             {
-                menu.ClearItems();
+                var queryColumnListItem = (QueryColumnListItem) queryelement;
+
+                var queryColumnListHitTestInfo =
+                    QBuilder.QueryColumnListControl.HitTest(Mouse
+                        .GetPosition((UIElement) QBuilder.QueryColumnListControl).ToCPoint());
+
+                switch (queryColumnListHitTestInfo.ItemProperty)
+                {
+                    case QueryColumnListItemProperty.Expression:
+                        menu.AddSeparator();
+                        var menuItemExpression = menu.AddSubMenu("Expression property");
+                        menuItemExpression.AddItem("Show full SQL", ExpressionColumnEventHandler, false, true, null,
+                            queryColumnListItem.Expression.GetSQL());
+                        break;
+                    case QueryColumnListItemProperty.Selected:
+                    case QueryColumnListItemProperty.Alias:
+                    case QueryColumnListItemProperty.SortType:
+                    case QueryColumnListItemProperty.SortOrder:
+                    case QueryColumnListItemProperty.Aggregate:
+                    case QueryColumnListItemProperty.Grouping:
+                    case QueryColumnListItemProperty.ConditionType:
+                    case QueryColumnListItemProperty.Condition:
+                    case QueryColumnListItemProperty.Custom:
+                        menu.AddSeparator();
+                        menu.AddItem("Get info of current cell", (o, args) =>
+                        {
+                            var message =
+                                $"Item property [{queryColumnListHitTestInfo.ItemProperty}]\nItem index [{queryColumnListHitTestInfo.ItemIndex}]\nCondition index [{queryColumnListHitTestInfo.ConditionIndex}]\nIs now here [{queryColumnListHitTestInfo.IsNowhere}]";
+                            MessageBox.Show(this, message, "Information");
+                        });
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
+        }
+
+        private void ExpressionColumnEventHandler(object o, EventArgs eventArgs)
+        {
+            var menuItem = (ICustomMenuItem) o;
+
+            MessageBox.Show(menuItem.Tag.ToString());
         }
 
         private static void CustomItem1EventHandler(object sender, EventArgs e)

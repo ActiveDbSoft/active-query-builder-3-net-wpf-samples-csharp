@@ -1,7 +1,7 @@
 ﻿//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2018 Active Database Software              //
+//       Copyright © 2006-2019 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -663,7 +663,7 @@ namespace FullFeaturedMdiDemo
             MdiContainer1.Children.Add(window);
             MdiContainer1.ActiveChild = window;
 
-            window.QueryText = ((MetadataObject)e.MetadataStructureItem.MetadataItem).Expression.Trim('(', ')');
+            window.QueryText = ((MetadataObject)e.MetadataStructureItem.MetadataItem).Expression;
         }
 
         private void Window_SaveQueryEvent(object sender, EventArgs e)
@@ -749,7 +749,7 @@ namespace FullFeaturedMdiDemo
                 childWindow.UserMetadataStructureItem.MetadataName)) return;
 
             UserQueries.SaveUserQuery(childWindow.SqlQuery.SQLContext.MetadataContainer,
-                childWindow.UserMetadataStructureItem, "(" + childWindow.QueryText + ")", ActiveQueryBuilder.View.Helpers.GetLayout(childWindow.SqlQuery.QueryRoot));
+                childWindow.UserMetadataStructureItem, childWindow.FormattedQueryText, ActiveQueryBuilder.View.Helpers.GetLayout(childWindow.SqlQuery.QueryRoot));
 
             childWindow.IsModified = false;
             SaveSettings();
@@ -786,7 +786,7 @@ namespace FullFeaturedMdiDemo
                     atItem = atItem.Parent;
 
                 newItem = UserQueries.AddUserQuery(childWindow.SqlQuery.SQLContext.MetadataContainer, atItem, title,
-                    "(" + childWindow.SqlQuery.SQL + ")", (int) DefaultImageListImageIndices.VirtualObject, ActiveQueryBuilder.View.Helpers.GetLayout(childWindow.SqlQuery.QueryRoot));
+                    childWindow.FormattedQueryText, (int) DefaultImageListImageIndices.VirtualObject, ActiveQueryBuilder.View.Helpers.GetLayout(childWindow.SqlQuery.QueryRoot));
 
                 break;
 
@@ -887,7 +887,7 @@ namespace FullFeaturedMdiDemo
             MdiContainer1.Children.Add(window);
             MdiContainer1.ActiveChild = window;
 
-            window.QueryText = ((MetadataObject)QueriesView.FocusedItem.MetadataItem).Expression.Trim('(', ')');
+            window.QueryText = ((MetadataObject)QueriesView.FocusedItem.MetadataItem).Expression;
             window.OpenExecuteTab();
         }
 

@@ -1,7 +1,7 @@
 ﻿//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2018 Active Database Software              //
+//       Copyright © 2006-2019 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -592,14 +592,22 @@ namespace FullFeaturedMdiDemo.Common
 
         private void LanguageChanged(object sender, EventArgs e)
         {
-            DockPanelPropertiesBar.Title = Helpers.GetLocalizedText("strPropertiesBarCaption", Language);
-            DockPanelSubQueryNavBar.Title = Helpers.GetLocalizedText("strSubQueryStructureBarCaption", Language);
+            DockPanelPropertiesBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strPropertiesBarCaption",
+                ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
+                LocalizableConstantsUI.strPropertiesBarCaption);
+            DockPanelSubQueryNavBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strSubQueryStructureBarCaption",
+                ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
+                LocalizableConstantsUI.strSubQueryStructureBarCaption);
         }
 
         private void ContentWindowChild_Loaded(object sender, RoutedEventArgs e)
         {
-            DockPanelPropertiesBar.Title = Helpers.GetLocalizedText("strPropertiesBarCaption", Language);
-            DockPanelSubQueryNavBar.Title = Helpers.GetLocalizedText("strSubQueryStructureBarCaption", Language);
+            DockPanelPropertiesBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strPropertiesBarCaption",
+                ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
+                LocalizableConstantsUI.strPropertiesBarCaption);
+            DockPanelSubQueryNavBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strSubQueryStructureBarCaption",
+                ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
+                LocalizableConstantsUI.strSubQueryStructureBarCaption);
         }
 
         #region Menu buttons event method

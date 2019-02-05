@@ -110,19 +110,21 @@
                                 <expressionEditor:ExpressionEditor x:Name="ExpressionEditor"/>
                             </queryView:QueryView.ExpressionEditor>
                             <dockManager:DockManager x:Name="DockManager" Grid.Row="0">
-                                <dockManager:DockPanel Title="Properties" x:Name="DockPanelPropertiesBar" Position="Right">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                        <queryView:PropertiesBar/>
-                                    </ScrollViewer>
-                                </dockManager:DockPanel>
+                                <dockManager:DockManager.DockPanels>
+                                    <dockManager:DockPanel Title="Properties" x:Name="DockPanelPropertiesBar" Position="Right">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <queryView:PropertiesBar/>
+                                        </ScrollViewer>
+                                    </dockManager:DockPanel>
+
+                                    <dockManager:DockPanel Title="SubQuery Structure" x:Name="DockPanelSubQueryNavBar" Position="Left">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <navigationBar:SubQueryNavBar/>
+                                        </ScrollViewer>
+                                    </dockManager:DockPanel>
+                                </dockManager:DockManager.DockPanels>
 
                                 <queryView:DesignPaneControl x:Name="DPaneControl"/>
-
-                                <dockManager:DockPanel Title="SubQuery Structure" x:Name="DockPanelSubQueryNavBar" Position="Left">
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                        <navigationBar:SubQueryNavBar/>
-                                    </ScrollViewer>
-                                </dockManager:DockPanel>
                             </dockManager:DockManager>
 
                             <GridSplitter Grid.Row="1" VerticalAlignment="Top" Margin="0,0,0,0" Height="2"  HorizontalAlignment="Stretch"  Background="Transparent" Style="{x:Null}" Panel.ZIndex="9999"/>

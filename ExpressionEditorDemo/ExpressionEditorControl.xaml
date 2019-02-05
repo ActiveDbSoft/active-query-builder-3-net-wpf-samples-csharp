@@ -22,93 +22,93 @@
         </Grid.RowDefinitions>
 
         <dockManager:DockManager Margin="5">
-            <dockManager:DockPanel Title="Title1" x:Name="DockPanelDatabaseShema" 
-                                   IsFixed="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type expressionEditorDemo:ExpressionEditorControl}}, Path=ObjectsTreePinned}">
-                <databaseSchemaView:DatabaseSchemaView  x:Name="TreeObjects" ItemDoubleClick="TreeObjects_OnItemDoubleClick" ViewMode="Tree" Margin="5,0"/>
-            </dockManager:DockPanel>
+            <dockManager:DockManager.DockPanels>
+                <dockManager:DockPanel x:Name="DockPanelDatabaseShema" >
+                    <databaseSchemaView:DatabaseSchemaView  x:Name="TreeObjects" ItemDoubleClick="TreeObjects_OnItemDoubleClick" ViewMode="Tree" Margin="5,0"/>
+                </dockManager:DockPanel>
 
-            <dockManager:DockPanel Title="Title2" x:Name="DockPanelSqlContext" 
-                                   IsFixed="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type expressionEditorDemo:ExpressionEditorControl}}, Path=QueryObjectsTreePinned}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                <dockManager:DockPanel x:Name="DockPanelSqlContext" AutoHide="False">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <databaseSchemaView:DatabaseSchemaView x:Name="TreeQueryObjects" Grid.Row="0" Margin="5,0,5,8" 
+                        <databaseSchemaView:DatabaseSchemaView x:Name="TreeQueryObjects" Grid.Row="0" Margin="5,0,5,8" 
                                                            ItemDoubleClick="TreeQueryObjects_OnItemDoubleClick" ViewMode="Tree"/>
 
-                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,0,0,3" Height="2"  Grid.Row="0" Background="LightGray"/>
+                        <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,0,0,3" Height="2"  Grid.Row="0" Background="LightGray"/>
 
-                    <Grid Row="1" Margin="0,0,0,4">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <WrapPanel Grid.Row="0" x:Name="PanelOperators" Margin="5,0,5,5" VerticalAlignment="Top"/>
-
-                        <Grid Row="1" Margin="5,0,5,0">
+                        <Grid Row="1" Margin="0,0,0,4">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
+                            <WrapPanel Grid.Row="0" x:Name="PanelOperators" Margin="5,0,5,5" VerticalAlignment="Top"/>
 
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                            <Grid Row="1" Margin="5,0,5,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                                <Image Source="Resources/find.png" Grid.Column="0"  
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Source="Resources/find.png" Grid.Column="0"  
                                        RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" VerticalAlignment="Center" Stretch="None"/>
 
-                                <TextBox Grid.Column="1" Height="21" Margin="5,0" x:Name="TbFilterForFunctions" TextChanged="TbFilterForFunctions_OnTextChanged"
+                                    <TextBox Grid.Column="1" Height="21" Margin="5,0" x:Name="TbFilterForFunctions" TextChanged="TbFilterForFunctions_OnTextChanged"
                                          TextOptions.TextFormattingMode="Display"  VerticalAlignment="Center" VerticalContentAlignment="Center" KeyDown="TbFilterForFunctions_OnKeyDown"/>
 
-                                <ToggleButton Grid.Column="2" Width="21" Height="20" x:Name="CbFilterFunctions" Checked="CbFilterFunctions_OnChange" Unchecked="CbFilterFunctions_OnChange">
-                                    <ToggleButton.Content>
-                                        <Image Source="Resources/filter.png" 
+                                    <ToggleButton Grid.Column="2" Width="21" Height="20" x:Name="CbFilterFunctions" Checked="CbFilterFunctions_OnChange" Unchecked="CbFilterFunctions_OnChange">
+                                        <ToggleButton.Content>
+                                            <Image Source="Resources/filter.png" 
                                                Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                                    </ToggleButton.Content>
-                                </ToggleButton>
+                                        </ToggleButton.Content>
+                                    </ToggleButton>
+                                </Grid>
+
+                                <common:TreeViewMod Grid.Row="1" Margin="0,6,0,0" x:Name="TreeFunctions" FocusVisualStyle="{x:Null}">
+                                    <common:TreeViewMod.Resources>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Focusable" Value="False"/>
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                            <EventSetter Event="PreviewMouseDown" Handler="TreeFunctions_MouseDown"/>
+                                            <EventSetter Event="MouseUp" Handler="TreeFunctions_MouseUp"/>
+                                            <EventSetter Event="MouseMove" Handler="TreeFunctions_MouseMove"/>
+                                            <EventSetter Event="MouseDoubleClick" Handler="TreeFunctions_OnSuperMouseDoubleClick"/>
+                                            <EventSetter Event="KeyDown" Handler="TreeFunctions_KeyDown"/>
+                                        </Style>
+                                    </common:TreeViewMod.Resources>
+                                    <common:TreeViewMod.ItemTemplate>
+                                        <DataTemplate DataType="common:TreeViewItemData">
+                                            <Grid>
+                                                <Grid.ToolTip>
+                                                    <ToolTip Visibility="{Binding Text, Converter={StaticResource IsNullOrEmptyToVisibilityConverter}}">
+                                                        <ToolTip.Content>
+                                                            <TextBlock Text="{Binding ToolTip}"/>
+                                                        </ToolTip.Content>
+                                                    </ToolTip>
+                                                </Grid.ToolTip>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <common:ImageBox Source="{Binding ImageSource}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                                    <common:CustomTextBlock Text="{Binding Text}" StringToUnderscore="{Binding StringToUnderscore}" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </common:TreeViewMod.ItemTemplate>
+                                </common:TreeViewMod>
                             </Grid>
-
-                            <common:TreeViewMod Grid.Row="1" Margin="0,6,0,0" x:Name="TreeFunctions" FocusVisualStyle="{x:Null}">
-                                <common:TreeViewMod.Resources>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="Focusable" Value="False"/>
-                                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                                        <EventSetter Event="PreviewMouseDown" Handler="TreeFunctions_MouseDown"/>
-                                        <EventSetter Event="MouseUp" Handler="TreeFunctions_MouseUp"/>
-                                        <EventSetter Event="MouseMove" Handler="TreeFunctions_MouseMove"/>
-                                        <EventSetter Event="MouseDoubleClick" Handler="TreeFunctions_OnSuperMouseDoubleClick"/>
-                                        <EventSetter Event="KeyDown" Handler="TreeFunctions_KeyDown"/>
-                                    </Style>
-                                </common:TreeViewMod.Resources>
-                                <common:TreeViewMod.ItemTemplate>
-                                    <DataTemplate DataType="common:TreeViewItemData">
-                                        <Grid>
-                                            <Grid.ToolTip>
-                                                <ToolTip Visibility="{Binding Text, Converter={StaticResource IsNullOrEmptyToVisibilityConverter}}">
-                                                    <ToolTip.Content>
-                                                        <TextBlock Text="{Binding ToolTip}"/>
-                                                    </ToolTip.Content>
-                                                </ToolTip>
-                                            </Grid.ToolTip>
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                                <common:ImageBox Source="{Binding ImageSource}" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                                                <common:CustomTextBlock Text="{Binding Text}" StringToUnderscore="{Binding StringToUnderscore}" VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                        </Grid>
-                                    </DataTemplate>
-                                </common:TreeViewMod.ItemTemplate>
-                            </common:TreeViewMod>
                         </Grid>
-                    </Grid>
 
-                </Grid>
-            </dockManager:DockPanel>
+                    </Grid>
+                </dockManager:DockPanel>
+            </dockManager:DockManager.DockPanels>
 
             <Grid x:Name="PartContent" Margin="0,3,3,3">
                 <Grid.Resources>

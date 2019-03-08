@@ -7,7 +7,7 @@
         xmlns:criteriaBuilder="clr-namespace:ActiveQueryBuilder.View.WPF.CriteriaBuilder;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:common="clr-namespace:FullFeaturedDemo.Common"
         mc:Ignorable="d"
-        Title="Active Query Builder for .NET Standart WPF Edition - Full Featured Demo (C#)" Height="900" Width="1000" Icon="Resources/App.ico">
+        Title="Active Query Builder for .NET Standard WPF Edition - Full Featured Demo (C#)" Height="900" Width="1000" Icon="Resources/App.ico">
 
     <Window.Resources>
         <Style TargetType="MenuItem" x:Key="MenuItemSyleCustom">

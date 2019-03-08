@@ -320,8 +320,6 @@ namespace BasicDemo
             viewResellers.AddField("ResellerID");
             viewResellers.AddField("ResellerName");
 
-            queryBuilder.DatabaseSchemaViewOptions.DefaultExpandLevel = 1;
-
             // kick the query builder to fill metadata tree
             queryBuilder.InitializeDatabaseSchemaTree();
 

@@ -49,7 +49,6 @@ namespace SubQueryTextEditingDemo
             Builder.MetadataContainer.LoadingOptions.OfflineMode = true;
             Builder.MetadataContainer.ImportFromXML(@"Northwind.xml");
 
-            Builder.DatabaseSchemaViewOptions.DefaultExpandLevel = 2;
             Builder.InitializeDatabaseSchemaTree();
 
             TextEditor.QueryProvider = Builder;

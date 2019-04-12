@@ -23,17 +23,20 @@ namespace FullFeaturedDemo.PropertiesForm
     [ToolboxItem(false)]
     public partial class OfflineModePage
     {
-        private readonly MetadataContainer _metadataContainerCopy;
+        private readonly SQLContext _sqlContext;
+        private readonly SQLContext _sqlContextCopy;
 
         private readonly OpenFileDialog _openDialog;
         private readonly SaveFileDialog _saveDialog;
-        private readonly SQLContext _sqlContext;
 
         public bool Modified { get; set; }
 
-        public OfflineModePage(SQLContext sqlContext)
+        public OfflineModePage(SQLContext context)
         {
-            _sqlContext = sqlContext;
+            _sqlContext = context;
+            _sqlContextCopy = new SQLContext();
+            _sqlContextCopy.Assign(context);
+
             _openDialog = new OpenFileDialog
             {
                 Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*",
@@ -46,14 +49,16 @@ namespace FullFeaturedDemo.PropertiesForm
                 Title = "Select XML file to save metadata to"
             };
 
-            Modified = false;
+            //Modified = false;
+            //_queryBuilder = queryBuilder;
+            //_syntaxProvider = syntaxProvider;
 
-            _metadataContainerCopy = new MetadataContainer(_sqlContext);
-            _metadataContainerCopy.Assign(_sqlContext.MetadataContainer);
+            //_metadataContainerCopy = new MetadataContainer(queryBuilder.SQLContext);
+            //_metadataContainerCopy.Assign(_queryBuilder.MetadataContainer);
 
             InitializeComponent();
 
-            cbOfflineMode.IsChecked = _sqlContext.LoadingOptions.OfflineMode;
+            cbOfflineMode.IsChecked= _sqlContextCopy.LoadingOptions.OfflineMode;
 
             UpdateMode();
 
@@ -68,17 +73,14 @@ namespace FullFeaturedDemo.PropertiesForm
         {
             if (Modified)
             {
-                _sqlContext.LoadingOptions.OfflineMode = cbOfflineMode.IsChecked.HasValue &&
+                _sqlContextCopy.LoadingOptions.OfflineMode = cbOfflineMode.IsChecked.HasValue &&
                                                                    cbOfflineMode.IsChecked.Value;
 
-                if (_sqlContext.LoadingOptions.OfflineMode)
+                if (_sqlContextCopy.LoadingOptions.OfflineMode)
                 {
-                    if (_sqlContext.MetadataProvider != null)
-                    {
-                        _sqlContext.MetadataProvider.Disconnect();
-                    }
+                    _sqlContextCopy.MetadataProvider?.Disconnect();
 
-                    _sqlContext.MetadataContainer.Assign(_metadataContainerCopy);
+                    _sqlContext.Assign(_sqlContextCopy);
                 }
                 else
                 {
@@ -105,28 +107,27 @@ namespace FullFeaturedDemo.PropertiesForm
 
         private void UpdateMetadataStats()
         {
-            List<MetadataObject> metadataObjects = _metadataContainerCopy.Items.GetItemsRecursive<MetadataObject>(MetadataType.Objects);
+            List<MetadataObject> metadataObjects = _sqlContextCopy.MetadataContainer.Items.GetItemsRecursive<MetadataObject>(MetadataType.Objects);
             int t = 0, v = 0, p = 0, s = 0;
 
-            for (int i = 0; i < metadataObjects.Count; i++)
+            for (var i = 0; i < metadataObjects.Count; i++)
             {
                 MetadataObject mo = metadataObjects[i];
 
-                if (mo.Type == MetadataType.Table)
+                switch (mo.Type)
                 {
-                    t++;
-                }
-                else if (mo.Type == MetadataType.View)
-                {
-                    v++;
-                }
-                else if (mo.Type == MetadataType.Procedure)
-                {
-                    p++;
-                }
-                else if (mo.Type == MetadataType.Synonym)
-                {
-                    s++;
+                    case MetadataType.Table:
+                        t++;
+                        break;
+                    case MetadataType.View:
+                        v++;
+                        break;
+                    case MetadataType.Procedure:
+                        p++;
+                        break;
+                    case MetadataType.Synonym:
+                        s++;
+                        break;
                 }
             }
 
@@ -136,24 +137,25 @@ namespace FullFeaturedDemo.PropertiesForm
 
         private void buttonLoadFromXML_Click(object sender, EventArgs e)
         {
-            if (_openDialog.ShowDialog() != true) return;
-
-            _metadataContainerCopy.ImportFromXML(_openDialog.FileName);
-            Modified = true;
-            UpdateMetadataStats();
+            if (_openDialog.ShowDialog() == true)
+            {
+                _sqlContextCopy.MetadataContainer.ImportFromXML(_openDialog.FileName);
+                Modified = true;
+                UpdateMetadataStats();
+            }
         }
 
         private void buttonSaveToXML_Click(object sender, EventArgs e)
         {
             if (_saveDialog.ShowDialog() == true)
             {
-                _metadataContainerCopy.ExportToXML(_saveDialog.FileName);
+                _sqlContextCopy.MetadataContainer.ExportToXML(_saveDialog.FileName);
             }
         }
 
         private void buttonEditMetadata_Click(object sender, EventArgs e)
         {
-            if (QueryBuilder.EditMetadataContainer(_metadataContainerCopy, _sqlContext.MetadataStructure, _sqlContext.LoadingOptions))
+            if (QueryBuilder.EditMetadataContainer(_sqlContextCopy))
             {
                 Modified = true;
             }

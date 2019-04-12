@@ -8,7 +8,11 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
+using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Threading;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
 using FullFeaturedMdiDemo.Properties;
@@ -59,6 +63,35 @@ namespace FullFeaturedMdiDemo
             Settings.Default.Connections = Connections;
             Settings.Default.XmlFiles = XmlFiles;
             Settings.Default.Save();
+        }
+
+        private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            var result = new StringBuilder();
+            result.Append(e.Exception.Message);
+            result.AppendLine("\n\n");
+            result.Append(e.Exception.StackTrace);
+
+            var richTextBox = new RichTextBox
+            {
+                IsReadOnly = true,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+
+            e.Handled = true;
+
+            richTextBox.Document.Blocks.Clear();
+            richTextBox.Document.Blocks.Add(new Paragraph(new Run(result.ToString())));
+
+            var window = new Window
+            {
+                Width = 600,
+                Height = 800,
+                Content = richTextBox
+            };
+
+            window.ShowDialog();
         }
     }
 }

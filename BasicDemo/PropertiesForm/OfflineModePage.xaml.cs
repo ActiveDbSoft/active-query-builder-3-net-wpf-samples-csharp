@@ -25,16 +25,20 @@ namespace BasicDemo.PropertiesForm
     [ToolboxItem(false)]
     public partial class OfflineModePage
     {
-        private readonly QueryBuilder _queryBuilder;
-        private readonly MetadataContainer _metadataContainerCopy;
-        private BaseSyntaxProvider _syntaxProvider;
+        private readonly SQLContext _sqlContext;
+        private readonly SQLContext _sqlContextCopy;
+
         private readonly OpenFileDialog _openDialog;
         private readonly SaveFileDialog _saveDialog;
 
         public bool Modified { get; set; }
 
-        public OfflineModePage(QueryBuilder queryBuilder, BaseSyntaxProvider syntaxProvider)
+        public OfflineModePage(SQLContext context)
         {
+            _sqlContext = context;
+            _sqlContextCopy = new SQLContext();
+            _sqlContextCopy.Assign(context);
+
             _openDialog = new OpenFileDialog
             {
                 Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*",
@@ -47,16 +51,16 @@ namespace BasicDemo.PropertiesForm
                 Title = "Select XML file to save metadata to"
             };
 
-            Modified = false;
-            _queryBuilder = queryBuilder;
-            _syntaxProvider = syntaxProvider;
+            //Modified = false;
+            //_queryBuilder = queryBuilder;
+            //_syntaxProvider = syntaxProvider;
 
-            _metadataContainerCopy = new MetadataContainer(queryBuilder.SQLContext);
-            _metadataContainerCopy.Assign(_queryBuilder.MetadataContainer);
+            //_metadataContainerCopy = new MetadataContainer(queryBuilder.SQLContext);
+            //_metadataContainerCopy.Assign(_queryBuilder.MetadataContainer);
 
             InitializeComponent();
 
-            cbOfflineMode.IsChecked= queryBuilder.MetadataLoadingOptions.OfflineMode;
+            cbOfflineMode.IsChecked= _sqlContextCopy.LoadingOptions.OfflineMode;
 
             UpdateMode();
 
@@ -65,28 +69,24 @@ namespace BasicDemo.PropertiesForm
             bEditMetadata.Click += buttonEditMetadata_Click;
             bSaveToXML.Click += buttonSaveToXML_Click;
             bLoadFromXML.Click += buttonLoadFromXML_Click;
-            bLoadMetadata.Click += buttonLoadMetadata_Click;
         }
 
         public void ApplyChanges()
         {
             if (Modified)
             {
-                _queryBuilder.MetadataLoadingOptions.OfflineMode = cbOfflineMode.IsChecked.HasValue &&
+                _sqlContextCopy.LoadingOptions.OfflineMode = cbOfflineMode.IsChecked.HasValue &&
                                                                    cbOfflineMode.IsChecked.Value;
 
-                if (_queryBuilder.MetadataLoadingOptions.OfflineMode)
+                if (_sqlContextCopy.LoadingOptions.OfflineMode)
                 {
-                    if (_queryBuilder.MetadataProvider != null)
-                    {
-                        _queryBuilder.MetadataProvider.Disconnect();
-                    }
+                    _sqlContextCopy.MetadataProvider?.Disconnect();
 
-                    _queryBuilder.MetadataContainer.Assign(_metadataContainerCopy);
+                    _sqlContext.Assign(_sqlContextCopy);
                 }
                 else
                 {
-                    _queryBuilder.MetadataContainer.Items.Clear();
+                    _sqlContext.MetadataContainer.Items.Clear();
                 }
             }
         }
@@ -95,27 +95,6 @@ namespace BasicDemo.PropertiesForm
         {
             Modified = true;
             UpdateMode();
-        }
-
-        private void buttonLoadMetadata_Click(object sender, EventArgs e)
-        {
-            _metadataContainerCopy.BeginUpdate();
-
-            try
-            {
-                MetadataContainerLoadForm f = new MetadataContainerLoadForm(_metadataContainerCopy, false);
-
-                if (f.ShowDialog() == true)
-                {
-                    Modified = true;
-                    cbOfflineMode.IsChecked = true;
-                }
-
-            }
-            finally
-            {
-                _metadataContainerCopy.EndUpdate();
-            }
         }
 
         private void UpdateMode()
@@ -130,28 +109,27 @@ namespace BasicDemo.PropertiesForm
 
         private void UpdateMetadataStats()
         {
-            List<MetadataObject> metadataObjects = _metadataContainerCopy.Items.GetItemsRecursive<MetadataObject>(MetadataType.Objects);
+            List<MetadataObject> metadataObjects = _sqlContextCopy.MetadataContainer.Items.GetItemsRecursive<MetadataObject>(MetadataType.Objects);
             int t = 0, v = 0, p = 0, s = 0;
 
-            for (int i = 0; i < metadataObjects.Count; i++)
+            for (var i = 0; i < metadataObjects.Count; i++)
             {
                 MetadataObject mo = metadataObjects[i];
 
-                if (mo.Type == MetadataType.Table)
+                switch (mo.Type)
                 {
-                    t++;
-                }
-                else if (mo.Type == MetadataType.View)
-                {
-                    v++;
-                }
-                else if (mo.Type == MetadataType.Procedure)
-                {
-                    p++;
-                }
-                else if (mo.Type == MetadataType.Synonym)
-                {
-                    s++;
+                    case MetadataType.Table:
+                        t++;
+                        break;
+                    case MetadataType.View:
+                        v++;
+                        break;
+                    case MetadataType.Procedure:
+                        p++;
+                        break;
+                    case MetadataType.Synonym:
+                        s++;
+                        break;
                 }
             }
 
@@ -161,24 +139,25 @@ namespace BasicDemo.PropertiesForm
 
         private void buttonLoadFromXML_Click(object sender, EventArgs e)
         {
-            if (_openDialog.ShowDialog() != true) return;
-
-            _metadataContainerCopy.ImportFromXML(_openDialog.FileName);
-            Modified = true;
-            UpdateMetadataStats();
+            if (_openDialog.ShowDialog() == true)
+            {
+                _sqlContextCopy.MetadataContainer.ImportFromXML(_openDialog.FileName);
+                Modified = true;
+                UpdateMetadataStats();
+            }
         }
 
         private void buttonSaveToXML_Click(object sender, EventArgs e)
         {
             if (_saveDialog.ShowDialog() == true)
             {
-                _metadataContainerCopy.ExportToXML(_saveDialog.FileName);
+                _sqlContextCopy.MetadataContainer.ExportToXML(_saveDialog.FileName);
             }
         }
 
         private void buttonEditMetadata_Click(object sender, EventArgs e)
         {
-            if (QueryBuilder.EditMetadataContainer(_metadataContainerCopy, _queryBuilder.MetadataStructure, _queryBuilder.MetadataLoadingOptions))
+            if (QueryBuilder.EditMetadataContainer(_sqlContextCopy))
             {
                 Modified = true;
             }

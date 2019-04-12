@@ -421,5 +421,10 @@ namespace BasicDemo
             Misc.ParamsCache.Clear();
             ExecuteQuery();
         }
+
+        private void MenuItemEditMetadata_OnClick(object sender, RoutedEventArgs e)
+        {
+            QueryBuilder.EditMetadataContainer(queryBuilder.SQLContext);
+        }
     }
 }

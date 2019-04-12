@@ -9,16 +9,11 @@
 //*******************************************************************//
 
 using System;
-using System.Data.Odbc;
-using System.Data.OleDb;
-using Oracle.ManagedDataAccess.Client;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,10 +26,9 @@ using FullFeaturedMdiDemo.Common;
 using FullFeaturedMdiDemo.MdiControl;
 using FullFeaturedMdiDemo.PropertiesForm;
 using Microsoft.Win32;
-using MySql.Data.MySqlClient;
-using Npgsql;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using ActiveQueryBuilder.View.EventHandlers.MetadataStructureItems;
+using ActiveQueryBuilder.View.WPF;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
 namespace FullFeaturedMdiDemo
@@ -203,6 +197,8 @@ namespace FullFeaturedMdiDemo
             MenuItemQueryAddDerived.IsEnabled = MdiContainer1.ActiveChild != null &&
                                                 ((ChildWindow)MdiContainer1.ActiveChild).CanAddDerivedTable();
 
+            MenuItemEditMetadata.IsEnabled = _sqlContext != null;
+
             MenuItemCopyUnionSq.IsEnabled = MdiContainer1.ActiveChild != null &&
                                             ((ChildWindow)MdiContainer1.ActiveChild).CanCopyUnionSubQuery();
             MenuItemAddUnionSq.IsEnabled = MdiContainer1.ActiveChild != null &&
@@ -266,7 +262,7 @@ namespace FullFeaturedMdiDemo
             window.SaveQueryEvent -= Window_SaveQueryEvent;
             window.SaveAsInFileEvent -= Window_SaveAsInFileEvent;
             window.SaveAsNewUserQueryEvent -= Window_SaveAsNewUserQueryEvent;
-        } 
+        }
 
         private bool InitializeSqlContext()
         {
@@ -280,10 +276,10 @@ namespace FullFeaturedMdiDemo
                     _sqlContext = new SQLContext
                     {
                         SyntaxProvider = _selectedConnection.ConnectionDescriptor.SyntaxProvider,
-                        LoadingOptions = { OfflineMode = true },
+                        LoadingOptions = {OfflineMode = true},
                         MetadataStructureOptions = {AllowFavourites = true}
                     };
-					
+
                     try
                     {
                         _sqlContext.MetadataContainer.ImportFromXML(_selectedConnection.XMLPath);
@@ -315,7 +311,7 @@ namespace FullFeaturedMdiDemo
 
                 QueriesView.SQLContext = _sqlContext;
                 QueriesView.SQLQuery = new SQLQuery(_sqlContext);
-		QueriesView.Initialize();
+                QueriesView.Initialize();
 
                 if (MdiContainer1.Children.Count > 0)
                 {
@@ -325,10 +321,11 @@ namespace FullFeaturedMdiDemo
             }
             finally
             {
-                if (_sqlContext.MetadataContainer.LoadingOptions.OfflineMode)
+                if (_sqlContext != null &&_sqlContext.MetadataContainer.LoadingOptions.OfflineMode)
                 {
                     TsmiOfflineMode.IsChecked = true;
                 }
+
                 Mouse.OverrideCursor = null;
             }
 
@@ -556,18 +553,29 @@ namespace FullFeaturedMdiDemo
 
         }
 
-        private void MenuItem_RefreashMetadata_OnClick(object sender, RoutedEventArgs e)
+        private void MenuItemEditMetadata_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_sqlContext.MetadataProvider != null && _sqlContext.MetadataProvider.Connected)
-            {
-                // to refresh metadata, just clear already loaded items
-                _sqlContext.MetadataContainer.Clear();
-            }
+            QueryBuilder.EditMetadataContainer(_sqlContext);
+        }
+
+        private void MenuItem_RefreshMetadata_OnClick(object sender, RoutedEventArgs e)
+        {
+            // to refresh metadata, just clear already loaded items
+
+            if (_sqlContext == null ||_sqlContext.MetadataProvider == null || !_sqlContext.MetadataProvider.Connected) return;
+
+            _sqlContext.MetadataContainer.Clear();
+            _sqlContext.MetadataContainer.LoadAll(true);
+
+            DatabaseSchemaView1.InitializeDatabaseSchemaTree();
         }
 
         private void MenuItem_ClearMetadata_OnClick(object sender, RoutedEventArgs e)
         {
             // to refresh metadata, just clear already loaded items
+
+            if (_sqlContext == null) return;
+
             _sqlContext.MetadataContainer.Clear();
         }
 
@@ -863,8 +871,12 @@ namespace FullFeaturedMdiDemo
 
         private void QueriesView_OnValidateItemContextMenu(object sender, MetadataStructureItemMenuEventArgs e)
         {
-            e.Menu.AddItem("Copy SQL", Execute_SqlExpression, false, true, null,
-                ((MetadataObject) e.MetadataStructureItem.MetadataItem).Expression);
+            if(e.MetadataStructureItem == null) return;
+
+            var obj = e.MetadataStructureItem.MetadataItem as MetadataObject;
+            if(obj == null) return;
+
+            e.Menu.AddItem("Copy SQL", Execute_SqlExpression, false, true, null, obj.Expression);
         }
 
         private static void Execute_SqlExpression(object sender, EventArgs eventArgs)

@@ -35,6 +35,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using ActiveQueryBuilder.View.WPF;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
@@ -630,15 +631,14 @@ namespace FullFeaturedDemo
             QBuilder.MetadataContainer.LoadingOptions.OfflineMode = menuItem.IsChecked;
         }
 
-        private void MenuItem_RefreashMetadata_OnClick(object sender, RoutedEventArgs e)
+        private void MenuItem_RefreshMetadata_OnClick(object sender, RoutedEventArgs e)
         {
-            if (QBuilder.SQLContext.MetadataProvider != null && QBuilder.SQLContext.MetadataProvider.Connected)
-            {
-                // Force the query builder to refresh metadata from current connection
-                // to refresh metadata, just clear MetadataContainer and reinitialize metadata tree
-                QBuilder.MetadataContainer.Clear();
-                QBuilder.InitializeDatabaseSchemaTree();
-            }
+            if (QBuilder.SQLContext == null || QBuilder.SQLContext.MetadataProvider == null ||
+                !QBuilder.SQLContext.MetadataProvider.Connected) return;
+            // Force the query builder to refresh metadata from current connection
+            // to refresh metadata, just clear MetadataContainer and reinitialize metadata tree
+            QBuilder.MetadataContainer.Clear();
+            QBuilder.InitializeDatabaseSchemaTree();
         }
 
         private void MenuItem_ClearMetadata_OnClick(object sender, RoutedEventArgs e)
@@ -862,12 +862,12 @@ namespace FullFeaturedDemo
             FillFastResult();
         }
 
-        private void ButtonRefreashFastResult_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonRefreshFastResult_OnClick(object sender, RoutedEventArgs e)
         {
             FillFastResult();
         }
 
-        private void CheckBoxAutoRefreash_OnChecked(object sender, RoutedEventArgs e)
+        private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
         {
             if (ButtonRefreashFastResult == null || CheckBoxAutoRefreash == null) return;
             ButtonRefreashFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;
@@ -903,6 +903,11 @@ namespace FullFeaturedDemo
                 LabelErrorFast.Text = ex.Message;
                 BorderErrorFast.Visibility = Visibility.Visible;
             }
+        }
+
+        private void MenuItemEditMetadata_OnClick(object sender, RoutedEventArgs e)
+        {
+            QueryBuilder.EditMetadataContainer(QBuilder.SQLContext);
         }
     }
 }

@@ -13,6 +13,6 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)system.data.sqlite.core\1.0.108\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('$(NuGetPackageRoot)system.data.sqlite.core\1.0.108\build\net451\System.Data.SQLite.Core.targets')" />
+    <Import Project="$(NuGetPackageRoot)system.data.sqlite.core\1.0.109\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('$(NuGetPackageRoot)system.data.sqlite.core\1.0.109\build\net451\System.Data.SQLite.Core.targets')" />
   </ImportGroup>
 </Project>

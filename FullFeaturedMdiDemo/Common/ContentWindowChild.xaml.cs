@@ -222,11 +222,11 @@ namespace FullFeaturedMdiDemo.Common
 
             BoxSql.Query = SqlQuery;
             BoxSqlCurrentSubQuery.Query = SqlQuery;
-            BoxSqlCurrentSubQuery.ActiveUnionSubQuery = QueryView.ActiveUnionSubQuery;
+            BoxSqlCurrentSubQuery.ExpressionContext = QueryView.ActiveUnionSubQuery;
 
             QueryView.ActiveUnionSubQueryChanged += delegate
             {
-                BoxSqlCurrentSubQuery.ActiveUnionSubQuery = QueryView.ActiveUnionSubQuery;
+                BoxSqlCurrentSubQuery.ExpressionContext = QueryView.ActiveUnionSubQuery;
             };
 
             _transformerSql = new QueryTransformer();
@@ -739,12 +739,12 @@ namespace FullFeaturedMdiDemo.Common
             }
         }
 
-        private void ButtonRefreashFastResult_OnClick(object sender, RoutedEventArgs e)
+        private void ButtonRefreshFastResult_OnClick(object sender, RoutedEventArgs e)
         {
             FillFastResult();
         }
 
-        private void CheckBoxAutoRefreash_OnChecked(object sender, RoutedEventArgs e)
+        private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
         {
             if (ButtonRefreashFastResult == null || CheckBoxAutoRefreash == null) return;
             ButtonRefreashFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;

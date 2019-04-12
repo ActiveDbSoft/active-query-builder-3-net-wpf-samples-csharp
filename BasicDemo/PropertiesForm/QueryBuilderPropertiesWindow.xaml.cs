@@ -79,7 +79,7 @@ namespace BasicDemo.PropertiesForm
 				: new GenericSyntaxProvider();
 
             _sqlSyntaxPage = new SqlSyntaxPage(_queryBuilder, syntaxProvider);
-            _offlineModePage = new OfflineModePage(_queryBuilder, syntaxProvider);
+            _offlineModePage = new OfflineModePage(_queryBuilder.SQLContext);
 
             _panesVisibilityPage = new PanesVisibilityPage(_queryBuilder);
             _databaseSchemaViewPage = new DatabaseSchemaViewPage(_queryBuilder);

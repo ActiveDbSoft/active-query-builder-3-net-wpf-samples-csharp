@@ -5,7 +5,7 @@
     "MySql.Data": "6.9.12",
     "Npgsql": "4.0.1",
     "Oracle.ManagedDataAccess": "12.2.1100",
-    "System.Data.SQLite.Core": "1.0.108"
+    "System.Data.SQLite.Core": "1.0.109"
   },
   "frameworks": {
     "net452": {}

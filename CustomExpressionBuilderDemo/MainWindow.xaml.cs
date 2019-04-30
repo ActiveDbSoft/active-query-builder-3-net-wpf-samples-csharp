@@ -13,6 +13,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
@@ -66,7 +67,8 @@ namespace CustomExpressionBuilderDemo
         private void QBuilder_OnSQLUpdated(object sender, EventArgs e)
         {
             // Text of SQL query has been updated by the query builder.
-            SqlEditor.Text = QBuilder.FormattedSQL;
+            SqlEditor.Document.Blocks.Clear();
+            SqlEditor.Document.Blocks.Add(new Paragraph(new Run(QBuilder.FormattedSQL)));
         }
 
         private void SqlEditor_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -74,13 +76,13 @@ namespace CustomExpressionBuilderDemo
             try
             {
                 // Update the query builder with manually edited query text:
-                QBuilder.SQL = SqlEditor.Text;
+                QBuilder.SQL = new TextRange(SqlEditor.Document.ContentStart, SqlEditor.Document.ContentEnd).Text;
                 ShowErrorBanner((FrameworkElement)sender, "");
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                SqlEditor.SelectionStart = ex.ErrorPos.pos;
+                SqlEditor.CaretPosition = SqlEditor.Document.ContentStart.GetPositionAtOffset(ex.ErrorPos.pos);
                 // Report error
                 ShowErrorBanner((FrameworkElement)sender, ex.Message);
             }

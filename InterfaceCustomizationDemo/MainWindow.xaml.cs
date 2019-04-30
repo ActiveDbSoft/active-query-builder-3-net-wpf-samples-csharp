@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
@@ -64,24 +65,25 @@ namespace InterfaceCustomizationDemo
 
         private void QBuilder_OnSQLUpdated(object sender, EventArgs e)
         {
-            // Update the text of SQL query when it's changed in the query builder.
-            SqlEditor.Text = QBuilder.FormattedSQL;
+            // Text of SQL query has been updated by the query builder.
+            SqlEditor.Document.Blocks.Clear();
+            SqlEditor.Document.Blocks.Add(new Paragraph(new Run(QBuilder.FormattedSQL)));
         }
 
         private void SqlEditor_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             try
             {
-                // Feed the text from text editor to the query builder when user exits the editor.
-                QBuilder.SQL = SqlEditor.Text;
-                ShowErrorBanner((FrameworkElement) sender, "");
+                // Update the query builder with manually edited query text:
+                QBuilder.SQL = new TextRange(SqlEditor.Document.ContentStart, SqlEditor.Document.ContentEnd).Text;
+                ShowErrorBanner((FrameworkElement)sender, "");
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                SqlEditor.SelectionStart = ex.ErrorPos.pos;
+                SqlEditor.CaretPosition = SqlEditor.Document.ContentStart.GetPositionAtOffset(ex.ErrorPos.pos);
                 // Report error
-                ShowErrorBanner((FrameworkElement) sender, ex.Message);
+                ShowErrorBanner((FrameworkElement)sender, ex.Message);
             }
         }
 

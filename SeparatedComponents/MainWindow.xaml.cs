@@ -25,6 +25,9 @@ namespace SeparatedComponents
         private readonly SQLQuery _sqlQuery;
         private readonly SQLContext _sqlContext;
 
+        private string _lastValidSql;
+        private int _errorPosition = -1;
+
         public MainWindow()
         {
             //sample query
@@ -71,7 +74,7 @@ namespace SeparatedComponents
         {
             // Text of SQL query has been updated.
             // To get the query text, ready for execution on SQL server with real object names just use SQL property.
-            sqlTextEditor.Text = FormattedSQLBuilder.GetSQL(_sqlQuery.QueryRoot, new SQLFormattingOptions());
+            _lastValidSql = sqlTextEditor.Text = FormattedSQLBuilder.GetSQL(_sqlQuery.QueryRoot, new SQLFormattingOptions());
         }
 
         private void MenuItemLoadMetadata_OnClick(object sender, RoutedEventArgs e)
@@ -144,22 +147,38 @@ namespace SeparatedComponents
             {
                 // Update the query builder with manually edited query text:
                 _sqlQuery.SQL = sqlTextEditor.Text;
-                ErrorBox.Message = string.Empty;
+                ErrorBox.Show(null, sqlTextEditor.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                sqlTextEditor.SelectionStart = ex.ErrorPos.pos;
+                _errorPosition = sqlTextEditor.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
-                ErrorBox.Message = ex.Message;
+                ErrorBox.Show(ex.Message, sqlTextEditor.SyntaxProvider);
             }
         }
 
         private void SqlTextEditor_OnTextChanged(object sender, EventArgs e)
         {
-            if (ErrorBox != null)
-                ErrorBox.Message = string.Empty;
+            if(_sqlContext == null) return;
+            ErrorBox.Show(null, sqlTextEditor.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            sqlTextEditor.Focus();
+
+            if (_errorPosition == -1) return;
+
+            sqlTextEditor.ScrollToPosition(_errorPosition);
+            sqlTextEditor.CaretOffset = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            sqlTextEditor.Text = _lastValidSql;
+            sqlTextEditor.Focus();
         }
     }
 }

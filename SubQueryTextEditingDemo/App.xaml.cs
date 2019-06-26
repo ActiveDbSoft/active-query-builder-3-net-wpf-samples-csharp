@@ -8,7 +8,8 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System.Windows;
+using System.Windows.Threading;
+using SubQueryTextEditingDemo.Common;
 
 namespace SubQueryTextEditingDemo
 {
@@ -17,5 +18,16 @@ namespace SubQueryTextEditingDemo
     /// </summary>
     public partial class App
     {
+        private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            var errorWindow = new ExceptionWindow
+            {
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
+            };
+
+            errorWindow.ShowDialog();
+        }
     }
 }

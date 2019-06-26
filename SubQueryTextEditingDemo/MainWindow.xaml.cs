@@ -9,13 +9,7 @@
 //*******************************************************************//
 
 using System;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 
 namespace SubQueryTextEditingDemo
@@ -30,6 +24,8 @@ namespace SubQueryTextEditingDemo
     public partial class MainWindow
     {
         private ModeEditor _mode;
+        private string _lastValidSql;
+        private int _errorPosition = -1;
 
         public MainWindow()
         {
@@ -112,17 +108,17 @@ namespace SubQueryTextEditingDemo
             switch (_mode)
             {
                 case ModeEditor.Entire:
-                    TextEditor.Text = Builder.FormattedSQL;
+                    _lastValidSql = TextEditor.Text = Builder.FormattedSQL;
                     break;
                 case ModeEditor.SubQuery:
                     if(Builder.ActiveUnionSubQuery == null) break;
                     var subQuery = Builder.ActiveUnionSubQuery.ParentSubQuery;
-                    TextEditor.Text = FormattedSQLBuilder.GetSQL(subQuery, sqlFormattingOptions);
+                    _lastValidSql = TextEditor.Text = FormattedSQLBuilder.GetSQL(subQuery, sqlFormattingOptions);
                     break;
                 case ModeEditor.Expression:
                     if (Builder.ActiveUnionSubQuery == null) break;
                     var unionSubQuery = Builder.ActiveUnionSubQuery;
-                    TextEditor.Text = FormattedSQLBuilder.GetSQL(unionSubQuery, sqlFormattingOptions);
+                    _lastValidSql = TextEditor.Text = FormattedSQLBuilder.GetSQL(unionSubQuery, sqlFormattingOptions);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -137,32 +133,15 @@ namespace SubQueryTextEditingDemo
 
             e.Abort = true;
 
-            ShowErrorBanner(TextEditor, exception);
+            ErrorBox.Show(exception.Message, Builder.SyntaxProvider);
+            _errorPosition = exception.ErrorPos.pos;
         }
 
         private void Builder_OnSQLUpdated(object sender, EventArgs e)
         {
             ApplyText();
         }
-
-        private static void SetText(RichTextBox box, string value)
-        {
-            box.Document.Blocks.Clear();
-            box.Document.Blocks.Add(new Paragraph(new Run(value)));
-        }
-
-        private static string GetText(RichTextBox box)
-        {
-            return new TextRange(box.Document.ContentStart, box.Document.ContentEnd).Text;
-        }
-
-        private void ShowErrorBanner(UIElement element, Exception exception)
-        {
-            if (!(exception is SQLParsingException)) return;
-
-            ErrorBox.Message = exception.Message;
-        }
-
+        
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             try
@@ -194,11 +173,9 @@ namespace SubQueryTextEditingDemo
             PopupSwitch.IsOpen = true;
         }
 
-        private void TextEditor_OnPreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void TextEditor_OnPreviewLostKeyboardFocus(object sender, RoutedEventArgs routedEventArgs)
         {
             var text = TextEditor.Text.Trim();
-
-            var isSuccess = true;
 
             Builder.BeginUpdate();
 
@@ -226,20 +203,39 @@ namespace SubQueryTextEditingDemo
             }
             catch (Exception exception)
             {
-                isSuccess = false;
-                ShowErrorBanner(TextEditor, exception);
+                var sqlParsingException = exception as SQLParsingException;
+
+                if (sqlParsingException != null)
+                {
+                    ErrorBox.Show(sqlParsingException.Message, Builder.SyntaxProvider);
+                    _errorPosition = sqlParsingException.ErrorPos.pos;
+                }
             }
             finally
             {
                 Builder.EndUpdate();
             }
-
-            e.Handled = !isSuccess;
         }
 
         private void TextEditor_OnTextChanged(object sender, EventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, Builder.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            TextEditor.Focus();
+
+            if (_errorPosition == -1) return;
+
+            TextEditor.CaretOffset = _errorPosition;
+            TextEditor.ScrollToPosition(_errorPosition);
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            TextEditor.Text = _lastValidSql;
+            TextEditor.Focus();
         }
     }
 }

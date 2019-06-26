@@ -33,9 +33,11 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Connection Type" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Column="2" Height="21" Grid.Row="0" VerticalAlignment="Center" x:Name="cbConnectionType" SelectionChanged="CbConnectionType_OnSelectionChanged"/>
+                                <ComboBox Grid.Column="2" Height="21" Grid.Row="0" 
+                                          VerticalAlignment="Center" x:Name="cbConnectionType" SelectionChanged="CbConnectionType_OnSelectionChanged"/>
                                 <TextBlock Text="Syntax"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                                <ComboBox Grid.Column="2" Height="21" Grid.Row="1" VerticalAlignment="Center" x:Name="cbSyntax" SelectionChanged="CbSyntax_OnSelectionChanged"/>
+                                <ComboBox Grid.Column="2" Height="21" Grid.Row="1" 
+                                          VerticalAlignment="Center" x:Name="cbSyntax" SelectionChanged="CbSyntax_OnSelectionChanged"/>
                             </Grid>
                         </Border>
                         <QueryView:PropertiesBar x:Name="pbSyntax" Margin="0, 0, 0, 3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>

@@ -25,6 +25,8 @@ namespace DragDropDemo
     public partial class MainWindow
     {
         private Rect _dragBoxFromMouseDown = Rect.Empty;
+        private string _lastValidSql;
+        private int _errorPosition = -1;
 
         public MainWindow()
         {
@@ -124,7 +126,7 @@ namespace DragDropDemo
             // Handle the event raised by SQL Builder object that the text of SQL query is changed
 
             // Hide error banner if any
-            ShowErrorBanner(TextBox1, "");
+            ErrorBox.Show(null, QueryBuilder1.SyntaxProvider);
 
             // update the text box
             TextBox1.Text = QueryBuilder1.FormattedSQL;
@@ -139,7 +141,8 @@ namespace DragDropDemo
                 QueryBuilder1.SQL = TextBox1.Text;
 
                 // Hide error banner if any
-                ShowErrorBanner(TextBox1, "");
+                ErrorBox.Show(null, QueryBuilder1.SyntaxProvider);
+                _lastValidSql = QueryBuilder1.FormattedSQL;
             }
             catch (SQLParsingException ex)
             {
@@ -147,19 +150,32 @@ namespace DragDropDemo
                 TextBox1.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
-                ShowErrorBanner(TextBox1, ex.Message);
-            }
-        }
+                ErrorBox.Show(ex.Message, QueryBuilder1.SyntaxProvider);
 
-        public void ShowErrorBanner(FrameworkElement control, string text)
-        {
-            // Show new banner if text is not empty
-            ErrorBox.Message = text;
+                _errorPosition = ex.ErrorPos.pos;
+            }
         }
 
         private void TextBox1_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, QueryBuilder1.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            TextBox1.Focus();
+
+            if (_errorPosition == -1) return;
+
+            if (TextBox1.LineCount != 1)
+                TextBox1.ScrollToLine(TextBox1.GetLineIndexFromCharacterIndex(_errorPosition));
+            TextBox1.CaretIndex = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            TextBox1.Text = _lastValidSql;
+            TextBox1.Focus();
         }
     }
 }

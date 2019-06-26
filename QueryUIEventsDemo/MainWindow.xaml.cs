@@ -11,10 +11,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
@@ -27,6 +25,9 @@ namespace QueryUIEventsDemo
     /// </summary>
     public partial class MainWindow
     {
+        private string _lastValidSql;
+        private int _errorPosition = -1;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -62,8 +63,7 @@ namespace QueryUIEventsDemo
         private void QBuilder_OnSQLUpdated(object sender, EventArgs e)
         {
             // Text of SQL query has been updated by the query builder.
-            SqlEditor.Document.Blocks.Clear();
-            SqlEditor.Document.Blocks.Add(new Paragraph(new Run(QBuilder.FormattedSQL)));
+            _lastValidSql = SqlEditor.Text = QBuilder.FormattedSQL;
         }
 
         private void SqlEditor_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -71,22 +71,17 @@ namespace QueryUIEventsDemo
             try
             {
                 // Update the query builder with manually edited query text:
-                QBuilder.SQL = new TextRange(SqlEditor.Document.ContentStart, SqlEditor.Document.ContentEnd).Text;
-                ShowErrorBanner((FrameworkElement)sender, "");
+                QBuilder.SQL = SqlEditor.Text;
+                ErrorBox.Show(null, QBuilder.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                SqlEditor.CaretPosition = SqlEditor.Document.ContentStart.GetPositionAtOffset(ex.ErrorPos.pos);
+                SqlEditor.CaretIndex = ex.ErrorPos.pos;
+                _errorPosition = ex.ErrorPos.pos;
                 // Report error
-                ShowErrorBanner((FrameworkElement)sender, ex.Message);
+                ErrorBox.Show(ex.Message, QBuilder.SyntaxProvider);
             }
-        }
-
-        public void ShowErrorBanner(FrameworkElement control, string text)
-        {
-            // Display error banner if passed text is not empty
-            ErrorBox.Message = text;
         }
 
         /// <summary>
@@ -355,7 +350,24 @@ namespace QueryUIEventsDemo
 
         private void SqlEditor_OnTextChanged(object sender, EventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, QBuilder.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            SqlEditor.Focus();
+
+            if (_errorPosition == -1) return;
+
+            if (SqlEditor.LineCount != 1)
+                SqlEditor.ScrollToLine(SqlEditor.GetLineIndexFromCharacterIndex(_errorPosition));
+            SqlEditor.CaretIndex = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            SqlEditor.Text = _lastValidSql;
+            SqlEditor.Focus();
         }
     }
 }

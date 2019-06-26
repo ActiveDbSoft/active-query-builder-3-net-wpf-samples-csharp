@@ -22,6 +22,7 @@ using ActiveQueryBuilder.View;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
+using SQLParsingException = ActiveQueryBuilder.Core.SQLParsingException;
 
 namespace FullFeaturedMdiDemo.Common
 {
@@ -153,6 +154,11 @@ namespace FullFeaturedMdiDemo.Common
         }
 
         private SQLFormattingOptions _sqlFormattingOptions;
+        private int _errorPosition = -1;
+        private string _lastValidSql;
+        private string _lastValidSqlCurrentSubQuery;
+        private int _errorPositionCurrentSubQuery = -1;
+
         public SQLFormattingOptions SqlFormattingOptions
         {
             get { return _sqlFormattingOptions; }
@@ -274,6 +280,8 @@ namespace FullFeaturedMdiDemo.Common
 
         private void SqlQuery_SQLUpdated(object sender, EventArgs e)
         {
+            _lastValidSql = FormattedQueryText;
+
             IsModified = _sql != QueryText;
 
             BoxSql.Text = FormattedQueryText;
@@ -520,12 +528,13 @@ namespace FullFeaturedMdiDemo.Common
                 SqlQuery.SQL = BoxSql.Text;
 
                 // Hide error banner if any
-                ErrorBox.Message = string.Empty;
+                ErrorBox.Show(null, QView.Query.SQLContext.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Show banner with error text
-                ErrorBox.Message = ex.Message;
+                ErrorBox.Show(ex.Message, QView.Query.SQLContext.SyntaxProvider);
+                _errorPosition = ex.ErrorPos.pos;
             }
         }
 
@@ -658,7 +667,7 @@ namespace FullFeaturedMdiDemo.Common
 
         private void BoxSql_OnTextChanged(object sender, EventArgs eventArgs)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, SqlContext.SyntaxProvider);
         }
 
         private void ResetPagination()
@@ -701,7 +710,7 @@ namespace FullFeaturedMdiDemo.Common
 
         private void SetSqlTextCurrentSubQuery()
         {
-            BorderErrorFast.Visibility = Visibility.Collapsed;
+            ErrorBoxCurrentSunQuery.Show(null, QView.Query.SQLContext.SyntaxProvider);
             if (_transformerSql == null) return;
 
             if (QueryView.ActiveUnionSubQuery == null || SqlQuery.SleepMode)
@@ -717,6 +726,7 @@ namespace FullFeaturedMdiDemo.Common
 
             var sql = QueryView.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(SqlFormattingOptions);
             BoxSqlCurrentSubQuery.Text = sql;
+            _lastValidSqlCurrentSubQuery = sql;
         }
 
         private void FillFastResult()
@@ -767,7 +777,7 @@ namespace FullFeaturedMdiDemo.Common
             if (QueryView.ActiveUnionSubQuery == null) return;
             try
             {
-                BorderErrorFast.Visibility = Visibility.Collapsed;
+                ErrorBoxCurrentSunQuery.Show(null, SqlContext.SyntaxProvider);
 
                 QView.ActiveUnionSubQuery.ParentSubQuery.SQL = ((SqlTextEditor)sender).Text;
 
@@ -775,10 +785,10 @@ namespace FullFeaturedMdiDemo.Common
 
                 _transformerSql.Query = new SQLQuery(QueryView.ActiveUnionSubQuery.SQLContext) { SQL = sql };
             }
-            catch (Exception ex)
+            catch (SQLParsingException ex)
             {
-                LabelErrorFast.Text = ex.Message;
-                BorderErrorFast.Visibility = Visibility.Visible;
+                ErrorBoxCurrentSunQuery.Show(ex.Message, SqlContext.SyntaxProvider);
+                _errorPositionCurrentSubQuery = ex.ErrorPos.pos;
             }
         }
 
@@ -827,6 +837,38 @@ namespace FullFeaturedMdiDemo.Common
                 CheckBoxAutoRefreash.IsChecked == false) return;
 
             FillFastResult();
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            BoxSql.Focus();
+
+            if (_errorPosition == -1) return;
+
+            BoxSql.ScrollToPosition((_errorPosition));
+            BoxSql.CaretOffset = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            BoxSql.Text = _lastValidSql;
+            BoxSql.Focus();
+        }
+
+        private void ErrorBoxCurrentSunQuery_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            BoxSqlCurrentSubQuery.Focus();
+
+            if (_errorPositionCurrentSubQuery == -1) return;
+
+            BoxSqlCurrentSubQuery.ScrollToPosition((_errorPositionCurrentSubQuery));
+            BoxSqlCurrentSubQuery.CaretOffset = _errorPositionCurrentSubQuery;
+        }
+
+        private void ErrorBoxCurrentSunQuery_OnRevertValidText(object sender, EventArgs e)
+        {
+            BoxSqlCurrentSubQuery.Text = _lastValidSql;
+            BoxSqlCurrentSubQuery.Focus();
         }
     }
 }

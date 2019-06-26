@@ -29,6 +29,8 @@ namespace LoadMetadataDemo
     {
         private IDbConnection _dbConnection;
         private EventMetadataProvider _way3EventMetadataProvider;
+        private string _lastValidSql;
+        private int _errorPosition = -1;
 
         public MainWindow()
         {
@@ -314,9 +316,9 @@ namespace LoadMetadataDemo
         {
             if(SqlTextBox == null) return;
             // Handle the event raised by SQL builder object that the text of SQL query is changed
-
+            _lastValidSql = QBuilder.FormattedSQL;
             // Hide error banner if any
-            ShowErrorBanner(SqlTextBox, "");
+            ErrorBox.Show(null, QBuilder.SyntaxProvider);
 
             // update the text box
             SqlTextBox.Text = QBuilder.FormattedSQL;
@@ -452,26 +454,38 @@ namespace LoadMetadataDemo
                 QBuilder.SQL = SqlTextBox.Text;
 
                 // Hide error banner if any
-                ShowErrorBanner(SqlTextBox, "");
+                ErrorBox.Show(null, QBuilder.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
                 SqlTextBox.SelectionStart = ex.ErrorPos.pos;
-
+                _errorPosition = ex.ErrorPos.pos;
                 // Show banner with error text
-                ShowErrorBanner(SqlTextBox, ex.Message);
+                ErrorBox.Show(ex.Message, QBuilder.SyntaxProvider);
             }
-        }
-
-        private void ShowErrorBanner(FrameworkElement sqlTextBox, string text)
-        {
-            ErrorBox.Message = text;
         }
 
         private void SqlTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, QBuilder.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            SqlTextBox.Focus();
+
+            if (_errorPosition == -1) return;
+
+            if (SqlTextBox.LineCount != 1)
+                SqlTextBox.ScrollToLine(SqlTextBox.GetLineIndexFromCharacterIndex(_errorPosition));
+            SqlTextBox.CaretIndex = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            SqlTextBox.Text = _lastValidSql;
+            SqlTextBox.Focus();
         }
     }
 }

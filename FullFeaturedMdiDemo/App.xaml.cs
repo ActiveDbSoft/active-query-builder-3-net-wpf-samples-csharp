@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
+using FullFeaturedMdiDemo.Common;
 using FullFeaturedMdiDemo.Properties;
 
 namespace FullFeaturedMdiDemo
@@ -67,31 +68,14 @@ namespace FullFeaturedMdiDemo
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            var result = new StringBuilder();
-            result.Append(e.Exception.Message);
-            result.AppendLine("\n\n");
-            result.Append(e.Exception.StackTrace);
-
-            var richTextBox = new RichTextBox
+            var errorWindow = new ExceptionWindow
             {
-                IsReadOnly = true,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                HorizontalAlignment = HorizontalAlignment.Stretch
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
             };
 
-            e.Handled = true;
-
-            richTextBox.Document.Blocks.Clear();
-            richTextBox.Document.Blocks.Add(new Paragraph(new Run(result.ToString())));
-
-            var window = new Window
-            {
-                Width = 600,
-                Height = 800,
-                Content = richTextBox
-            };
-
-            window.ShowDialog();
+            errorWindow.ShowDialog();
         }
     }
 }

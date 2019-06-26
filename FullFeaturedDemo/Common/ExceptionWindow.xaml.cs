@@ -8,41 +8,40 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System;
-using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Documents;
 
 namespace FullFeaturedDemo.Common
 {
     /// <summary>
-    /// Interaction logic for WindowDispatcherUnhandledException.xaml
+    /// Interaction logic for ExceptionWindow.xaml
     /// </summary>
-    public  partial class WindowDispatcherUnhandledException
+    public partial class ExceptionWindow
     {
-        private static WindowDispatcherUnhandledException _internal;
+        public string Message
+        {
+            get { return BlockMessage.Text; }
+            set { BlockMessage.Text = value; }
+        }
 
-        public WindowDispatcherUnhandledException()
+        public string StackTrace
+        {
+            get { return new TextRange(BoxStackTrace.Document.ContentStart, BoxStackTrace.Document.ContentEnd).Text; }
+            set
+            {
+                BoxStackTrace.Document.Blocks.Clear();
+                BoxStackTrace.Document.Blocks.Add(new Paragraph(new Run(value)));
+            }
+        }
+
+        public ExceptionWindow()
         {
             InitializeComponent();
         }
 
-        public static void Show(Exception ex)
+        private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_internal == null)
-            {
-                _internal = new WindowDispatcherUnhandledException();
-            }
-
-            _internal.TextBlockMessageError.Text = ex.Message;
-
-            SetTextRichTextBox(ex.StackTrace, _internal.StackTraceBox);
-            _internal.ShowDialog();
-        }
-
-        private static void SetTextRichTextBox(string text, RichTextBox editor)
-        {
-            editor.Document.Blocks.Clear();
-            editor.Document.Blocks.Add(new Paragraph(new Run(text)));
+            Close();
         }
     }
 }

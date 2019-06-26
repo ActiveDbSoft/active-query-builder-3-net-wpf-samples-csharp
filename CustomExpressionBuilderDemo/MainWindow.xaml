@@ -16,8 +16,11 @@
                           CustomExpressionBuilder="QBuilder_OnCustomExpressionBuilder">
         </wpf:QueryBuilder>
 
-        <RichTextBox Grid.Row="2" Margin="4" x:Name="SqlEditor" BorderBrush="LightGray" BorderThickness="1" 
+        <TextBox Grid.Row="2" Margin="4" x:Name="SqlEditor" BorderBrush="LightGray" BorderThickness="1" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                                         LostKeyboardFocus="SqlEditor_OnLostKeyboardFocus" TextChanged="SqlEditor_OnTextChanged"/>
-        <common1:ErrorBox  Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox"/>
+        <common1:ErrorBox  Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox"
+                           SyntaxProviderChanged="ErrorBox_OnSyntaxProviderChanged"
+                           RevertValidText="ErrorBox_OnRevertValidText"
+                           GoToErrorPosition="ErrorBox_OnGoToErrorPosition"/>
     </Grid>
 </Window>

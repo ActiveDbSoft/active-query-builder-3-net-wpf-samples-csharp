@@ -8,11 +8,8 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System;
-using System.IO;
-using System.Text;
-using System.Windows;
 using System.Windows.Threading;
+using BasicDemo.Common;
 
 namespace BasicDemo
 {
@@ -23,20 +20,14 @@ namespace BasicDemo
 	{
 	    private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 	    {
-	        using (var writer = new StreamWriter("log.txt", true,Encoding.UTF8))
-	        {
-	            writer.WriteLine("========================\\\\=[{0}]=\\\\========================", DateTime.Now);
-	            writer.WriteLine("Message: " + e.Exception.Message);
-                writer.WriteLine("Stack: \n" + e.Exception.StackTrace);
-	            if (e.Exception.InnerException != null)
-	            {
-	                writer.WriteLine("Inner Message: " + e.Exception.InnerException.Message);
-	                writer.WriteLine("inner Stack: \n" + e.Exception.InnerException.StackTrace);
-                }
-	            writer.WriteLine("===============================================================");
+            var errorWindow = new ExceptionWindow
+            {
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
+            };
 
-	            MessageBox.Show(string.Format("Message: {0}\nStack: \n{1}", e.Exception.Message, e.Exception.StackTrace));
-	        }   
-	    }
+            errorWindow.ShowDialog();
+        }
 	}
 }

@@ -9,53 +9,110 @@
 //*******************************************************************//
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
+using ActiveQueryBuilder.Core;
 
 namespace BasicDemo.Common
 {
     public partial class ErrorBox
     {
-        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
-            "Message", typeof(string), typeof(ErrorBox), new PropertyMetadata(default(string)));
+        private bool _allowChangedSyntax = true;
 
-        public string Message
+        public event SelectionChangedEventHandler SyntaxProviderChanged;
+        public event EventHandler GoToErrorPosition;
+        public event EventHandler RevertValidText;
+
+        public static readonly DependencyProperty VisibilityCheckSyntaxBlockProperty = DependencyProperty.Register(
+            "VisibilityCheckSyntaxBlock", typeof(Visibility), typeof(ErrorBox), new PropertyMetadata(Visibility.Collapsed));
+
+        public Visibility VisibilityCheckSyntaxBlock
         {
-            get { return (string) GetValue(MessageProperty); }
-            set { SetValue(MessageProperty, value); }
+            get { return (Visibility) GetValue(VisibilityCheckSyntaxBlockProperty); }
+            set { SetValue(VisibilityCheckSyntaxBlockProperty, value); }
         }
+        
         public ErrorBox()
         {
             InitializeComponent();
 
             Visibility = Visibility.Collapsed;
 
-            var property = DependencyPropertyDescriptor.FromProperty(MessageProperty, typeof(ErrorBox));
-            property.AddValueChanged(this, MessagePropertyChanged);
-        }
-
-        private void MessagePropertyChanged(object sender, EventArgs e)
-        {
-            TextBlockErrorPrompt.Text = Message;
-
-            Visibility = string.IsNullOrEmpty(Message) ? Visibility.Collapsed : Visibility.Visible;
-
-            if(string.IsNullOrEmpty(Message)) return;
-
-            var timer = new Timer(CallBackPopup, null, 3000, Timeout.Infinite);
-        }
-
-        private void CallBackPopup(object state)
-        {
-            Dispatcher.BeginInvoke((Action)delegate
+            var collection = new ObservableCollection<ComboBoxItem>();
+            foreach (Type syntax in Helpers.SyntaxProviderList)
             {
-                if (GridError.Visibility == Visibility.Collapsed) return;
+                var instance = Activator.CreateInstance(syntax) as BaseSyntaxProvider;
+                collection.Add(new ComboBoxItem(instance));
+            }
 
-                TextBlockErrorPrompt.Text = string.Empty;
+            ComboBoxSyntaxProvider.ItemsSource = collection;
+        }
+
+        public void Show(string message, BaseSyntaxProvider currentSyntaxProvider)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
                 Visibility = Visibility.Collapsed;
-            });
+                return;
+            }
+
+            _allowChangedSyntax = false;
+            TextBlockErrorPrompt.Text = message;
+            ComboBoxSyntaxProvider.Text = currentSyntaxProvider.ToString();
+            _allowChangedSyntax = true;
+            Visibility = Visibility.Visible;
+        }
+
+        private void ComboBoxSyntaxProvider_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_allowChangedSyntax) return;
+
+            var syntaxProvider = ((ComboBoxItem)ComboBoxSyntaxProvider.SelectedItem).SyntaxProvider;
+
+            OnSyntaxProviderChanged(new SelectionChangedEventArgs(e.RoutedEvent,
+                new List<BaseSyntaxProvider>(), new List<BaseSyntaxProvider> { syntaxProvider }));
+        }
+
+        protected virtual void OnSyntaxProviderChanged(SelectionChangedEventArgs e)
+        {
+            SyntaxProviderChanged?.Invoke(this, e);
+            Visibility = Visibility.Collapsed;
+        }
+
+        private void HyperlinkGoToPosition_OnClick(object sender, RoutedEventArgs e)
+        {
+            OnGoToErrorPositionEvent();
+            Visibility = Visibility.Collapsed;
+        }
+
+        private void HyperlinkPreviousValidText_OnClick(object sender, RoutedEventArgs e)
+        {
+            OnRevertValidTextEvent();
+            Visibility = Visibility.Collapsed;
+        }
+
+        protected virtual void OnGoToErrorPositionEvent()
+        {
+            GoToErrorPosition?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnRevertValidTextEvent()
+        {
+            RevertValidText?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public class ComboBoxItem
+    {
+        public BaseSyntaxProvider SyntaxProvider { get; }
+        public string DisplayString => SyntaxProvider.ToString();
+        public ComboBoxItem() { }
+
+        public ComboBoxItem(BaseSyntaxProvider provider)
+        {
+            SyntaxProvider = provider;
         }
     }
 }

@@ -27,6 +27,9 @@ namespace CustomExpressionBuilderDemo
     /// </summary>
     public partial class MainWindow
     {
+        private int _errorPosition = -1;
+        private string _lastValidSql = string.Empty;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -67,8 +70,7 @@ namespace CustomExpressionBuilderDemo
         private void QBuilder_OnSQLUpdated(object sender, EventArgs e)
         {
             // Text of SQL query has been updated by the query builder.
-            SqlEditor.Document.Blocks.Clear();
-            SqlEditor.Document.Blocks.Add(new Paragraph(new Run(QBuilder.FormattedSQL)));
+            SqlEditor.Text = QBuilder.FormattedSQL;
         }
 
         private void SqlEditor_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -76,22 +78,18 @@ namespace CustomExpressionBuilderDemo
             try
             {
                 // Update the query builder with manually edited query text:
-                QBuilder.SQL = new TextRange(SqlEditor.Document.ContentStart, SqlEditor.Document.ContentEnd).Text;
-                ShowErrorBanner((FrameworkElement)sender, "");
+                QBuilder.SQL = SqlEditor.Text;
+                ErrorBox.Show(null, QBuilder.SyntaxProvider);
+                _lastValidSql = QBuilder.FormattedSQL;
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                SqlEditor.CaretPosition = SqlEditor.Document.ContentStart.GetPositionAtOffset(ex.ErrorPos.pos);
+                SqlEditor.CaretIndex = ex.ErrorPos.pos;
                 // Report error
-                ShowErrorBanner((FrameworkElement)sender, ex.Message);
+                ErrorBox.Show(ex.Message, QBuilder.SyntaxProvider);
+                _errorPosition = ex.ErrorPos.pos;
             }
-        }
-
-        public void ShowErrorBanner(FrameworkElement control, string text)
-        {
-            // Show new banner if text is not empty
-            ErrorBox.Message = text;
         }
 
         private void QBuilder_OnCustomExpressionBuilder(QueryColumnListItem querycolumnlistitem, int conditionIndex, string expression)
@@ -168,7 +166,36 @@ namespace CustomExpressionBuilderDemo
 
         private void SqlEditor_OnTextChanged(object sender, EventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, QBuilder.SyntaxProvider);
+        }
+
+        private void ErrorBox_OnSyntaxProviderChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var oldSql = SqlEditor.Text;
+            var caretPosition = SqlEditor.CaretIndex;
+
+            QBuilder.SyntaxProvider = (BaseSyntaxProvider)e.AddedItems[0];
+            SqlEditor.Text = oldSql;
+            SqlEditor.Focus();
+            SqlEditor.CaretIndex = caretPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            SqlEditor.Text = _lastValidSql;
+            SqlEditor.Focus();
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            SqlEditor.Focus();
+
+            if (_errorPosition == -1) return;
+
+
+            SqlEditor.CaretIndex = _errorPosition;
+            if (SqlEditor.LineCount > 1)
+                SqlEditor.ScrollToLine(SqlEditor.GetLineIndexFromCharacterIndex(_errorPosition));
         }
     }
 }

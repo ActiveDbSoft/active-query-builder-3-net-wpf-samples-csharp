@@ -9,11 +9,9 @@
 //*******************************************************************//
 
 using System;
-using System.Threading;
+using System.Net.Mime;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
 
@@ -24,6 +22,11 @@ namespace AlternateNames
     /// </summary>
     public partial class MainWindow
     {
+        private string _lastValidSql1 = string.Empty;
+        private string _lastValidSql2 = string.Empty;
+
+        private int _errorPosition1 = -1;
+        private int _errorPosition2 = -1;
 
         public MainWindow()
         {
@@ -73,7 +76,7 @@ namespace AlternateNames
             //			TextBox2.Text = FormattedSQLBuilder.GetSQL(queryBuilder1.SQLQuery.QueryRoot, formattingOptions);
         }
 
-        private void TextBox1_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void TextBox1_OnLostKeyboardFocus(object sender, RoutedEventArgs routedEventArgs)
         {
             try
             {
@@ -81,7 +84,9 @@ namespace AlternateNames
                 QueryBuilder1.SQL = TextBox1.Text;
 
                 // Hide error banner if any
-                ShowErrorBanner(TextBox1, "");
+                ErrorBox1.Show(null, QueryBuilder1.SyntaxProvider);
+                _lastValidSql1 = TextBox1.Text;
+                _errorPosition1 = -1;
             }
             catch (SQLParsingException ex)
             {
@@ -89,11 +94,12 @@ namespace AlternateNames
                 TextBox1.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
-                ShowErrorBanner(TextBox1, ex.Message);
+                ErrorBox1.Show(ex.Message, QueryBuilder1.SyntaxProvider);
+                _errorPosition1 = ex.ErrorPos.pos;
             }
         }
 
-        private void TextBox2_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void TextBox2_OnLostKeyboardFocus(object sender, RoutedEventArgs routedEventArgs)
         {
             try
             {
@@ -101,7 +107,10 @@ namespace AlternateNames
                 QueryBuilder1.SQL = TextBox2.Text;
 
                 // Hide error banner if any
-                ShowErrorBanner(TextBox2, "");
+                ErrorBox2.Show(null, QueryBuilder1.SyntaxProvider);
+
+                _lastValidSql2 = TextBox2.Text;
+                _errorPosition2 = -1;
             }
             catch (SQLParsingException ex)
             {
@@ -109,23 +118,10 @@ namespace AlternateNames
                 TextBox2.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
-                ShowErrorBanner(TextBox2, ex.Message);
+                ErrorBox2.Show(ex.Message, QueryBuilder1.SyntaxProvider);
+                _errorPosition2 = ex.ErrorPos.pos;
             }
         }
-
-        public void ShowErrorBanner(FrameworkElement control, string text)
-        {
-            // Show new banner if text is not empty
-            if (Equals(control, TextBox1))
-            {
-                ErrorBox1.Message = text;
-            }
-            if (Equals(control, TextBox2))
-            {
-                ErrorBox1.Message = text;
-            }
-        }
-
 
         private void MenuItemAbout_OnClick(object sender, RoutedEventArgs e)
         {
@@ -134,8 +130,65 @@ namespace AlternateNames
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ErrorBox1.Message = string.Empty;
-            ErrorBox2.Message = string.Empty;
+            ErrorBox1.Show(null, QueryBuilder1.SyntaxProvider);
+            ErrorBox2.Show(null, QueryBuilder1.SyntaxProvider);
+        }
+
+        private void ErrorBox2_OnSyntaxProviderChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var oldSql = TextBox2.Text;
+            var caretPosition = TextBox2.CaretIndex;
+
+            QueryBuilder1.SyntaxProvider = (BaseSyntaxProvider)e.AddedItems[0];
+            TextBox2.Text = oldSql;
+            TextBox2.Focus();
+            TextBox2.CaretIndex = caretPosition;
+        }
+
+        private void ErrorBox2_OnRevertValidTextEvent(object sender, EventArgs e)
+        {
+            TextBox2.Text = _lastValidSql2;
+            ErrorBox2.Show(null, QueryBuilder1.SyntaxProvider);
+            TextBox2.Focus();
+        }
+
+        private void ErrorBox2_OnGoToErrorPositionEvent(object sender, EventArgs e)
+        {
+            TextBox2.Focus();
+
+            if (_errorPosition2 == -1) return;
+            if (TextBox2.LineCount != 1)
+                TextBox2.ScrollToLine(TextBox1.GetLineIndexFromCharacterIndex(_errorPosition2));
+            TextBox2.CaretIndex = _errorPosition2;
+        }
+
+        private void ErrorBox1_OnSyntaxProviderChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var oldSql = TextBox1.Text;
+            var caretPosition = TextBox1.CaretIndex;
+
+            QueryBuilder1.SyntaxProvider = (BaseSyntaxProvider)e.AddedItems[0];
+            TextBox1.Text = oldSql;
+            TextBox1.Focus();
+            TextBox1.CaretIndex = caretPosition;
+        }
+
+        private void ErrorBox1_OnRevertValidTextEvent(object sender, EventArgs e)
+        {
+            TextBox1.Text = _lastValidSql1;
+            TextBox1.Focus();
+        }
+
+        private void ErrorBox1_OnGoToErrorPositionEvent(object sender, EventArgs e)
+        {
+            TextBox1.Focus();
+
+            if (_errorPosition1 != -1)
+            {
+                if (TextBox2.LineCount != 1)
+                    TextBox1.ScrollToLine(TextBox1.GetLineIndexFromCharacterIndex(_errorPosition1));
+                TextBox1.CaretIndex = _errorPosition1;
+            }
         }
     }
 }

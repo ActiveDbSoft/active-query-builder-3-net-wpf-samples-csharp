@@ -141,6 +141,10 @@ namespace FullFeaturedDemo
         }
 
         bool _shown;
+        private int _errorPosition = -1;
+        private string _lastValidText;
+        private string _lastValidText1;
+        private int _errorPosition1 = -1;
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -216,10 +220,10 @@ namespace FullFeaturedDemo
             MenuItemUndo.IsEnabled = BoxSql.CanUndo;
             MenuItemRedo.IsEnabled = BoxSql.CanRedo;
             MenuItemCopyIco.IsEnabled =
-                MenuItemCopy.IsEnabled = BoxSql.Selection.Text.Length > 0;
+                MenuItemCopy.IsEnabled = BoxSql.SelectionLength > 0;
             MenuItemPasteIco.IsEnabled = MenuItemPaste.IsEnabled = Clipboard.ContainsText();
             MenuItemCutIco.IsEnabled =
-                MenuItemCut.IsEnabled = BoxSql.Selection.Text.Length > 0;
+                MenuItemCut.IsEnabled = BoxSql.SelectionLength > 0;
             MenuItemSelectAll.IsEnabled = true;
 
             MenuItemQueryAddDerived.IsEnabled = CanAddDerivedTable();
@@ -393,7 +397,7 @@ namespace FullFeaturedDemo
             if (DataGridResult.QueryTransformer == null || !Equals(TabItemData, TabControl.SelectedItem)) return;
 
             DataGridResult.FillDataGrid(DataGridResult.QueryTransformer.SQL);
-            SetTextRichTextBox(DataGridResult.QueryTransformer.SQL, BoxSqlTransformer);
+            BoxSqlTransformer.Text = DataGridResult.QueryTransformer.SQL;
         }
 
         private void MenuItemQueryStatistics_OnClick(object sender, RoutedEventArgs e)
@@ -705,22 +709,23 @@ namespace FullFeaturedDemo
             try
             {
                 // Update the query builder with manually edited query text:
-                QBuilder.SQL = GetTextRichTextBox(BoxSql);
+                QBuilder.SQL = BoxSql.Text;
 
                 // Hide error banner if any
-                ErrorBox.Message = string.Empty;
+                ErrorBox.Show(null, QBuilder.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Show banner with error text
-                ErrorBox.Message = ex.Message;
+                ErrorBox.Show(ex.Message, QBuilder.SyntaxProvider);
+                _errorPosition = ex.ErrorPos.pos;
             }
         }
 
         private void QBuilder_OnSQLUpdated(object sender, EventArgs e)
         {
-            SetTextRichTextBox(QBuilder.FormattedSQL, BoxSql);
-
+            BoxSql.Text = QBuilder.FormattedSQL;
+            _lastValidText = BoxSql.Text;
             SetSqlTextCurrentSubQuery();
 
             if (!TabItemFastResult.IsSelected || CheckBoxAutoRefreash.IsChecked == false) return;
@@ -733,17 +738,6 @@ namespace FullFeaturedDemo
             Dispatcher.BeginInvoke((Action)FillFastResult);
         }
 
-        private static void SetTextRichTextBox(string text, RichTextBox editor)
-        {
-            editor.Document.Blocks.Clear();
-            editor.Document.Blocks.Add(new Paragraph(new Run(text)));
-        }
-
-        private static string GetTextRichTextBox(RichTextBox editor)
-        {
-            return new TextRange(editor.Document.ContentStart, editor.Document.ContentEnd).Text;
-        }
-
         private void TabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // Execute a query on switching to the Data tab
@@ -753,12 +747,12 @@ namespace FullFeaturedDemo
 
             ResetPagination();
 
-            SetTextRichTextBox(GetTextRichTextBox(BoxSql), BoxSqlTransformer);
+            BoxSql.Text = BoxSqlTransformer.Text;
 
             if (Equals(TabItemData, TabControl.SelectedItem))
             {
                 BorderBlockPagination.Visibility = Visibility.Visible;
-                DataGridResult.FillDataGrid(GetTextRichTextBox(BoxSql));
+                DataGridResult.FillDataGrid(BoxSql.Text);
             }
         }
 
@@ -802,7 +796,7 @@ namespace FullFeaturedDemo
 
         private void BoxSql_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            ErrorBox.Message = string.Empty;
+            ErrorBox.Show(null, QBuilder.SyntaxProvider);
         }
 
         private void QBuilder_OnActiveUnionSubQueryChanged(object sender, EventArgs e)
@@ -812,13 +806,14 @@ namespace FullFeaturedDemo
 
         private void SetSqlTextCurrentSubQuery()
         {
-            BorderErrorFast.Visibility = Visibility.Collapsed;
+            ErrorBox2.Show(null, QBuilder.SyntaxProvider);
+
             if (_transformerSql == null) return;
 
             var activeUnionSubQuery = QBuilder.ActiveUnionSubQuery;
             if (activeUnionSubQuery == null || QBuilder.SleepMode)
             {
-                SetTextRichTextBox("", BoxSqlCurrentSubQuery);
+                BoxSqlCurrentSubQuery.Text = "";
                 _transformerSql.Query = null;
                 return;
             }
@@ -829,7 +824,7 @@ namespace FullFeaturedDemo
             _transformerSql.Query = new SQLQuery(activeUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
 
             var sql = parentSubQuery.GetResultSQL(_sqlFormattingOptions);
-            SetTextRichTextBox(sql, BoxSqlCurrentSubQuery);
+            BoxSqlCurrentSubQuery.Text = sql;
         }
 
         private void FillFastResult()
@@ -890,24 +885,59 @@ namespace FullFeaturedDemo
             if (QBuilder.ActiveUnionSubQuery == null) return;
             try
             {
-                BorderErrorFast.Visibility = Visibility.Collapsed;
+                ErrorBox.Show(null, QBuilder.SyntaxProvider);
 
-                QBuilder.ActiveUnionSubQuery.ParentSubQuery.SQL = GetTextRichTextBox((RichTextBox)sender);
+                QBuilder.ActiveUnionSubQuery.ParentSubQuery.SQL = ((TextBox) sender).Text;
 
                 var sql = QBuilder.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(_sqlFormattingOptions);
 
                 _transformerSql.Query = new SQLQuery(QBuilder.ActiveUnionSubQuery.SQLContext) { SQL = sql };
+                _lastValidText1 = ((TextBox) sender).Text;
             }
-            catch (Exception ex)
+            catch (SQLParsingException ex)
             {
-                LabelErrorFast.Text = ex.Message;
-                BorderErrorFast.Visibility = Visibility.Visible;
+                ErrorBox2.Show(ex.Message, QBuilder.SyntaxProvider);
+                _errorPosition1 = ex.ErrorPos.pos;
             }
         }
 
         private void MenuItemEditMetadata_OnClick(object sender, RoutedEventArgs e)
         {
             QueryBuilder.EditMetadataContainer(QBuilder.SQLContext);
+        }
+
+        private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
+        {
+            BoxSql.Focus();
+
+            if (_errorPosition == -1) return;
+
+            if (BoxSql.LineCount != 1)
+                BoxSql.ScrollToLine(BoxSql.GetLineIndexFromCharacterIndex(_errorPosition));
+            BoxSql.CaretIndex = _errorPosition;
+        }
+
+        private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
+        {
+            BoxSql.Text = _lastValidText;
+            BoxSql.Focus();
+        }
+        
+        private void ErrorBox_OnGoToErrorPositionEvent(object sender, EventArgs e)
+        {
+            BoxSqlCurrentSubQuery.Focus();
+
+            if (_errorPosition1 == -1) return;
+
+            if (BoxSqlCurrentSubQuery.LineCount != 1)
+                BoxSqlCurrentSubQuery.ScrollToLine(BoxSqlCurrentSubQuery.GetLineIndexFromCharacterIndex(_errorPosition1));
+            BoxSqlCurrentSubQuery.CaretIndex = _errorPosition1;
+        }
+
+        private void ErrorBox_OnRevertValidTextEvent(object sender, EventArgs e)
+        {
+            BoxSqlCurrentSubQuery.Text = _lastValidText1;
+            BoxSqlCurrentSubQuery.Focus();
         }
     }
 }

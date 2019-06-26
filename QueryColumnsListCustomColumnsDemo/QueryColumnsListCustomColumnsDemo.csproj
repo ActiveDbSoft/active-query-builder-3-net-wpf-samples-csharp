@@ -39,13 +39,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiveQueryBuilder.Core">
-		<HintPath>..\packages\ActiveQueryBuilder.Core.3.5.20.1133\lib\net\ActiveQueryBuilder.Core.dll</HintPath>
+		<HintPath>..\packages\ActiveQueryBuilder.Core.3.5.21.1134\lib\net\ActiveQueryBuilder.Core.dll</HintPath>
 	</Reference>
     <Reference Include="ActiveQueryBuilder.View">
-		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.5.20.1133\lib\net\ActiveQueryBuilder.View.dll</HintPath>
+		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.5.21.1134\lib\net\ActiveQueryBuilder.View.dll</HintPath>
 	</Reference>
     <Reference Include="ActiveQueryBuilder.View.WPF">
-		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.5.20.1133\lib\net\ActiveQueryBuilder.View.WPF.dll</HintPath>
+		<HintPath>..\packages\ActiveQueryBuilder.View.WPF.3.5.21.1134\lib\net\ActiveQueryBuilder.View.WPF.dll</HintPath>
 	</Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -66,9 +66,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\ExceptionWindow.xaml.cs">
+      <DependentUpon>ExceptionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Frames\CustomComobBoxWithButtonColumnDemoFrame.xaml.cs">
       <DependentUpon>CustomComobBoxWithButtonColumnDemoFrame.xaml</DependentUpon>
     </Compile>
+    <Page Include="Common\ExceptionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Frames\CustomCheckBoxColumnDemoFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

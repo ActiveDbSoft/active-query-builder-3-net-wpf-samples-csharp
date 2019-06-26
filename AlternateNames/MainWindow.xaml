@@ -25,14 +25,22 @@
             <TabControl Grid.Row="1" Height="144" FontFamily="Tahoma" FontSize="11" FontWeight="Bold" SelectionChanged="Selector_OnSelectionChanged">
                 <TabItem Header="Query text with alternate object names">
                     <Grid>
-                        <TextBox x:Name="TextBox1" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" FontWeight="Normal" FontFamily="Courier New" FontSize="9pt" Padding="3" LostKeyboardFocus="TextBox1_OnLostKeyboardFocus"/>
-                        <common1:ErrorBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox1"/>
+                        <TextBox x:Name="TextBox1" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" FontWeight="Normal" FontFamily="Courier New" FontSize="9pt" Padding="3" 
+                                 LostFocus="TextBox1_OnLostKeyboardFocus"/>
+                        <common1:ErrorBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox1"
+                                          SyntaxProviderChanged="ErrorBox1_OnSyntaxProviderChanged" 
+                                          RevertValidText="ErrorBox1_OnRevertValidTextEvent" 
+                                          GoToErrorPosition="ErrorBox1_OnGoToErrorPositionEvent"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Query text with real object names">
                     <Grid>
-                        <TextBox x:Name="TextBox2" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" FontWeight="Normal"  FontFamily="Courier New" FontSize="9pt" Padding="3" LostKeyboardFocus="TextBox2_OnLostKeyboardFocus"/>
-                        <common1:ErrorBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox2"/>
+                        <TextBox x:Name="TextBox2" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" FontWeight="Normal"  
+                                 FontFamily="Courier New" FontSize="9pt" Padding="3" LostFocus="TextBox2_OnLostKeyboardFocus"/>
+                        <common1:ErrorBox HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox2" 
+                                          SyntaxProviderChanged="ErrorBox2_OnSyntaxProviderChanged" 
+                                          RevertValidText="ErrorBox2_OnRevertValidTextEvent" 
+                                          GoToErrorPosition="ErrorBox2_OnGoToErrorPositionEvent"/>
                     </Grid>
                 </TabItem>
             </TabControl>

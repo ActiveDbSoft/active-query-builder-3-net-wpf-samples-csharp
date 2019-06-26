@@ -8,12 +8,9 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
+using CustomExpressionBuilderDemo.Common;
 
 namespace CustomExpressionBuilderDemo
 {
@@ -22,5 +19,16 @@ namespace CustomExpressionBuilderDemo
     /// </summary>
     public partial class App : Application
     {
+        private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            var errorWindow = new ExceptionWindow
+            {
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
+            };
+
+            errorWindow.ShowDialog();
+        }
     }
 }

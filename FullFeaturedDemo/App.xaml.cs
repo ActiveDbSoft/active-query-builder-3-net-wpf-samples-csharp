@@ -50,7 +50,14 @@ namespace FullFeaturedDemo
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            WindowDispatcherUnhandledException.Show(e.Exception);
+            var errorWindow = new ExceptionWindow
+            {
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
+            };
+
+            errorWindow.ShowDialog();
         }
     }
 }

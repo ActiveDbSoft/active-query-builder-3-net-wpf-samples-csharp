@@ -420,6 +420,9 @@ namespace FullFeaturedDemo.Connection
                 BoxServerVersion.Items.Add("SQL Server 2005");
                 BoxServerVersion.Items.Add("SQL Server 2012");
                 BoxServerVersion.Items.Add("SQL Server 2014");
+                BoxServerVersion.Items.Add("SQL Server 2016");
+                BoxServerVersion.Items.Add("SQL Server 2017");
+                BoxServerVersion.Items.Add("SQL Server 2019");
 
                 var mssqlSyntaxProvider = (MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider;
 
@@ -440,6 +443,15 @@ namespace FullFeaturedDemo.Connection
                     case MSSQLServerVersion.MSSQL2014:
                         BoxServerVersion.SelectedItem = "SQL Server 2014";
                         break;
+                    case MSSQLServerVersion.MSSQL2016:
+                        BoxServerVersion.SelectedItem = "SQL Server 2016";
+                        break;
+                    case MSSQLServerVersion.MSSQL2017:
+                        BoxServerVersion.SelectedItem = "SQL Server 2017";
+                        break;
+                    case MSSQLServerVersion.MSSQL2019:
+                        BoxServerVersion.SelectedItem = "SQL Server 2019";
+                        break;
                     default:
                         BoxServerVersion.SelectedItem = "Auto";
                         break;
@@ -450,7 +462,8 @@ namespace FullFeaturedDemo.Connection
                 BoxServerVersion.IsEnabled = true;
                 BoxServerVersion.Items.Add("3.0");
                 BoxServerVersion.Items.Add("4.0");
-                BoxServerVersion.Items.Add("5.0+");
+                BoxServerVersion.Items.Add("5.0");
+                BoxServerVersion.Items.Add("8.0+");
 
                 var mySqlSyntaxProvider = (MySQLSyntaxProvider)_connectionInfo.SyntaxProvider;
 
@@ -462,9 +475,13 @@ namespace FullFeaturedDemo.Connection
                 {
                     BoxServerVersion.SelectedItem = "4.0";
                 }
+                else if (mySqlSyntaxProvider.ServerVersionInt < 80000)
+                {
+                    BoxServerVersion.SelectedItem = "5.0";
+                }
                 else
                 {
-                    BoxServerVersion.SelectedItem = "5.0+";
+                    BoxServerVersion.SelectedItem = "8.0+";
                 }
             }
             else if (_connectionInfo.SyntaxProvider is OracleSyntaxProvider)
@@ -474,8 +491,10 @@ namespace FullFeaturedDemo.Connection
                 BoxServerVersion.Items.Add("Oracle 8");
                 BoxServerVersion.Items.Add("Oracle 9");
                 BoxServerVersion.Items.Add("Oracle 10");
-                BoxServerVersion.Items.Add("Oracle 11");
-                BoxServerVersion.Items.Add("Oracle 12");
+                BoxServerVersion.Items.Add("Oracle 11g");
+                BoxServerVersion.Items.Add("Oracle 12c");
+                BoxServerVersion.Items.Add("Oracle 18c");
+                BoxServerVersion.Items.Add("Oracle 19c");
 
                 var oracleSyntaxProvider = (OracleSyntaxProvider)_connectionInfo.SyntaxProvider;
 
@@ -494,10 +513,19 @@ namespace FullFeaturedDemo.Connection
                         BoxServerVersion.SelectedItem = "Oracle 10";
                         break;
                     case OracleServerVersion.Oracle11:
-                        BoxServerVersion.SelectedItem = "Oracle 11";
+                        BoxServerVersion.SelectedItem = "Oracle 11g";
+                        break;
+                    case OracleServerVersion.Oracle12:
+                        BoxServerVersion.SelectedItem = "Oracle 12c";
+                        break;
+                    case OracleServerVersion.Oracle18:
+                        BoxServerVersion.SelectedItem = "Oracle 18c";
+                        break;
+                    case OracleServerVersion.Oracle19:
+                        BoxServerVersion.SelectedItem = "Oracle 19c";
                         break;
                     default:
-                        BoxServerVersion.SelectedItem = "Oracle 12";
+                        BoxServerVersion.SelectedItem = "Oracle 18c";
                         break;
                 }
             }
@@ -804,6 +832,30 @@ namespace FullFeaturedDemo.Connection
                 {
                     ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2005;
                 }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2008")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2008;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2012")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2012;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2014")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2014;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2016")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2016;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2017")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2017;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2019")
+                {
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2017;
+                }
             }
             else if (_connectionInfo.SyntaxProvider is MySQLSyntaxProvider)
             {
@@ -818,6 +870,10 @@ namespace FullFeaturedDemo.Connection
                 else if ((string)BoxServerVersion.SelectedItem == "5.0")
                 {
                     ((MySQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersionInt = 50000;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "8.0+")
+                {
+                    ((MySQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersionInt = 80012;
                 }
             }
             else if (_connectionInfo.SyntaxProvider is OracleSyntaxProvider)
@@ -837,6 +893,22 @@ namespace FullFeaturedDemo.Connection
                 else if ((string)BoxServerVersion.SelectedItem == "Oracle 10")
                 {
                     ((OracleSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = OracleServerVersion.Oracle10;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "Oracle 11g")
+                {
+                    ((OracleSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = OracleServerVersion.Oracle11;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "Oracle 12c")
+                {
+                    ((OracleSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = OracleServerVersion.Oracle12;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "Oracle 18c")
+                {
+                    ((OracleSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = OracleServerVersion.Oracle18;
+                }
+                else if ((string)BoxServerVersion.SelectedItem == "Oracle 19c")
+                {
+                    ((OracleSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = OracleServerVersion.Oracle19;
                 }
             }
             else if (_connectionInfo.SyntaxProvider is SybaseSyntaxProvider)

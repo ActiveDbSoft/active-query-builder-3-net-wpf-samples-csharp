@@ -64,16 +64,23 @@ namespace BasicDemo.PropertiesForm
             comboSqlDialect.Items.Add("MS SQL Server 2008");
             comboSqlDialect.Items.Add("MS SQL Server 2012");
             comboSqlDialect.Items.Add("MS SQL Server 2014");
+            comboSqlDialect.Items.Add("MS SQL Server 2016");
+            comboSqlDialect.Items.Add("MS SQL Server 2017");
+            comboSqlDialect.Items.Add("MS SQL Server 2019");
             comboSqlDialect.Items.Add("MS SQL Server Compact Edition");
             comboSqlDialect.Items.Add("MySQL 3.xx");
             comboSqlDialect.Items.Add("MySQL 4.0");
             comboSqlDialect.Items.Add("MySQL 4.1");
             comboSqlDialect.Items.Add("MySQL 5.0");
+            comboSqlDialect.Items.Add("MySQL 8.0");
             comboSqlDialect.Items.Add("Oracle 7");
             comboSqlDialect.Items.Add("Oracle 8");
             comboSqlDialect.Items.Add("Oracle 9");
             comboSqlDialect.Items.Add("Oracle 10");
-            comboSqlDialect.Items.Add("Oracle 11");
+            comboSqlDialect.Items.Add("Oracle 11g");
+            comboSqlDialect.Items.Add("Oracle 12c");
+            comboSqlDialect.Items.Add("Oracle 18c");
+            comboSqlDialect.Items.Add("Oracle 19c");
             comboSqlDialect.Items.Add("PostgreSQL");
             comboSqlDialect.Items.Add("SQLite");
             comboSqlDialect.Items.Add("Sybase ASE");
@@ -176,8 +183,17 @@ namespace BasicDemo.PropertiesForm
                     case MSSQLServerVersion.MSSQL2014:
                         comboSqlDialect.SelectedItem = "MS SQL Server 2014";
                         break;
+                    case MSSQLServerVersion.MSSQL2016:
+                        comboSqlDialect.SelectedItem = "MS SQL Server 2016";
+                        break;
+                    case MSSQLServerVersion.MSSQL2017:
+                        comboSqlDialect.SelectedItem = "MS SQL Server 2017";
+                        break;
+                    case MSSQLServerVersion.MSSQL2019:
+                        comboSqlDialect.SelectedItem = "MS SQL Server 2019";
+                        break;
                     default:
-                        comboSqlDialect.SelectedItem = "MS SQL Server 7";
+                        comboSqlDialect.SelectedItem = "MS SQL Server 2017";
                         break;
                 }
             }
@@ -195,9 +211,13 @@ namespace BasicDemo.PropertiesForm
                 {
                     comboSqlDialect.SelectedItem = "MySQL 4.1";
                 }
-                else
+                else if ((queryBuilder.SyntaxProvider as MySQLSyntaxProvider).ServerVersionInt < 80000)
                 {
                     comboSqlDialect.SelectedItem = "MySQL 5.0";
+                }
+                else
+                {
+                    comboSqlDialect.SelectedItem = "MySQL 8.0";
                 }
             }
             else if (queryBuilder.SyntaxProvider is OracleSyntaxProvider)
@@ -217,10 +237,19 @@ namespace BasicDemo.PropertiesForm
                         comboSqlDialect.SelectedItem = "Oracle 10";
                         break;
                     case OracleServerVersion.Oracle11:
-                        comboSqlDialect.SelectedItem = "Oracle 11";
+                        comboSqlDialect.SelectedItem = "Oracle 11g";
+                        break;
+                    case OracleServerVersion.Oracle12:
+                        comboSqlDialect.SelectedItem = "Oracle 12c";
+                        break;
+                    case OracleServerVersion.Oracle18:
+                        comboSqlDialect.SelectedItem = "Oracle 18c";
+                        break;
+                    case OracleServerVersion.Oracle19:
+                        comboSqlDialect.SelectedItem = "Oracle 19c";
                         break;
                     default:
-                        comboSqlDialect.SelectedItem = "Oracle 11";
+                        comboSqlDialect.SelectedItem = "Oracle 18c";
                         break;
                 }
             }
@@ -370,6 +399,18 @@ namespace BasicDemo.PropertiesForm
                     _syntaxProvider = new MSSQLSyntaxProvider();
                     (_syntaxProvider as MSSQLSyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2014;
                     break;
+                case "MS SQL Server 2016":
+                    _syntaxProvider = new MSSQLSyntaxProvider();
+                    (_syntaxProvider as MSSQLSyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2016;
+                    break;
+                case "MS SQL Server 2017":
+                    _syntaxProvider = new MSSQLSyntaxProvider();
+                    (_syntaxProvider as MSSQLSyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2017;
+                    break;
+                case "MS SQL Server 2019":
+                    _syntaxProvider = new MSSQLSyntaxProvider();
+                    (_syntaxProvider as MSSQLSyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2019;
+                    break;
                 case "MS SQL Server Compact Edition":
                     _syntaxProvider = new MSSQLCESyntaxProvider();
                     break;
@@ -389,6 +430,10 @@ namespace BasicDemo.PropertiesForm
                     _syntaxProvider = new MySQLSyntaxProvider();
                     (_syntaxProvider as MySQLSyntaxProvider).ServerVersionInt = 50000;
                     break;
+                case "MySQL 8.0":
+                    _syntaxProvider = new MySQLSyntaxProvider();
+                    (_syntaxProvider as MySQLSyntaxProvider).ServerVersionInt = 80012;
+                    break;
                 case "Oracle 7":
                     _syntaxProvider = new OracleSyntaxProvider();
                     (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle7;
@@ -405,9 +450,21 @@ namespace BasicDemo.PropertiesForm
                     _syntaxProvider = new OracleSyntaxProvider();
                     (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle10;
                     break;
-                case "Oracle 11":
+                case "Oracle 11g":
                     _syntaxProvider = new OracleSyntaxProvider();
                     (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle11;
+                    break;
+                case "Oracle 12c":
+                    _syntaxProvider = new OracleSyntaxProvider();
+                    (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle12;
+                    break;
+                case "Oracle 18c":
+                    _syntaxProvider = new OracleSyntaxProvider();
+                    (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle18;
+                    break;
+                case "Oracle 19c":
+                    _syntaxProvider = new OracleSyntaxProvider();
+                    (_syntaxProvider as OracleSyntaxProvider).ServerVersion = OracleServerVersion.Oracle19;
                     break;
                 case "PostgreSQL":
                     _syntaxProvider = new PostgreSQLSyntaxProvider();

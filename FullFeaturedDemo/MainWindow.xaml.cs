@@ -31,11 +31,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using ActiveQueryBuilder.View.WPF;
+using BasicDemo.PropertiesForm;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
@@ -47,23 +47,24 @@ namespace FullFeaturedDemo
     public partial class MainWindow
     {
         private ConnectionInfo _selectedConnection;
-        private readonly SQLFormattingOptions _sqlFormattingOptions;
-        private readonly SQLGenerationOptions _sqlGenerationOptions;
+        //private readonly SQLFormattingOptions _sqlFormattingOptions;
+        //private readonly SQLGenerationOptions _sqlGenerationOptions;
         private bool _showHintConnection = true;
         private readonly QueryTransformer _transformerSql;
         private readonly Timer _timerStartingExecuteSql;
 
         public MainWindow()
         {
+            InitializeComponent();
             // Options to present the formatted SQL query text to end-user
             // Use names of virtual objects, do not replace them with appropriate derived tables
-            _sqlFormattingOptions = new SQLFormattingOptions { ExpandVirtualObjects = false };
+            QBuilder.SQLFormattingOptions = new SQLFormattingOptions { ExpandVirtualObjects = false };
 
             // Options to generate the SQL query text for execution against a database server
             // Replace virtual objects with derived tables
-            _sqlGenerationOptions = new SQLGenerationOptions { ExpandVirtualObjects = true };
+            QBuilder.SQLGenerationOptions = new SQLGenerationOptions { ExpandVirtualObjects = true };
 
-            InitializeComponent();
+            
 
             Closing += MainWindow_Closing;
             Dispatcher.Hooks.DispatcherInactive += Hooks_DispatcherInactive;
@@ -232,7 +233,7 @@ namespace FullFeaturedDemo
             MenuItemAddUnionSq.IsEnabled = CanAddUnionSubQuery();
             MenuItemProp.IsEnabled = CanShowProperties();
             MenuItemAddObject.IsEnabled = CanAddObject();
-            MenuItemProperties.IsEnabled = (_sqlFormattingOptions != null && QBuilder.SQLContext != null);
+            MenuItemProperties.IsEnabled = (QBuilder.SQLFormattingOptions != null && QBuilder.SQLContext != null);
 
             foreach (var item in MetadataItemMenu.Items.Cast<FrameworkElement>().Where(x => x is MenuItem).ToList())
             {
@@ -370,7 +371,7 @@ namespace FullFeaturedDemo
                 CBuilder.QueryTransformer = new QueryTransformer
                 {
                     Query = QBuilder.SQLQuery,
-                    SQLGenerationOptions = _sqlGenerationOptions
+                    SQLGenerationOptions = QBuilder.SQLGenerationOptions
                 };
 
                 CBuilder.QueryTransformer.SQLUpdated += QueryTransformer_SQLUpdated;
@@ -601,7 +602,7 @@ namespace FullFeaturedDemo
 
         private void MenuItemProperties_OnClick(object sender, RoutedEventArgs e)
         {
-            var propWindow = new QueryPropertiesWindow(QBuilder.SQLContext, _sqlFormattingOptions);
+            var propWindow = new QueryBuilderPropertiesWindow(QBuilder);
             propWindow.ShowDialog();
         }
 
@@ -700,7 +701,7 @@ namespace FullFeaturedDemo
 
             using (var sw = new StreamWriter(saveFileDialog1.FileName))
             {
-                sw.Write(FormattedSQLBuilder.GetSQL(QBuilder.ActiveUnionSubQuery.QueryRoot, _sqlFormattingOptions));
+                sw.Write(FormattedSQLBuilder.GetSQL(QBuilder.ActiveUnionSubQuery.QueryRoot, QBuilder.SQLFormattingOptions));
             }
         }
 
@@ -823,7 +824,7 @@ namespace FullFeaturedDemo
             var sqlForDataPreview = parentSubQuery.GetSqlForDataPreview();
             _transformerSql.Query = new SQLQuery(activeUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
 
-            var sql = parentSubQuery.GetResultSQL(_sqlFormattingOptions);
+            var sql = parentSubQuery.GetResultSQL(QBuilder.SQLFormattingOptions);
             BoxSqlCurrentSubQuery.Text = sql;
         }
 
@@ -889,7 +890,7 @@ namespace FullFeaturedDemo
 
                 QBuilder.ActiveUnionSubQuery.ParentSubQuery.SQL = ((TextBox) sender).Text;
 
-                var sql = QBuilder.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(_sqlFormattingOptions);
+                var sql = QBuilder.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(QBuilder.SQLFormattingOptions);
 
                 _transformerSql.Query = new SQLQuery(QBuilder.ActiveUnionSubQuery.SQLContext) { SQL = sql };
                 _lastValidText1 = ((TextBox) sender).Text;

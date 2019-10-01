@@ -264,6 +264,7 @@
       "path": "firebirdsql.data.firebirdclient/6.0.0",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "content/app.config.transform",
         "content/web.config.transform",
         "firebirdsql.data.firebirdclient.6.0.0.nupkg.sha512",
@@ -283,6 +284,7 @@
       "path": "mysql.data/6.9.12",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "CHANGES",
         "Readme.txt",
         "content/app.config.transform",
@@ -299,6 +301,7 @@
       "path": "npgsql/4.0.1",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net45/Npgsql.dll",
         "lib/net45/Npgsql.pdb",
         "lib/net45/Npgsql.xml",
@@ -318,6 +321,7 @@
       "path": "oracle.manageddataaccess/12.2.1100",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "bin/x64/Oracle.ManagedDataAccessDTC.dll",
         "bin/x64/Oracle.ManagedDataAccessIOP.dll",
         "bin/x86/Oracle.ManagedDataAccessDTC.dll",
@@ -496,7 +500,7 @@
     ".NETFramework,Version=v4.5.2": []
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
@@ -504,14 +508,19 @@
       "projectName": "FullFeaturedMdiDemo",
       "projectPath": "C:\\TeamCity_work\\ActiveQueryBuilderNET3_release\\_deployment\\Files\\Samples\\wpf\\cs\\FullFeaturedMdiDemo\\FullFeaturedMdiDemo.csproj",
       "projectJsonPath": "C:\\TeamCity_work\\ActiveQueryBuilderNET3_release\\_deployment\\Files\\Samples\\wpf\\cs\\FullFeaturedMdiDemo\\project.json",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\TeamCity_work\\ActiveQueryBuilderNET3_release\\_deployment\\Files\\Samples\\wpf\\cs\\FullFeaturedMdiDemo\\obj\\",
       "projectStyle": "ProjectJson",
       "validateRuntimeAssets": true,
       "configFilePaths": [
         "C:\\TeamCity_work\\ActiveQueryBuilderNET3_release\\NuGet.Config",
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 19.1.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\DevExpress 19.1\\Components\\System\\Components\\Packages": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

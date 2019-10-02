@@ -17,7 +17,6 @@
         <Menu Grid.Row="0" Padding="0,2">
             <MenuItem Header="Conntect">
                 <MenuItem Header="Connect to Microsoft SQL Server" Click="connectToMSSQLServerMenuItem_Click"/>
-                <MenuItem Header="Connect to Oracle Server" Click="connectToOracleServerMenuItem_Click"/>
                 <MenuItem Header="Connect to Microsoft Access database" Click="connectToAccessDatabaseMenuItem_Click"/>
                 <Separator/>
                 <MenuItem Header="Connect to database through OLE DB" Click="connectOleDbMenuItem_Click"/>

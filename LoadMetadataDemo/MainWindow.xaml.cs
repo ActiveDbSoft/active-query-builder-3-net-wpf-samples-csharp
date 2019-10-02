@@ -343,25 +343,6 @@ namespace LoadMetadataDemo
 
         }
 
-        private void connectToOracleServerMenuItem_Click(object sender, EventArgs e)
-        {
-            // Connect to Oracle Server
-
-            OracleConnectionWindow f = new OracleConnectionWindow();
-
-            if (f.ShowDialog() == true)
-            {
-                if (_dbConnection != null)
-                {
-                    _dbConnection.Close();
-                    _dbConnection.Dispose();
-                }
-
-                _dbConnection = new OracleConnection(f.ConnectionString);
-            }
-
-        }
-
         private void connectToAccessDatabaseMenuItem_Click(object sender, EventArgs e)
         {
             // Connect to MS Access database using OLE DB provider

@@ -119,7 +119,7 @@
 
                                     <dockManager:DockPanel Title="SubQuery Structure" x:Name="DockPanelSubQueryNavBar" Position="Left">
                                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                            <navigationBar:SubQueryNavBar/>
+                                            <navigationBar:SubQueryNavBar x:Name="SubQueryNavBarControl"/>
                                         </ScrollViewer>
                                     </dockManager:DockPanel>
                                 </dockManager:DockManager.DockPanels>

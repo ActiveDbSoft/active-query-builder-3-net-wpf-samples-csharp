@@ -22,6 +22,7 @@ using ActiveQueryBuilder.View.PropertiesEditors;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
+using FullFeaturedMdiDemo.PropertiesForm.Tabs;
 
 namespace FullFeaturedMdiDemo.PropertiesForm
 {
@@ -54,17 +55,29 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             linkAddObject.Visibility = Visibility.Collapsed;
 
-            _linkToPageFormatting.Add(linkGeneral, new GeneralPage(childWindow.SqlFormattingOptions));
-            _linkToPageFormatting.Add(linkMainQuery, new SqlFormattingPage(SqlBuilderOptionsPages.MainQuery, childWindow.SqlFormattingOptions));
-            _linkToPageFormatting.Add(linkDerievedQueries, new SqlFormattingPage(SqlBuilderOptionsPages.DerievedQueries, childWindow.SqlFormattingOptions));
-            _linkToPageFormatting.Add(linkExpressionSubqueries, new SqlFormattingPage(SqlBuilderOptionsPages.ExpressionSubqueries, childWindow.SqlFormattingOptions));
-            
+            // SQL Formatting options ============================
+            // main query
+            _linkToPageFormatting.Add(LinkMain, new MainQueryTab(childWindow.SqlFormattingOptions));
+            _linkToPageFormatting.Add(LinkMainCommon, new CommonTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.MainQueryFormat));
+            _linkToPageFormatting.Add(LinkMainExpressions, new ExpressionsTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.MainQueryFormat));
+            // CTE query
+            _linkToPageFormatting.Add(LinkCte, new SubQueryTab(childWindow.SqlFormattingOptions, SubQueryType.Cte));
+            _linkToPageFormatting.Add(LinkCteCommon, new CommonTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.CTESubQueryFormat));
+            _linkToPageFormatting.Add(LinkCteExpressions, new ExpressionsTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.CTESubQueryFormat));
+            // Derived table
+            _linkToPageFormatting.Add(LinkDerived, new SubQueryTab(childWindow.SqlFormattingOptions, SubQueryType.Derived));
+            _linkToPageFormatting.Add(LinkDerivedCommon, new CommonTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.DerivedQueryFormat));
+            _linkToPageFormatting.Add(LinkDerivedExpressions, new ExpressionsTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.DerivedQueryFormat));
+            // expression
+            _linkToPageFormatting.Add(LinkExpression, new SubQueryTab(childWindow.SqlFormattingOptions, SubQueryType.Expression));
+            _linkToPageFormatting.Add(LinkExpressionCommon, new CommonTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.ExpressionSubQueryFormat));
+            _linkToPageFormatting.Add(LinkExpressionExpressions, new ExpressionsTab(childWindow.SqlFormattingOptions, childWindow.SqlFormattingOptions.ExpressionSubQueryFormat));
+
             _sqlGenerationControl = new SqlGenerationPage(childWindow.SqlGenerationOptions, childWindow.SqlFormattingOptions);
             _linkToPageGeneral.Add(linkBehavior, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.BehaviorOptions)));
             _linkToPageGeneral.Add(linkSchemaView, GetPropertyPage(new ObjectProperties(schemaViewOptions)));
             _linkToPageGeneral.Add(linkDesignPane, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DesignPaneOptions)));
             _linkToPageGeneral.Add(linkVisual, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.VisualOptions)));
-            //_linkToPageGeneral.Add(linkAddObject, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.)));
             _linkToPageGeneral.Add(linkDatasource, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DataSourceOptions)));
             _linkToPageGeneral.Add(linkMetadataLoading, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.MetadataLoadingOptions)));
             _linkToPageGeneral.Add(linkMetadataStructure, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.MetadataStructureOptions)));
@@ -82,7 +95,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             _linkToPageGeneral.Add(linkTextEditorSql, GetPropertyPage(new ObjectProperties(_textEditorSqlOptions)));
 
             GeneralLinkClick(linkGeneration, null);
-            FormattingLinkClick(linkGeneral, null);
+            FormattingLinkClick(LinkMain, null);
         }
 
         private void TextEditorOptionsOnUpdated(object sender, EventArgs eventArgs)
@@ -138,14 +151,9 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             gridFormatting.Children.Add(page);
         }
 
-        private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
-        {            
-            DialogResult = true;
-        }
-
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
+            DialogResult = true;
         }
 
         private void FormattingLinkClick(object sender, MouseButtonEventArgs e)

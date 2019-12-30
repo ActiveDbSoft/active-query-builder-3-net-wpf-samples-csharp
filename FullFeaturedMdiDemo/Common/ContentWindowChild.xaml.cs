@@ -19,6 +19,7 @@ using System.Windows.Input;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.Core.QueryTransformer;
 using ActiveQueryBuilder.View;
+using ActiveQueryBuilder.View.QueryView;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
@@ -61,7 +62,18 @@ namespace FullFeaturedMdiDemo.Common
         public QueryNavBarOptions QueryNavBarOptions
         {
             get { return NavigationBar.Options; }
-            set { NavigationBar.Options = value; }
+            set
+            {
+                NavigationBar.Options.Updated -= QueryNavBarOptionsOnUpdated;
+                NavigationBar.Options = value;
+                NavigationBar.Options.Updated += QueryNavBarOptionsOnUpdated;
+                SubQueryNavBarControl.Options = NavigationBar.Options;
+            }
+        }
+
+        private void QueryNavBarOptionsOnUpdated(object sender, EventArgs e)
+        {
+            SubQueryNavBarControl.Options.Assign((IQueryNavigationBarOptions) QueryNavBarOptions);
         }
 
         public MetadataLoadingOptions MetadataLoadingOptions
@@ -584,6 +596,8 @@ namespace FullFeaturedMdiDemo.Common
             Loaded += ContentWindowChild_Loaded;
             var langProperty = DependencyPropertyDescriptor.FromProperty(LanguageProperty, typeof(ContentWindowChild));
             langProperty.AddValueChanged(this, LanguageChanged);
+
+            QueryNavBarOptions.Updated += QueryNavBarOptionsOnUpdated;
         }
 
         private void QueryTransformer_SQLUpdated(object sender, EventArgs e)

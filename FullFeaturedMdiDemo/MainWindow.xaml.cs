@@ -205,9 +205,12 @@ namespace FullFeaturedMdiDemo
                                            ((ChildWindow)MdiContainer1.ActiveChild).CanAddUnionSubQuery();
             MenuItemProp.IsEnabled = MdiContainer1.ActiveChild != null &&
                                      ((ChildWindow)MdiContainer1.ActiveChild).CanShowProperties();
+           
             MenuItemAddObject.IsEnabled = MdiContainer1.ActiveChild != null &&
                                           ((ChildWindow)MdiContainer1.ActiveChild).CanAddObject();
             MenuItemProperties.IsEnabled = MdiContainer1.ActiveChild != null;
+            MenuItemProperties.Header =
+                MenuItemProperties.IsEnabled ? "Properties" : "Properties (open a query to edit)";
 
             foreach (var item in MetadataItemMenu.Items.Cast<FrameworkElement>().Where(x => x is MenuItem).ToList())
             {

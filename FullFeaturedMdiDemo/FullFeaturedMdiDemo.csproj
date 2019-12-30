@@ -178,6 +178,18 @@
     <Compile Include="PropertiesForm\SqlGenerationPage.xaml.cs">
       <DependentUpon>SqlGenerationPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PropertiesForm\Tabs\CommonTab.xaml.cs">
+      <DependentUpon>CommonTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\Tabs\ExpressionsTab.xaml.cs">
+      <DependentUpon>ExpressionsTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\Tabs\MainQueryTab.xaml.cs">
+      <DependentUpon>MainQueryTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertiesForm\Tabs\SubQueryTab.xaml.cs">
+      <DependentUpon>SubQueryTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -287,6 +299,26 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="PropertiesForm\SqlGenerationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\Tabs\CommonTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\Tabs\ExpressionsTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\Tabs\MainQueryTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\Tabs\SubQueryTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PropertiesForm\Tabs\TabStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -414,6 +446,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

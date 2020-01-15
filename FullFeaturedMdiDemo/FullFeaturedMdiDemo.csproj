@@ -148,6 +148,7 @@
     <Compile Include="Common\InformBlockLabel.xaml.cs">
       <DependentUpon>InformBlockLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\Options.cs" />
     <Compile Include="Common\PaginationPanel.xaml.cs">
       <DependentUpon>PaginationPanel.xaml</DependentUpon>
     </Compile>
@@ -202,7 +203,7 @@
     <Compile Include="QueryStatisticsWindow.xaml.cs">
       <DependentUpon>QueryStatisticsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="Properties\Settings.cs" />
     <Compile Include="XmlConnectionEditWindow.xaml.cs">
       <DependentUpon>XmlConnectionEditWindow.xaml</DependentUpon>
     </Compile>

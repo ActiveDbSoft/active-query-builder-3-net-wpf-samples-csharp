@@ -17,6 +17,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using FullFeaturedMdiDemo.Common;
 
 namespace FullFeaturedMdiDemo.MdiControl
 {

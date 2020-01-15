@@ -43,6 +43,7 @@ namespace FullFeaturedMdiDemo
         private readonly SQLFormattingOptions _sqlFormattingOptions;
         private readonly SQLGenerationOptions _sqlGenerationOptions;
         private bool _showHintConnection = true;
+        private Options _options;
 
         public MainWindow()
         {
@@ -74,6 +75,8 @@ namespace FullFeaturedMdiDemo
 
             var menuItem = MenuItemLanguage.Items.Cast<MenuItem>().First(item => (string)item.Tag == defLang);
             menuItem.IsChecked = true;
+
+            TryToLoadOptions();
 
             // DEMO WARNING
             if (BuildInfo.GetEdition() == BuildInfo.Edition.Trial)
@@ -107,7 +110,7 @@ namespace FullFeaturedMdiDemo
                     VerticalAlignment = VerticalAlignment.Center,
                     Content = new Image
                     {
-                        Source = ActiveQueryBuilder.View.WPF.Helpers.GetImageSource(Properties.Resources.cancel),
+                        Source = Properties.Resources.cancel.GetImageSource(),
                         Stretch = Stretch.None
                     }
                 };
@@ -119,6 +122,24 @@ namespace FullFeaturedMdiDemo
                 GridRoot.Children.Add(button);
             }
 
+        }
+
+        private void TryToLoadOptions()
+        {
+            if (string.IsNullOrEmpty(Properties.Settings.Default.Options))
+                return;
+
+            _options = new Options();
+            _options.CreateDefaultOptions();
+            try
+            {
+                _options.DeserializeFromString(Properties.Settings.Default.Options);
+            }
+            catch
+            {
+                _options = null;
+                Properties.Settings.Default.Options = string.Empty;
+            }
         }
 
         bool _shown;
@@ -220,7 +241,15 @@ namespace FullFeaturedMdiDemo
 
         private void MenuItemNewQuery_OnClick(object sender, RoutedEventArgs e)
         {
-            MdiContainer1.Children.Add(CreateChildWindow());
+            var window = CreateChildWindow();
+
+            MdiContainer1.Children.Add(window);
+
+            var options = window.GetOptions();
+            _options = options;
+
+            foreach (var child in MdiContainer1.Children.OfType<ChildWindow>())
+                child.SetOptions(options);
         }
 
         private ChildWindow CreateChildWindow(string caption = "")
@@ -239,7 +268,7 @@ namespace FullFeaturedMdiDemo
                 }
             }
 
-            var window = new ChildWindow(_sqlContext)
+            var window = new ChildWindow(_sqlContext, DatabaseSchemaView1)
             {
                 State = StateWindow.Maximized,
                 Title = title,
@@ -251,6 +280,9 @@ namespace FullFeaturedMdiDemo
             window.SaveQueryEvent += Window_SaveQueryEvent;
             window.SaveAsInFileEvent += Window_SaveAsInFileEvent;
             window.SaveAsNewUserQueryEvent += Window_SaveAsNewUserQueryEvent;
+
+            if (_options != null)
+                window.SetOptions(_options);
 
             return window;
         }
@@ -530,7 +562,7 @@ namespace FullFeaturedMdiDemo
         {
             if (MdiContainer1.ActiveChild == null) return;
             var window = (ChildWindow)MdiContainer1.ActiveChild;
-            var propWindow = new QueryPropertiesWindow(window, DatabaseSchemaView1.Options);
+            var propWindow = new QueryPropertiesWindow(window, DatabaseSchemaView1);
             propWindow.ShowDialog();
         }
 
@@ -887,8 +919,6 @@ namespace FullFeaturedMdiDemo
             var item = (ICustomMenuItem) sender;
 
             Clipboard.SetText(item.Tag.ToString(), TextDataFormat.UnicodeText);
-
-            Debug.WriteLine("SQL: {0}", item.Tag);
         }
 
         private void MenuItemExecuteUserQuery_OnClick(object sender, RoutedEventArgs e)

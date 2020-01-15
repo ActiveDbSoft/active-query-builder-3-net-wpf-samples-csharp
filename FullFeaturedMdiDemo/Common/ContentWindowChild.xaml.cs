@@ -65,9 +65,9 @@ namespace FullFeaturedMdiDemo.Common
             set
             {
                 NavigationBar.Options.Updated -= QueryNavBarOptionsOnUpdated;
-                NavigationBar.Options = value;
+                NavigationBar.Options.Assign(value);
                 NavigationBar.Options.Updated += QueryNavBarOptionsOnUpdated;
-                SubQueryNavBarControl.Options = NavigationBar.Options;
+                SubQueryNavBarControl.Options.Assign((IQueryNavigationBarOptions) NavigationBar.Options);
             }
         }
 
@@ -217,6 +217,12 @@ namespace FullFeaturedMdiDemo.Common
                     FormattedSQLBuilder.GetSQL(SqlQuery.QueryRoot, SqlFormattingOptions) :
                     SqlQuery.SQL;
             }
+        }
+
+        public AddObjectDialogOptions AddObjectDialogOptions
+        {
+            get { return ((AddObjectDialog) QueryView.AddObjectDialog).Options; }
+            set { ((AddObjectDialog) QueryView.AddObjectDialog).Options.Assign(value); }
         }
 
         public ContentWindowChild(SQLContext sqlContext)

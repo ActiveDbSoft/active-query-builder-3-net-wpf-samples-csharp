@@ -80,5 +80,17 @@ namespace FullFeaturedMdiDemo.Properties {
                 this["XmlFiles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Options {
+            get {
+                return ((string)(this["Options"]));
+            }
+            set {
+                this["Options"] = value;
+            }
+        }
     }
 }

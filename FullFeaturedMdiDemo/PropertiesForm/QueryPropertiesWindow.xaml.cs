@@ -20,6 +20,7 @@ using ActiveQueryBuilder.Core.PropertiesEditors;
 using ActiveQueryBuilder.View;
 using ActiveQueryBuilder.View.PropertiesEditors;
 using ActiveQueryBuilder.View.WPF;
+using ActiveQueryBuilder.View.WPF.DatabaseSchemaView;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
 using FullFeaturedMdiDemo.PropertiesForm.Tabs;
@@ -38,20 +39,23 @@ namespace FullFeaturedMdiDemo.PropertiesForm
         private readonly TextEditorOptions _textEditorOptions = new TextEditorOptions();
         private readonly SqlTextEditorOptions _textEditorSqlOptions = new SqlTextEditorOptions();
         private readonly ChildWindow _childWindow;
+        private readonly DatabaseSchemaView _dbSchemaView;
 
         private TextBlock _currentGeneralSelectedLink;
         private TextBlock _currentFormattingSelectedLink;
+        private bool _structureOptionsChanged;
 
         public QueryPropertiesWindow()
         {
             InitializeComponent();
         }
         
-        public QueryPropertiesWindow(ChildWindow childWindow, DatabaseSchemaViewOptions schemaViewOptions)
+        public QueryPropertiesWindow(ChildWindow childWindow, DatabaseSchemaView schemaView)
         {
             InitializeComponent();
 
             _childWindow = childWindow;
+            _dbSchemaView = schemaView;
 
             linkAddObject.Visibility = Visibility.Collapsed;
 
@@ -75,7 +79,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             _sqlGenerationControl = new SqlGenerationPage(childWindow.SqlGenerationOptions, childWindow.SqlFormattingOptions);
             _linkToPageGeneral.Add(linkBehavior, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.BehaviorOptions)));
-            _linkToPageGeneral.Add(linkSchemaView, GetPropertyPage(new ObjectProperties(schemaViewOptions)));
+            _linkToPageGeneral.Add(linkSchemaView, GetPropertyPage(new ObjectProperties(schemaView.Options)));
             _linkToPageGeneral.Add(linkDesignPane, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DesignPaneOptions)));
             _linkToPageGeneral.Add(linkVisual, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.VisualOptions)));
             _linkToPageGeneral.Add(linkDatasource, GetPropertyPage(new ObjectProperties(childWindow.ContentControl.DataSourceOptions)));
@@ -96,6 +100,24 @@ namespace FullFeaturedMdiDemo.PropertiesForm
 
             GeneralLinkClick(linkGeneration, null);
             FormattingLinkClick(LinkMain, null);
+
+            childWindow.MetadataStructureOptions.Updated += MetadataStructureOptionsOnUpdated;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Properties.Settings.Default.Options = _childWindow.GetOptions().SerializeToString();
+            Properties.Settings.Default.Save();
+
+            if (_structureOptionsChanged)
+                _dbSchemaView.InitializeDatabaseSchemaTree();
+
+            base.OnClosing(e);
+        }
+
+        private void MetadataStructureOptionsOnUpdated(object sender, EventArgs e)
+        {
+            _structureOptionsChanged = true;
         }
 
         private void TextEditorOptionsOnUpdated(object sender, EventArgs eventArgs)

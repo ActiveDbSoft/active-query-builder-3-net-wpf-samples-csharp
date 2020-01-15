@@ -17,5 +17,8 @@
     <Setting Name="XmlFiles" Type="FullFeaturedMdiDemo.ConnectionList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Options" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

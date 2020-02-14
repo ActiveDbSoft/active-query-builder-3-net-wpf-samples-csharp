@@ -21,7 +21,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Active Database Software")]
 [assembly: AssemblyProduct("WpfExample")]
-[assembly: AssemblyCopyright("Copyright © 2006-2019 Active Database Software")]
+[assembly: AssemblyCopyright("Copyright © 2006-2020 Active Database Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

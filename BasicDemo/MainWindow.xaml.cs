@@ -226,6 +226,14 @@ namespace BasicDemo
             // update the text box
             sqlTextEditor1.Text = queryBuilder.FormattedSQL;
             CheckParameters();
+
+            if (!Equals(TabControl.SelectedItem, tbData))
+            {
+                dataGridView1.ItemsSource = null;
+                return;
+            }
+
+            ExecuteQuery();
         }
 
         private void CheckParameters()
@@ -368,7 +376,12 @@ namespace BasicDemo
 
         private void ExecuteQuery()
         {
+            if (sqlTextEditor1.Text != queryBuilder.FormattedSQL)
+                queryBuilder.SQL = sqlTextEditor1.Text;
+
             dataGridView1.ItemsSource = null;
+
+            if (string.IsNullOrEmpty(queryBuilder.SQL)) return;
 
             if (queryBuilder.MetadataProvider != null && queryBuilder.MetadataProvider.Connected)
             {
@@ -405,10 +418,11 @@ namespace BasicDemo
             var tab = e.AddedItems[0] as TabItem;
             if (tab == null) return;
 
-            if (tab.Header.ToString() != "Data") return;
-
-            if (sqlTextEditor1.Text != queryBuilder.FormattedSQL)
-                queryBuilder.SQL = sqlTextEditor1.Text;
+            if (!Equals(TabControl.SelectedItem, tbData))
+            {
+                dataGridView1.ItemsSource = null;
+                return;
+            }
 
             ExecuteQuery();
         }

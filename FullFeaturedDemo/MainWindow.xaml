@@ -6,6 +6,7 @@
         xmlns:wpf="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:criteriaBuilder="clr-namespace:ActiveQueryBuilder.View.WPF.CriteriaBuilder;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:common="clr-namespace:FullFeaturedDemo.Common"
+        xmlns:view="clr-namespace:ActiveQueryBuilder.View;assembly=ActiveQueryBuilder.View"
         mc:Ignorable="d"
         Title="Active Query Builder for .NET Standard WPF Edition - Full Featured Demo (C#)" Height="900" Width="1000" Icon="Resources/App.ico">
 
@@ -257,7 +258,11 @@
                         <RowDefinition Height="250"/>
                     </Grid.RowDefinitions>
 
-                    <wpf:QueryBuilder x:Name="QBuilder" Grid.Row="0" SQLUpdated="QBuilder_OnSQLUpdated" ActiveUnionSubQueryChanged="QBuilder_OnActiveUnionSubQueryChanged"/>
+                    <wpf:QueryBuilder x:Name="QBuilder" Grid.Row="0" SQLUpdated="QBuilder_OnSQLUpdated" ActiveUnionSubQueryChanged="QBuilder_OnActiveUnionSubQueryChanged">
+                        <wpf:QueryBuilder.PanesConfigurationOptions>
+                            <view:PanesConfigurationOptions DatabaseSchemaViewDock="Left"/>
+                        </wpf:QueryBuilder.PanesConfigurationOptions>
+                    </wpf:QueryBuilder>
 
                     <GridSplitter Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="2"/>
 

@@ -22,7 +22,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CustomExpressionBuilderDemo")]
-[assembly: AssemblyCopyright("Copyright © 2006-2019 Active Database Software")]
+[assembly: AssemblyCopyright("Copyright © 2006-2020 Active Database Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -126,10 +126,12 @@ namespace QueryUIEventsDemo
         {
             if (CbDataSourceFieldAdding.IsChecked != true) return;
 
-            BoxLogEvents.Text = "DatasourceFieldAdding adding field \"" + field.Name + "\"" +
+            var fieldText = field == null ? $"{datasource.NameInQuery}.*" : field.Name;
+
+            BoxLogEvents.Text = "DatasourceFieldAdding adding field \"" + fieldText + "\"" +
                            Environment.NewLine + BoxLogEvents.Text;
 
-            var msg = "Are you sure to add \"" + field.Name + "\" to the SELECT list?";
+            var msg = "Are you sure to add \"" + fieldText + "\" to the SELECT list?";
 
             if (MessageBox.Show(msg, "DatasourceFieldAdding event handler", MessageBoxButton.YesNo) == MessageBoxResult.No)
             {
@@ -144,8 +146,8 @@ namespace QueryUIEventsDemo
             BoxLogEvents.Text = "DataSourceFieldRemoving removing field \"" + field.Name + "\" form \"" +
                                 datasource.NameInQuery + "\"" +
                                 Environment.NewLine + BoxLogEvents.Text;
-            var name = datasource.NameInQuery;
-            var msg = "Are you sure to remove \"" + "\".\"" + name + "\"" + field.Name + "\" from the query?";
+
+            var msg = "Are you sure to remove \"" + "\".\"" + datasource.NameInQuery + "\"" + (field.Name ?? "*") + "\" from the query?";
 
             if (MessageBox.Show(msg, "DataSourceFieldRemoving event handler", MessageBoxButton.YesNo) == MessageBoxResult.No)
             {
@@ -189,6 +191,7 @@ namespace QueryUIEventsDemo
         private void QBuilder_OnLinkCreating(DataSource fromDatasource, MetadataField fromField, DataSource toDatasource, MetadataField toField, MetadataForeignKey correspondingmetadataforeignkey, ref bool abort)
         {
             if (CbLinkCreating.IsChecked != true) return;
+            if (fromField == null || toField == null) return;
 
             BoxLogEvents.Text = "LinkCreating" +
                              Environment.NewLine + BoxLogEvents.Text;
@@ -260,24 +263,25 @@ namespace QueryUIEventsDemo
         private void QBuilder_OnDatasourceFieldRemoved(DataSource datasource, MetadataField field)
         {
             if (CbDatasourceFieldRemoved.IsChecked != true) return;
-
-            BoxLogEvents.Text = "DatasourceFieldRemoved " +
-                               Environment.NewLine + BoxLogEvents.Text;
+            var fieldText = field == null ? datasource.NameInQuery + ".*" : field.Name;
+            BoxLogEvents.Text = $"DatasourceFieldRemoved {fieldText}" +
+                                Environment.NewLine + BoxLogEvents.Text;
         }
 
         private void QBuilder_OnDataSourceFieldAdded(DataSource datasource, MetadataField field, QueryColumnListItem querycolumnlistitem, bool isFocused)
         {
             if (CbDataSourceFieldAdded.IsChecked != true) return;
 
-            BoxLogEvents.Text = "LinkCreated" +
-                               Environment.NewLine + BoxLogEvents.Text;
+            var fieldText = field == null ? datasource.NameInQuery + ".*" : field.Name;
+            BoxLogEvents.Text = $"DataSourceFieldAdded {fieldText}" +
+                                Environment.NewLine + BoxLogEvents.Text;
         }
 
         private void QBuilder_OnDataSourceAdded(SQLQuery sender, DataSource addedobject)
         {
             if (CbDataSourceAdded.IsChecked != true) return;
 
-            BoxLogEvents.Text = "LinkCreated" +
+            BoxLogEvents.Text = "DataSourceAdded " + addedobject.NameInQuery +
                                Environment.NewLine + BoxLogEvents.Text;
         }
 

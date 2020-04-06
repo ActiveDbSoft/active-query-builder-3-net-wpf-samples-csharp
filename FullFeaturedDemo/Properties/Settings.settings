@@ -11,10 +11,10 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">Auto</Value>
     </Setting>
-    <Setting Name="XmlFiles" Type="FullFeaturedDemo.ConnectionList" Scope="User">
+    <Setting Name="XmlFiles" Type="GeneralAssembly.ConnectionList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Connections" Type="FullFeaturedDemo.ConnectionList" Scope="User">
+    <Setting Name="Connections" Type="GeneralAssembly.ConnectionList" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

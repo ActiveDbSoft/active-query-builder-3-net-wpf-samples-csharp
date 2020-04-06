@@ -37,9 +37,9 @@ namespace FullFeaturedMdiDemo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::FullFeaturedMdiDemo.ConnectionList Connections {
+        public global::GeneralAssembly.ConnectionList Connections {
             get {
-                return ((global::FullFeaturedMdiDemo.ConnectionList)(this["Connections"]));
+                return ((global::GeneralAssembly.ConnectionList)(this["Connections"]));
             }
             set {
                 this["Connections"] = value;
@@ -72,9 +72,9 @@ namespace FullFeaturedMdiDemo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::FullFeaturedMdiDemo.ConnectionList XmlFiles {
+        public global::GeneralAssembly.ConnectionList XmlFiles {
             get {
-                return ((global::FullFeaturedMdiDemo.ConnectionList)(this["XmlFiles"]));
+                return ((global::GeneralAssembly.ConnectionList)(this["XmlFiles"]));
             }
             set {
                 this["XmlFiles"] = value;

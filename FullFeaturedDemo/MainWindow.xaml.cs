@@ -11,12 +11,7 @@
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.Core.QueryTransformer;
 using FullFeaturedDemo.Connection;
-using FullFeaturedDemo.PropertiesForm;
-using FullFeaturedDemo.Windows;
 using Microsoft.Win32;
-using MySql.Data.MySqlClient;
-using Npgsql;
-using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
@@ -35,7 +30,11 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using ActiveQueryBuilder.View.WPF;
-using BasicDemo.PropertiesForm;
+using GeneralAssembly;
+using GeneralAssembly.Common;
+using GeneralAssembly.QueryBuilderProperties;
+using GeneralAssembly.Windows;
+using GeneralAssembly.Windows.QueryInformationWindows;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
@@ -196,7 +195,7 @@ namespace FullFeaturedDemo
                 };
 
                 MenuItemLanguage.Items.Add(menuItem);
-                menuItem.SetValue(MenuBehavior.OptionGroupNameProperty, "group");
+                menuItem.SetValue(GroupedMenuBehavior.OptionGroupNameProperty, "group");
             }
         }
 
@@ -234,7 +233,7 @@ namespace FullFeaturedDemo
             MenuItemProp.IsEnabled = CanShowProperties();
             MenuItemAddObject.IsEnabled = CanAddObject();
             MenuItemProperties.IsEnabled = (QBuilder.SQLFormattingOptions != null && QBuilder.SQLContext != null);
-
+            MenuItemUserExpression.IsEnabled = _selectedConnection != null;
             foreach (var item in MetadataItemMenu.Items.Cast<FrameworkElement>().Where(x => x is MenuItem).ToList())
             {
                 item.IsEnabled = QBuilder.SQLContext != null;
@@ -290,65 +289,12 @@ namespace FullFeaturedDemo
 
                 // create new SqlConnection object using the connections string from the connection form
                 if (!_selectedConnection.IsXmlFile)
-                {
-                    switch (_selectedConnection.ConnectionType)
-                    {
-                        case ConnectionTypes.MSSQL:
-                            metadataProvaider = new MSSQLMetadataProvider
-                            {
-                                Connection = new SqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.MSAccess:
-                            metadataProvaider = new OLEDBMetadataProvider
-                            {
-                                Connection = new OleDbConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.Oracle:
-                            // previous version of this demo uses deprecated System.Data.OracleClient
-                            // current version uses Oracle.ManagedDataAccess.Client which doesn't support "Integrated Security" setting
-                            var updatedConnectionString = Regex.Replace(_selectedConnection.ConnectionString,
-                                "Integrated Security=.*?;", "");
-
-                            metadataProvaider = new OracleNativeMetadataProvider
-                            {
-                                Connection = new OracleConnection(updatedConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.MySQL:
-                            metadataProvaider = new MySQLMetadataProvider()
-                            {
-                                Connection = new MySqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.PostgreSQL:
-                            metadataProvaider = new PostgreSQLMetadataProvider
-                            {
-                                Connection = new NpgsqlConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.OLEDB:
-                            metadataProvaider = new OLEDBMetadataProvider
-                            {
-                                Connection = new OleDbConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        case ConnectionTypes.ODBC:
-                            metadataProvaider = new ODBCMetadataProvider
-                            {
-                                Connection = new OdbcConnection(_selectedConnection.ConnectionString)
-                            };
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
+                    metadataProvaider = _selectedConnection.ConnectionDescriptor?.MetadataProvider;
 
                 // setup the query builder with metadata and syntax providers
                 QBuilder.SQLContext.MetadataContainer.Clear();
                 QBuilder.MetadataProvider = metadataProvaider;
-                QBuilder.SyntaxProvider = _selectedConnection.SyntaxProvider;
+                QBuilder.SyntaxProvider = _selectedConnection.ConnectionDescriptor.SyntaxProvider;
                 QBuilder.MetadataLoadingOptions.OfflineMode = metadataProvaider == null;
 
                 if (metadataProvaider == null)
@@ -378,16 +324,6 @@ namespace FullFeaturedDemo
 
                 DataGridResult.QueryTransformer = CBuilder.QueryTransformer;
                 DataGridResult.SqlQuery = QBuilder.SQLQuery;
-
-                // The pagination panel is displayed if the current SyntaxProvider has support for pagination
-                PaginationPanel.Visibility = (CBuilder.QueryTransformer.IsSupportLimitCount ||
-                                              CBuilder.QueryTransformer.IsSupportLimitOffset) && QBuilder.SyntaxProvider != null
-                   ? Visibility.Visible
-                   : Visibility.Collapsed;
-
-
-                PaginationPanel.IsSupportLimitCount = CBuilder.QueryTransformer.IsSupportLimitCount;
-                PaginationPanel.IsSupportLimitOffset = CBuilder.QueryTransformer.IsSupportLimitOffset;
             }
         }
 
@@ -397,7 +333,7 @@ namespace FullFeaturedDemo
             // update the text box
             if (DataGridResult.QueryTransformer == null || !Equals(TabItemData, TabControl.SelectedItem)) return;
 
-            DataGridResult.FillDataGrid(DataGridResult.QueryTransformer.SQL);
+            DataGridResult.FillData(DataGridResult.QueryTransformer.SQL);
             BoxSqlTransformer.Text = DataGridResult.QueryTransformer.SQL;
         }
 
@@ -421,7 +357,7 @@ namespace FullFeaturedDemo
             stats += "\r\n\r\n" + "Output Expressions (" + qs.OutputColumns.Count + "):\r\n";
             stats = qs.OutputColumns.Aggregate(stats, (current, t) => current + ("\r\n" + t.Expression));
 
-            var f = new QueryStatisticsWindow { textBox = { Text = stats } };
+            var f = new QueryStatisticsWindow(stats);
 
             f.ShowDialog();
         }
@@ -680,7 +616,7 @@ namespace FullFeaturedDemo
 
         private void MenuItem_About_OnClick(object sender, RoutedEventArgs e)
         {
-            var f = new AboutForm { Owner = this };
+            var f = new AboutWindow { Owner = this };
 
             f.ShowDialog();
         }
@@ -746,55 +682,15 @@ namespace FullFeaturedDemo
 
             if (QBuilder.SyntaxProvider == null || !Equals(e.AddedItems[0], TabItemData)) return;
 
-            ResetPagination();
-
-            BoxSql.Text = BoxSqlTransformer.Text;
+            CBuilder.Clear();
+            BoxSqlTransformer.Text = BoxSql.Text;
 
             if (Equals(TabItemData, TabControl.SelectedItem))
             {
-                BorderBlockPagination.Visibility = Visibility.Visible;
-                DataGridResult.FillDataGrid(BoxSql.Text);
+                DataGridResult.FillData(BoxSql.Text);
             }
         }
-
-        private void ResetPagination()
-        {
-            PaginationPanel.Reset();
-            CBuilder.QueryTransformer.Skip("");
-            CBuilder.QueryTransformer.Take("");
-        }
-
-        private void PaginationPanel_OnCurrentPageChanged(object sender, RoutedEventArgs e)
-        {
-            if (PaginationPanel.CurrentPage == 1)
-            {
-                CBuilder.QueryTransformer.Skip("");
-                return;
-            }
-
-            // Select next n records
-            CBuilder.QueryTransformer.Skip(
-                (PaginationPanel.PageSize * (PaginationPanel.CurrentPage - 1)).ToString());
-        }
-
-        private void PaginationPanel_OnEnabledPaginationChanged(object sender, RoutedEventArgs e)
-        {
-            // Turn paging on and off
-            if (PaginationPanel.IsEnabled)
-            {
-                CBuilder.QueryTransformer.Take(PaginationPanel.PageSize.ToString());
-            }
-            else
-            {
-                ResetPagination();
-            }
-        }
-
-        private void PaginationPanel_OnPageSizeChanged(object sender, RoutedEventArgs e)
-        {
-            CBuilder.QueryTransformer.Take(PaginationPanel.PageSize.ToString());
-        }
-
+        
         private void BoxSql_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ErrorBox.Show(null, QBuilder.SyntaxProvider);
@@ -831,21 +727,7 @@ namespace FullFeaturedDemo
         private void FillFastResult()
         {
             var result = _transformerSql.Take("10");
-
-            try
-            {
-                var dv = Common.Helpers.ExecuteSql(result.SQL, (SQLQuery)_transformerSql.Query);
-
-                ListViewFastResultSql.ItemsSource = dv;
-                BorderError.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception exception)
-            {
-                BorderError.Visibility = Visibility.Visible;
-                LabelError.Text = exception.Message;
-
-                ListViewFastResultSql.ItemsSource = null;
-            }
+            ListViewFastResultSql.FillData(result.SQL, (SQLQuery) _transformerSql.Query);
         }
 
         private void TabControlSql_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -867,18 +749,6 @@ namespace FullFeaturedDemo
         {
             if (ButtonRefreashFastResult == null || CheckBoxAutoRefreash == null) return;
             ButtonRefreashFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;
-        }
-
-        private void CloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            BorderError.Visibility = Visibility.Collapsed;
-        }
-
-        private void DataGridResult_OnRowsLoaded(object sender, EventArgs e)
-        {
-            if (!PaginationPanel.IsEnabled)
-                PaginationPanel.CountRows = DataGridResult.CountRows;
-            BorderBlockPagination.Visibility = Visibility.Collapsed;
         }
 
         private void BoxSqlCurrentSubQuery_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -939,6 +809,13 @@ namespace FullFeaturedDemo
         {
             BoxSqlCurrentSubQuery.Text = _lastValidText1;
             BoxSqlCurrentSubQuery.Focus();
+        }
+
+        private void MenuItemUserExpression_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new EditUserExpressionWindow {Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner};
+            window.Load(QBuilder.QueryView);
+            window.ShowDialog();
         }
     }
 }

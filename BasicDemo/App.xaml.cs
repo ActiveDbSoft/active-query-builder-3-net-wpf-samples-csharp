@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using BasicDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace BasicDemo
 {

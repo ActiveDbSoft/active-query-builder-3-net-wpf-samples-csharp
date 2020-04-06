@@ -12,7 +12,6 @@ using System;
 using System.Data;
 using System.Data.Odbc;
 using System.Data.OleDb;
-using System.Data.OracleClient;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;

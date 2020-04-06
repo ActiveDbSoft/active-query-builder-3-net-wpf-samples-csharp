@@ -19,91 +19,54 @@ namespace ConsolidatedMetadataContainer
     /// </summary>
     public partial class MainWindow
     {
-        private readonly Dictionary<string, SQLContext> _connections = new Dictionary<string, SQLContext>();
-        private readonly Dictionary<MetadataItem, MetadataItem> _consolidatedToInner = new Dictionary<MetadataItem, MetadataItem>();
-        private readonly Dictionary<MetadataItem, MetadataItem> _innerToConsolidated = new Dictionary<MetadataItem, MetadataItem>();
+        // list of connections, name -> innerContext
+        private readonly Dictionary<string, SQLContext> _connections = InitConnections();
 
-        public MainWindow()
+        // fill connections dictionary
+        private static Dictionary<string, SQLContext> InitConnections()
         {
-            InitializeComponent();
+            var result = new Dictionary<string, SQLContext>();
 
             // first connection
-            var xmlNorthwind = new SQLContext
+            var innerXml = new SQLContext
             {
                 SyntaxProvider = new MSSQLSyntaxProvider(),
             };
-            xmlNorthwind.MetadataContainer.ImportFromXML("northwind.xml");
-            _connections.Add("xml", xmlNorthwind);
+            innerXml.MetadataContainer.ImportFromXML("northwind.xml");
+            result.Add("xml", innerXml);
 
             // second connection
-            var mssqlAdventureWorks = new SQLContext
+            var innerMsSql = new SQLContext
             {
                 SyntaxProvider = new MSSQLSyntaxProvider(),
                 MetadataProvider = new MSSQLMetadataProvider
                 {
                     Connection = new SqlConnection("Server=sql2014;Database=AdventureWorks;User Id=sa;Password=********;"),
                 },
+                LoadingOptions =
+                {
+                    LoadDefaultDatabaseOnly = false,
+                },
             };
-            _connections.Add("live", mssqlAdventureWorks);
+            result.Add("live", innerMsSql);
 
-            // QueryBuilder with consolidated metadata
-            QBuilder.MetadataContainer.ItemMetadataLoading += MetadataContainerOnItemMetadataLoading;
+            return result;
+        }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            // add connections
+            var metadataContainer = QBuilder.MetadataContainer;
+            foreach (var connectionDescription in _connections)
+            {
+                var name = connectionDescription.Key;
+                var innerContext = connectionDescription.Value;
+                metadataContainer.AddConnection(name, innerContext);
+            }
 
             QBuilder.InitializeDatabaseSchemaTree();
-        }
-
-        private void MetadataContainerOnItemMetadataLoading(object sender, MetadataItem item, MetadataType loadTypes)
-        {
-            // root of consolidated metadata contains connections
-            if (item == QBuilder.MetadataContainer && loadTypes.Contains(MetadataType.Connection))
-            {
-                // add connections (as virtual "Connection" objects)
-                foreach (var connectionDescription in _connections)
-                {
-                    var connectionName = connectionDescription.Key;
-                    var connection = connectionDescription.Value;
-                    var innerItem = connection.MetadataContainer;
-
-                    if (_innerToConsolidated.ContainsKey(innerItem))
-                        continue;
-
-                    var newItem = item.AddConnection(connectionName);
-                    newItem.Items = innerItem.Items;
-
-                    MapConsolidatedToInnerRecursive(newItem, innerItem);
-                }
-
-                return;
-            }
-
-            // find "inner" item, load it's children and copy them to consolidated container
-            {
-                var innerItem = _consolidatedToInner[item];
-                innerItem.Items.Load(loadTypes, false);
-
-                foreach (var childItem in innerItem.Items)
-                {
-                    if (!loadTypes.Contains(childItem.Type))
-                        continue;
-
-                    if (_innerToConsolidated.ContainsKey(childItem))
-                        continue;
-
-                    var newItem = childItem.Clone(item.Items);
-                    item.Items.Add(newItem);
-
-                    MapConsolidatedToInnerRecursive(newItem, childItem);
-                }
-            }
-        }
-
-        private void MapConsolidatedToInnerRecursive(MetadataItem consolidated, MetadataItem inner)
-        {
-            _consolidatedToInner.Add(consolidated, inner);
-            _innerToConsolidated.Add(inner, consolidated);
-
-            for (var i = 0; i < inner.Items.Count; i++)
-                MapConsolidatedToInnerRecursive(consolidated.Items[i], inner.Items[i]);
         }
     }
 }

@@ -10,7 +10,7 @@
 
 using System.Windows;
 using System.Windows.Threading;
-using InterfaceCustomizationDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace InterfaceCustomizationDemo
 {

@@ -10,7 +10,7 @@
 
 using System.Windows;
 using System.Windows.Threading;
-using ExpressionEditorDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace ExpressionEditorDemo
 {

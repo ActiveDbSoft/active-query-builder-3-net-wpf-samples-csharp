@@ -637,8 +637,8 @@ namespace ExpressionEditorDemo
         private void TreeFunctions_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _dragBoxFromMouseDown = Rect.Empty;
-
-            var mousePosition = e.GetPosition(TreeFunctions);
+            var p = e.GetPosition((FrameworkElement) sender);
+            var mousePosition = ((FrameworkElement) sender).PointToScreen(p);
 
             if (e.ChangedButton != MouseButton.Right) return;
 
@@ -655,7 +655,7 @@ namespace ExpressionEditorDemo
                         LocalizableConstantsUI.strInsertFunction), MenuItem_Clicked, false, true, null, aki.Template);
 
             if (menu.ItemCount > 0)
-                menu.Show(mousePosition.X, mousePosition.Y);
+                menu.Show(null, mousePosition.X, mousePosition.Y);
         }
 
         private void TreeFunctions_MouseMove(object sender, MouseEventArgs e)

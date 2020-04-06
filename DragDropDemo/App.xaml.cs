@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using DragDropDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace DragDropDemo
 {

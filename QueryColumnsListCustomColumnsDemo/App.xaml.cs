@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using CustomColumnsDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace CustomColumnsDemo
 {

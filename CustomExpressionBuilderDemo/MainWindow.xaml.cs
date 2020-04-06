@@ -9,13 +9,9 @@
 //*******************************************************************//
 
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.QueryView;
 using Orientation = System.Windows.Controls.Orientation;

@@ -5,9 +5,7 @@
         xmlns:queryView="clr-namespace:ActiveQueryBuilder.View.WPF.QueryView;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:expressionEditor="clr-namespace:ActiveQueryBuilder.View.WPF.ExpressionEditor;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:databaseSchemaView="clr-namespace:ActiveQueryBuilder.View.WPF.DatabaseSchemaView;assembly=ActiveQueryBuilder.View.WPF"
-        xmlns:core="clr-namespace:ActiveQueryBuilder.Core;assembly=ActiveQueryBuilder.Core"
-        xmlns:sqlServer="clr-namespace:Microsoft.SqlServer.Server;assembly=System.Data"
-        xmlns:common="clr-namespace:SeparatedComponents.Common"
+        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_ext"
 
         Title="SeparatedComponents Demo" Height="658" Width="950">
     <Grid>
@@ -67,6 +65,6 @@
         </Grid>
         <expressionEditor:SqlTextEditor Grid.Row="2" Height="93" Margin="4" Background="#404040" Foreground="White" Text="sqlTextEditor"
                                         x:Name="sqlTextEditor" LostKeyboardFocus="SqlTextEditor_OnLostFocus" TextChanged="SqlTextEditor_OnTextChanged"/>
-        <common:ErrorBox Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,7" x:Name="ErrorBox" GoToErrorPosition="ErrorBox_OnGoToErrorPosition" RevertValidText="ErrorBox_OnRevertValidText"/>
+        <common:SqlErrorBox Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,7" x:Name="ErrorBox" GoToErrorPosition="ErrorBox_OnGoToErrorPosition" RevertValidText="ErrorBox_OnRevertValidText"/>
     </Grid>
 </Window>

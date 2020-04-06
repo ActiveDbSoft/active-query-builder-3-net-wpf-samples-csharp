@@ -1,10 +1,11 @@
 ﻿<Window x:Class="BasicDemo.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:common="clr-namespace:BasicDemo.Common"
-	xmlns:wpf="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
+    xmlns:wpf="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
 	xmlns:expressionEditor="clr-namespace:ActiveQueryBuilder.View.WPF.ExpressionEditor;assembly=ActiveQueryBuilder.View.WPF"
 	xmlns:view="clr-namespace:ActiveQueryBuilder.View;assembly=ActiveQueryBuilder.View"
+	xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_ext"
+	xmlns:dataViewerControl="clr-namespace:GeneralAssembly.Common.DataViewerControl;assembly=GeneralAssembly_ext"
 	Title="Active Query Builder for .NET WPF Edition - Basic Demo (C#)" Height="640" Width="800"
     Loaded="Window_Loaded" FontSize="11" WindowStartupLocation="CenterScreen">
     <Grid x:Name="GridRoot">
@@ -103,7 +104,7 @@
                                                     LostKeyboardFocus="SqlTextEditor_LostKeyboardFocus"
                                                     FontFamily="Courier New" TextChanged="SqlTextEditor1_OnTextChanged" Padding="5"/>
 
-                        <common:ErrorBox  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox" VisibilityCheckSyntaxBlock="Visible"
+                        <common:SqlErrorBox  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox" VisibilityCheckSyntaxBlock="Visible"
                                      SyntaxProviderChanged="ErrorBox_OnSyntaxProviderChanged" 
                                      GoToErrorPosition="ErrorBox_OnGoToErrorPositionEvent" 
                                      RevertValidText="ErrorBox_OnRevertValidTextEvent"/>
@@ -111,21 +112,7 @@
                 </TabItem>
                 <TabItem Header="Data" x:Name="tbData">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Border x:Name="pnlQueryParams" Grid.Row="0" BorderThickness="1" BorderBrush="Black" Visibility="Collapsed">
-                            <Grid Background="LightGoldenrodYellow">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="40"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="lbQueryParams" Background="LightGoldenrodYellow" VerticalAlignment="Center" Margin="5, 0, 0, 0" Grid.Column="0" Text=""></TextBlock>
-                                <Button Grid.Column="1" Margin="4" Content="Edit" Click="EditParams_Click"></Button>
-                            </Grid>
-                        </Border>
-                        <DataGrid Grid.Row="1" x:Name="dataGridView1"></DataGrid>
+                        <dataViewerControl:DataViewer Grid.Row="1" x:Name="dataGridView1"/>
                     </Grid>
                 </TabItem>
             </TabControl>

@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:databaseSchemaView="clr-namespace:ActiveQueryBuilder.View.WPF.DatabaseSchemaView;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:mdiControl="clr-namespace:FullFeaturedMdiDemo.MdiControl"
-        xmlns:fullFeaturedMdiDemo="clr-namespace:FullFeaturedMdiDemo"
         xmlns:userQueries="clr-namespace:ActiveQueryBuilder.View.WPF.UserQueries;assembly=ActiveQueryBuilder.View.WPF"
-        xmlns:common="clr-namespace:FullFeaturedMdiDemo.Common"
+        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_ext"
         Title="Active Query Builder for .NET Professional WPF Edition - Full Featured Mdi Demo (C#)" Height="900" Width="1000" Icon="Resources/App.ico">
 
     <Window.Resources>
@@ -79,17 +78,17 @@
                 <Separator/>
                 <MenuItem Header="Cut" InputGestureText="Ctrl+X" Command="Cut" x:Name="MenuItemCut">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/cut.ico" />
+                        <common:AutoGreyableImage Source="Resources/cut.ico" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Copy" InputGestureText="Ctrl+C" Command="Copy" x:Name="MenuItemCopy">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/page_copy.png"/>
+                        <common:AutoGreyableImage Source="Resources/page_copy.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste" InputGestureText="Ctrl+V" Command="Paste" x:Name="MenuItemPaste">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/page_paste.png"/>
+                        <common:AutoGreyableImage Source="Resources/page_paste.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
@@ -98,22 +97,22 @@
             <MenuItem Header="Query">
                 <MenuItem Header="Add derived table" x:Name="MenuItemQueryAddDerived" Click="MenuItemQueryAddDerived_OnClick" >
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/add_derived_table.png"/>
+                        <common:AutoGreyableImage Source="Resources/add_derived_table.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Add Object" x:Name="MenuItemAddObject"  Click="MenuItemAddObject_OnClick">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/new_object.png"/>
+                        <common:AutoGreyableImage Source="Resources/new_object.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Add union sub-query" x:Name="MenuItemAddUnionSq"  Click="MenuItemAddUnionSq_OnClick">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/add_union_subquery.png"/>
+                        <common:AutoGreyableImage Source="Resources/add_union_subquery.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Copy union sub-query" x:Name="MenuItemCopyUnionSq"  Click="MenuItemCopyUnionSq_OnClick">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/copy_union_subquery.png"/>
+                        <common:AutoGreyableImage Source="Resources/copy_union_subquery.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
 
@@ -121,7 +120,7 @@
 
                 <MenuItem Header="Properties" x:Name="MenuItemProp" Click="MenuItemProp_OnClick">
                     <MenuItem.Icon>
-                        <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/query_properties.png"/>
+                        <common:AutoGreyableImage Source="Resources/query_properties.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Query Statistics" x:Name="MenuItemQueryStatistics" Click="MenuItemQueryStatistics_OnClick"/>
@@ -162,7 +161,7 @@
                 <Style TargetType="{x:Type MenuItem}">
                     <Setter Property="Padding" Value="0"/>
                 </Style>
-                <Style TargetType="{x:Type fullFeaturedMdiDemo:AutoGreyableImage}">
+                <Style TargetType="{x:Type common:AutoGreyableImage}">
                     <Setter Property="Width" Value="16"/>
                     <Setter Property="Height" Value="16"/>
                     <Setter Property="Stretch" Value="None"/>
@@ -197,7 +196,7 @@
 
             <MenuItem Header="" x:Name="MenuItemSaveIco" ToolTip="Save the current query" Command="Save">
                 <MenuItem.Icon>
-                    <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/disk.ico"/>
+                    <common:AutoGreyableImage Source="Resources/disk.ico"/>
                 </MenuItem.Icon>
             </MenuItem>
 
@@ -225,19 +224,19 @@
 
             <MenuItem Header="" Command="Cut" x:Name="MenuItemCutIco" ToolTip="Cut">
                 <MenuItem.Icon>
-                    <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/cut.ico" />
+                    <common:AutoGreyableImage Source="Resources/cut.ico" />
                 </MenuItem.Icon>
             </MenuItem>
 
             <MenuItem Header="" Command="Copy" x:Name="MenuItemCopyIco" ToolTip="Copy">
                 <MenuItem.Icon>
-                    <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/page_copy.png"/>
+                    <common:AutoGreyableImage Source="Resources/page_copy.png"/>
                 </MenuItem.Icon>
             </MenuItem>
 
             <MenuItem Header="" Command="Paste" x:Name="MenuItemPasteIco" ToolTip="Paste">
                 <MenuItem.Icon>
-                    <fullFeaturedMdiDemo:AutoGreyableImage Source="Resources/page_paste.png"/>
+                    <common:AutoGreyableImage Source="Resources/page_paste.png"/>
                 </MenuItem.Icon>
             </MenuItem>
 

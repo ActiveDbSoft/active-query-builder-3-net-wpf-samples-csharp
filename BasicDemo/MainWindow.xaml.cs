@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,11 +20,14 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
-using BasicDemo.PropertiesForm;
+using BasicDemo.ConnectionWindow;
+using GeneralAssembly;
+using GeneralAssembly.Windows.QueryInformationWindows;
 using Microsoft.Win32;
 using Helpers = ActiveQueryBuilder.View.Helpers;
 using Timer = System.Timers.Timer;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
+using QueryBuilderPropertiesWindow = GeneralAssembly.QueryBuilderProperties.QueryBuilderPropertiesWindow;
 
 namespace BasicDemo
 {
@@ -49,6 +51,9 @@ namespace BasicDemo
 			sqlTextEditor1.QueryProvider = queryBuilder;
             queryBuilder.SleepModeChanged += QueryBuilder_SleepModeChanged;
             queryBuilder.QueryAwake += QueryBuilder_QueryAwake;
+
+            dataGridView1.SqlQuery = queryBuilder.SQLQuery;
+            dataGridView1.SqlGenerationOptions = queryBuilder.SQLGenerationOptions;
 
             // DEMO WARNING
             if (BuildInfo.GetEdition() == BuildInfo.Edition.Trial)
@@ -133,7 +138,7 @@ namespace BasicDemo
         }
 
         // TextBox lost focus by keyboard
-        private void SqlTextEditor_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void SqlTextEditor_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             try
             {
@@ -166,9 +171,9 @@ namespace BasicDemo
             }
         }
 
-        private void TimerEvent(Object source, EventArgs args)
+        private void TimerEvent(object source, EventArgs args)
         {
-            Dispatcher.Invoke((Action) delegate
+            Dispatcher?.Invoke(delegate
             {
                 panel1.Visibility = Visibility.Collapsed;
             });
@@ -229,7 +234,6 @@ namespace BasicDemo
 
             if (!Equals(TabControl.SelectedItem, tbData))
             {
-                dataGridView1.ItemsSource = null;
                 return;
             }
 
@@ -238,12 +242,12 @@ namespace BasicDemo
 
         private void CheckParameters()
         {
-            if (Misc.CheckParameters(queryBuilder))
+            if (SqlHelpers.CheckParameters(queryBuilder.MetadataProvider, queryBuilder.SyntaxProvider, queryBuilder.Parameters))
                 HideParametersErrorPanel();
             else
             {
                 var acceptableFormats =
-                    Misc.GetAcceptableParametersFormats(queryBuilder.MetadataProvider, queryBuilder.SyntaxProvider);
+                    SqlHelpers.GetAcceptableParametersFormats(queryBuilder.MetadataProvider, queryBuilder.SyntaxProvider);
                 ShowParametersErrorPanel(acceptableFormats);
             }
         }
@@ -361,7 +365,7 @@ namespace BasicDemo
 			for (int i = 0; i < queryStatistics.OutputColumns.Count; i++)
 				builder.AppendLine(queryStatistics.OutputColumns[i].Expression);
 
-			var f = new QueryStatisticsWindow { textBox = { Text = builder.ToString() }, Owner = this};
+            var f = new QueryStatisticsWindow(builder.ToString()) {Owner = this};
             f.ShowDialog();
         }
 
@@ -379,50 +383,12 @@ namespace BasicDemo
             if (sqlTextEditor1.Text != queryBuilder.FormattedSQL)
                 queryBuilder.SQL = sqlTextEditor1.Text;
 
-            dataGridView1.ItemsSource = null;
-
-            if (string.IsNullOrEmpty(queryBuilder.SQL)) return;
-
-            if (queryBuilder.MetadataProvider != null && queryBuilder.MetadataProvider.Connected)
-            {
-                try
-                {
-                    dataGridView1.ItemsSource = Misc.ExecuteSql(queryBuilder.SQL, queryBuilder.SQLQuery).DefaultView;
-                    if (Misc.ParamsCache.Count != 0 && dataGridView1.ItemsSource != null)
-                        ShowParamsPanel();
-                    else
-                        HideParamsPanel();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "SQL query error");
-                }
-            }
-        }
-
-        private void ShowParamsPanel()
-        {
-            var parameters = Misc.ParamsCache.Select(x => string.Format("{0} = {1}", x.Name, x.Value));
-            lbQueryParams.Text = "Used parameters: " + string.Join(", ", parameters);
-            pnlQueryParams.Visibility = Visibility.Visible;
-        }
-
-        private void HideParamsPanel()
-        {
-            pnlQueryParams.Visibility = Visibility.Collapsed;
+            dataGridView1.FillData(queryBuilder.SQL);
         }
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
-            var tab = e.AddedItems[0] as TabItem;
-            if (tab == null) return;
-
-            if (!Equals(TabControl.SelectedItem, tbData))
-            {
-                dataGridView1.ItemsSource = null;
-                return;
-            }
+            if (!Equals(TabControl.SelectedItem, tbData)) return;
 
             ExecuteQuery();
         }
@@ -430,12 +396,6 @@ namespace BasicDemo
         private void SqlTextEditor1_OnTextChanged(object sender, EventArgs e)
         {
             ErrorBox.Show(null, queryBuilder.SyntaxProvider);
-        }
-
-        private void EditParams_Click(object sender, RoutedEventArgs e)
-        {
-            Misc.ParamsCache.Clear();
-            ExecuteQuery();
         }
 
         private void MenuItemEditMetadata_OnClick(object sender, RoutedEventArgs e)
@@ -458,11 +418,10 @@ namespace BasicDemo
         {
             sqlTextEditor1.Focus();
 
-            if (_errorPosition != -1)
-            {
-                sqlTextEditor1.ScrollToPosition(_errorPosition);
-                sqlTextEditor1.CaretOffset = _errorPosition;
-            }
+            if (_errorPosition == -1) return;
+
+            sqlTextEditor1.ScrollToPosition(_errorPosition);
+            sqlTextEditor1.CaretOffset = _errorPosition;
         }
 
         private void ErrorBox_OnRevertValidTextEvent(object sender, EventArgs e)

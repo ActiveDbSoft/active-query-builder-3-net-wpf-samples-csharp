@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ActiveQueryBuilder.Core;
+using GeneralAssembly.Windows.QueryInformationWindows;
 
 namespace QueryCreationDemo
 {
@@ -150,10 +151,9 @@ namespace QueryCreationDemo
             foreach (StatisticsOutputColumn statisticsOutputColumn in qs.OutputColumns)
                 stats += "\r\n" + statisticsOutputColumn.Expression;
 
-            var f = new QueryStatisticsForm { textBox = { Text = stats }, Owner = this };
+            var f = new QueryStatisticsWindow(stats) {Owner = this};
 
             f.ShowDialog();
-
         }
 
         private void ComboBoxSyntax_SelectedIndexChanged(object sender, EventArgs e)

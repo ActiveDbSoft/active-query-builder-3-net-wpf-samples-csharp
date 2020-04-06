@@ -8,11 +8,10 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System;
-using System.Windows;
 using System.Windows.Threading;
-using FullFeaturedDemo.Common;
 using FullFeaturedDemo.Properties;
+using GeneralAssembly;
+using GeneralAssembly.Windows;
 
 namespace FullFeaturedDemo
 {

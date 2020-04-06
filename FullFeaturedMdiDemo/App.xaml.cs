@@ -8,15 +8,12 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Threading;
-using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
-using FullFeaturedMdiDemo.Common;
 using FullFeaturedMdiDemo.Properties;
+using GeneralAssembly;
+using GeneralAssembly.Windows;
 
 namespace FullFeaturedMdiDemo
 {

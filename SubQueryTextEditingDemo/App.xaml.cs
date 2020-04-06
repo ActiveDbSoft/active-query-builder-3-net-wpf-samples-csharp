@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using SubQueryTextEditingDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace SubQueryTextEditingDemo
 {

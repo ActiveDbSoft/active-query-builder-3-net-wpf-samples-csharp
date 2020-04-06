@@ -40,7 +40,6 @@ namespace SubQueryTextEditingDemo
             Loaded -= MainWindow_Loaded;
 
             Builder.SyntaxProvider = new MSSQLSyntaxProvider();
-            Builder.MetadataProvider = new MSSQLMetadataProvider();
 
             Builder.MetadataContainer.LoadingOptions.OfflineMode = true;
             Builder.MetadataContainer.ImportFromXML(@"Northwind.xml");

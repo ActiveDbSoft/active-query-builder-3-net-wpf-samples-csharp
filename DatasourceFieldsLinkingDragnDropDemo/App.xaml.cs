@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using DatasourceFieldsLinkingDragnDropDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace DatasourceFieldsLinkingDragnDropDemo
 {

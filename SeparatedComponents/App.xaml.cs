@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using SeparatedComponents.Common;
+using GeneralAssembly.Windows;
 
 namespace SeparatedComponents
 {

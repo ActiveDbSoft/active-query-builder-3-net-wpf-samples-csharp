@@ -61,9 +61,9 @@ namespace FullFeaturedDemo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::FullFeaturedDemo.ConnectionList XmlFiles {
+        public global::GeneralAssembly.ConnectionList XmlFiles {
             get {
-                return ((global::FullFeaturedDemo.ConnectionList)(this["XmlFiles"]));
+                return ((global::GeneralAssembly.ConnectionList)(this["XmlFiles"]));
             }
             set {
                 this["XmlFiles"] = value;
@@ -72,9 +72,9 @@ namespace FullFeaturedDemo.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::FullFeaturedDemo.ConnectionList Connections {
+        public global::GeneralAssembly.ConnectionList Connections {
             get {
-                return ((global::FullFeaturedDemo.ConnectionList)(this["Connections"]));
+                return ((global::GeneralAssembly.ConnectionList)(this["Connections"]));
             }
             set {
                 this["Connections"] = value;

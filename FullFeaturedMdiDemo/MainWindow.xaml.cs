@@ -29,6 +29,11 @@ using Microsoft.Win32;
 using Helpers = ActiveQueryBuilder.Core.Helpers;
 using ActiveQueryBuilder.View.EventHandlers.MetadataStructureItems;
 using ActiveQueryBuilder.View.WPF;
+using FullFeaturedMdiDemo.Connection;
+using GeneralAssembly;
+using GeneralAssembly.Common;
+using GeneralAssembly.Windows;
+using GeneralAssembly.Windows.SaveWindows;
 using BuildInfo = ActiveQueryBuilder.Core.BuildInfo;
 
 namespace FullFeaturedMdiDemo
@@ -185,7 +190,7 @@ namespace FullFeaturedMdiDemo
                 };
 
                 MenuItemLanguage.Items.Add(menuItem);
-                menuItem.SetValue(MenuBehavior.OptionGroupNameProperty, "group");
+                menuItem.SetValue(GroupedMenuBehavior.OptionGroupNameProperty, "group");
             }
         }
 
@@ -402,7 +407,7 @@ namespace FullFeaturedMdiDemo
                 window.FileSourceUrl = openFileDialog1.FileName;
                 window.QueryText = sb.ToString();
                 window.SqlFormattingOptions = _sqlFormattingOptions;
-                window.SqlSourceType = Common.Helpers.SourceType.File;
+                window.SqlSourceType = SourceType.File;
 
                 MdiContainer1.Children.Add(window);
             }
@@ -642,7 +647,7 @@ namespace FullFeaturedMdiDemo
 
         private void MenuItem_About_OnClick(object sender, RoutedEventArgs e)
         {
-            var f = new AboutForm { Owner = this };
+            var f = new AboutWindow { Owner = this };
 
             f.ShowDialog();
         }
@@ -702,7 +707,7 @@ namespace FullFeaturedMdiDemo
             var window = CreateChildWindow(e.MetadataStructureItem.MetadataItem.Name);
 
             window.UserMetadataStructureItem = e.MetadataStructureItem;
-            window.SqlSourceType = Common.Helpers.SourceType.UserQueries;
+            window.SqlSourceType = SourceType.UserQueries;
             MdiContainer1.Children.Add(window);
             MdiContainer1.ActiveChild = window;
 
@@ -719,15 +724,15 @@ namespace FullFeaturedMdiDemo
             switch (windowChild.SqlSourceType)
             {
                 // as a new user query
-                case Common.Helpers.SourceType.New:
+                case SourceType.New:
                     SaveNewUserQuery(windowChild);
                     break;
                 // in a text file
-                case Common.Helpers.SourceType.File:
+                case SourceType.File:
                     SaveInFile(windowChild);
                     break;
                 // replacing an exising user query 
-                case Common.Helpers.SourceType.UserQueries:
+                case SourceType.UserQueries:
                     SaveUserQuery(windowChild);
                     break;
                 default:
@@ -772,7 +777,7 @@ namespace FullFeaturedMdiDemo
 
                 if (saveFileDialog1.ShowDialog() != true) return;
 
-                windowChild.SqlSourceType = Common.Helpers.SourceType.File;
+                windowChild.SqlSourceType = SourceType.File;
                 windowChild.FileSourceUrl = saveFileDialog1.FileName;
             }
 
@@ -837,7 +842,7 @@ namespace FullFeaturedMdiDemo
 
             childWindow.Title = title;
             childWindow.UserMetadataStructureItem = newItem;
-            childWindow.SqlSourceType = Common.Helpers.SourceType.UserQueries;
+            childWindow.SqlSourceType = SourceType.UserQueries;
             childWindow.IsModified = false;
 
             SaveSettings();
@@ -928,7 +933,7 @@ namespace FullFeaturedMdiDemo
             var window = CreateChildWindow(QueriesView.FocusedItem.MetadataItem.Name);
 
             window.UserMetadataStructureItem = QueriesView.FocusedItem;
-            window.SqlSourceType = Common.Helpers.SourceType.UserQueries;
+            window.SqlSourceType = SourceType.UserQueries;
             MdiContainer1.Children.Add(window);
             MdiContainer1.ActiveChild = window;
 

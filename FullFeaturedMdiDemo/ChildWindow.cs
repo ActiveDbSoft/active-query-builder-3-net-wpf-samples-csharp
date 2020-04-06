@@ -21,7 +21,8 @@ using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
 using FullFeaturedMdiDemo.Common;
 using FullFeaturedMdiDemo.MdiControl;
-using Helpers = FullFeaturedMdiDemo.Common.Helpers;
+using GeneralAssembly;
+using GeneralAssembly.Windows.SaveWindows;
 
 #endregion
 
@@ -182,7 +183,7 @@ namespace FullFeaturedMdiDemo
             set { ContentControl.QueryText = value; }
         }
 
-        public Helpers.SourceType SqlSourceType
+        public SourceType SqlSourceType
         {
             get { return ContentControl.SqlSourceType; }
             set { ContentControl.SqlSourceType = value; }
@@ -362,7 +363,7 @@ namespace FullFeaturedMdiDemo
 
             var point = PointToScreen(new Point(0, 0));
 
-            if (SqlSourceType == Helpers.SourceType.New)
+            if (SqlSourceType == SourceType.New)
             {
                 IsNeedClose = true;
 

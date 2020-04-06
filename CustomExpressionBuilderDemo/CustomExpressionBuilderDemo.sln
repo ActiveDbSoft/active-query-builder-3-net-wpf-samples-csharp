@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomExpressionBuilderDemo", "CustomExpressionBuilderDemo.csproj", "{9AF5EB5A-CC83-4A79-8321-9BC15AA121F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralAssembly", "..\GeneralAssembly\GeneralAssembly.csproj", "{47A94736-FB2A-4AE2-A282-74E138E7CDED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{9AF5EB5A-CC83-4A79-8321-9BC15AA121F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AF5EB5A-CC83-4A79-8321-9BC15AA121F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AF5EB5A-CC83-4A79-8321-9BC15AA121F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A94736-FB2A-4AE2-A282-74E138E7CDED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A94736-FB2A-4AE2-A282-74E138E7CDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A94736-FB2A-4AE2-A282-74E138E7CDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A94736-FB2A-4AE2-A282-74E138E7CDED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5DA8BF5A-90EB-48CB-8FC2-F2D8191EBC06}
 	EndGlobalSection
 EndGlobal

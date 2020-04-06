@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using AlternateNames.Common;
+using GeneralAssembly.Windows;
 
 namespace AlternateNames
 {
@@ -22,7 +22,9 @@ namespace AlternateNames
         {
             var errorWindow = new ExceptionWindow
             {
-                Owner = Current.MainWindow, Message = e.Exception.Message, StackTrace = e.Exception.StackTrace
+                Owner = Current.MainWindow,
+                Message = e.Exception.Message,
+                StackTrace = e.Exception.StackTrace
             };
 
             errorWindow.ShowDialog();

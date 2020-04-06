@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using QueryUIEventsDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace QueryUIEventsDemo
 {

@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using LoadMetadataDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace LoadMetadataDemo
 {

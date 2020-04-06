@@ -9,7 +9,7 @@
 //*******************************************************************//
 
 using System.Windows.Threading;
-using QueryTransformerDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace QueryTransformerDemo
 {

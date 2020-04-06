@@ -11,15 +11,23 @@
             </StackPanel.ToolTip>
             <CheckBox VerticalContentAlignment="Center"  IsChecked="{Binding IsChecked}" 
                                           TextOptions.TextFormattingMode="Display" x:Name="CheckBoxSelected"/>
-            <Image RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True" 
+            <Image HorizontalAlignment="Left" RenderOptions.BitmapScalingMode="NearestNeighbor" SnapsToDevicePixels="True" 
                                        Source="{Binding Mark}" Margin="{Binding Margin}" Width="16" TextOptions.TextFormattingMode="Display"/>
-            <TextBlock  Text="{Binding Type.Text}" FontStyle="{Binding Type.Style}"  Foreground="{Binding Type.Foreground}" 
-                                            FontWeight="{Binding Type.FontWeight}" TextDecorations="{Binding Type.Decoration}" 
-                                            Margin="{Binding Type.Margin}" TextOptions.TextFormattingMode="Display"  x:Name="TypeField"/>
-            
-            <TextBlock Text="{Binding Name.Text}" FontStyle="{Binding Name.Style}"  Foreground="{Binding Name.Foreground}" 
-                                           FontWeight="{Binding Name.FontWeight}" TextDecorations="{Binding Name.Decoration}" 
-                                           Margin="{Binding Name.Margin}" TextOptions.TextFormattingMode="Display" x:Name="TextField"/>
+            <TextBlock HorizontalAlignment="Left" 
+                       Text="{Binding Type.Text}" 
+                       FontStyle="{Binding Type.Style}" 
+                       FontWeight="{Binding Type.FontWeight}" 
+                       TextDecorations="{Binding Type.Decoration}" 
+                       Margin="{Binding Type.Margin}" 
+                       TextOptions.TextFormattingMode="Display"  x:Name="TypeField"/>
+
+            <TextBlock HorizontalAlignment="Left" 
+                       Text="{Binding Name.Text}" 
+                       FontStyle="{Binding Name.Style}"   
+                       FontWeight="{Binding Name.FontWeight}" TextDecorations="{Binding Name.Decoration}" 
+                       Margin="{Binding Name.Margin}" 
+                       TextOptions.TextFormattingMode="Display" 
+                       x:Name="TextField"/>
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

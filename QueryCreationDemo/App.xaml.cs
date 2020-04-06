@@ -10,7 +10,7 @@
 
 using System.Windows;
 using System.Windows.Threading;
-using QueryCreationDemo.Common;
+using GeneralAssembly.Windows;
 
 namespace QueryCreationDemo
 {

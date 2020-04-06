@@ -49,21 +49,6 @@
   <ItemGroup>
     <None Include="project.json" />
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
@@ -92,85 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Common\CheckableCombobox.xaml">
+    <Page Include="ConnectionWindow\ConnectionEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Common\CustomUpDown.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Common\ErrorBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Common\ExceptionWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ConnectionEditWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ConnectionWindow\AccessConnectionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConnectionWindow\MSSQLConnectionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConnectionWindow\ODBCConnectionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConnectionWindow\OLEDBConnectionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ConnectionWindow\OracleConnectionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\DatabaseSchemaViewPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\GeneralPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\MiscellaneousPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\OfflineModePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\PanesVisibilityPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\QueryBuilderPropertiesWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\SqlFormattingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PropertiesForm\SqlSyntaxPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="QueryParametersWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="QueryStatisticsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -182,67 +91,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\CheckableCombobox.xaml.cs">
-      <DependentUpon>CheckableCombobox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\CustomUpDown.xaml.cs">
-      <DependentUpon>CustomUpDown.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\ErrorBox.xaml.cs">
-      <DependentUpon>ErrorBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Common\ExceptionWindow.xaml.cs">
-      <DependentUpon>ExceptionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionEditWindow.xaml.cs">
+    <Compile Include="ConnectionWindow\ConnectionEditWindow.xaml.cs">
       <DependentUpon>ConnectionEditWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWindow\AccessConnectionWindow.xaml.cs">
-      <DependentUpon>AccessConnectionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWindow\MSSQLConnectionWindow.xaml.cs">
-      <DependentUpon>MSSQLConnectionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWindow\ODBCConnectionWindow.xaml.cs">
-      <DependentUpon>ODBCConnectionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWindow\OLEDBConnectionWindow.xaml.cs">
-      <DependentUpon>OLEDBConnectionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ConnectionWindow\OracleConnectionWindow.xaml.cs">
-      <DependentUpon>OracleConnectionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Misc.cs" />
-    <Compile Include="PropertiesForm\DatabaseSchemaViewPage.xaml.cs">
-      <DependentUpon>DatabaseSchemaViewPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\GeneralPage.xaml.cs">
-      <DependentUpon>GeneralPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\GroupLabel.cs" />
-    <Compile Include="PropertiesForm\MiscellaneousPage.xaml.cs">
-      <DependentUpon>MiscellaneousPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\OfflineModePage.xaml.cs">
-      <DependentUpon>OfflineModePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\PanesVisibilityPage.xaml.cs">
-      <DependentUpon>PanesVisibilityPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\QueryBuilderPropertiesWindow.xaml.cs">
-      <DependentUpon>QueryBuilderPropertiesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\SqlFormattingPage.xaml.cs">
-      <DependentUpon>SqlFormattingPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PropertiesForm\SqlSyntaxPage.xaml.cs">
-      <DependentUpon>SqlSyntaxPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QueryParametersWindow.xaml.cs">
-      <DependentUpon>QueryParametersWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QueryStatisticsWindow.xaml.cs">
-      <DependentUpon>QueryStatisticsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -279,6 +129,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GeneralAssembly_ext\GeneralAssembly_ext.csproj">
+      <Project>{47a94736-fb2a-4ae2-a282-74e138e7cdee}</Project>
+      <Name>GeneralAssembly_ext</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -14,6 +14,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 using ActiveQueryBuilder.Core;
+using GeneralAssembly;
+using GeneralAssembly.Connection;
 
 namespace FullFeaturedDemo.Connection
 {
@@ -60,8 +62,8 @@ namespace FullFeaturedDemo.Connection
             {
                 sourcelvConnection.Add(new ConnectionListItem
                 {
-                    Name = App.Connections[i].ConnectionName,
-                    Type = App.Connections[i].ConnectionType.ToString(),
+                    Name = App.Connections[i].Name,
+                    Type = App.Connections[i].Type.ToString(),
                     Tag = App.Connections[i]
                 });
             }
@@ -75,8 +77,8 @@ namespace FullFeaturedDemo.Connection
 
             // add preset
             var found = false;
-            var northwind = new ConnectionInfo(ConnectionTypes.MSSQL, "Northwind.xml", "Northwind.xml", true,
-                null, ""){SyntaxProvider = new MSSQLSyntaxProvider()};
+            var northwind = new ConnectionInfo(ConnectionTypes.MSSQL, "Northwind.xml", "Northwind.xml", true, "")
+                {SyntaxProvider = new MSSQLSyntaxProvider()};
 
             for (var i = 0; i < App.XmlFiles.Count; i++)
             {
@@ -98,8 +100,8 @@ namespace FullFeaturedDemo.Connection
             {
                 sourceXmlfiles.Add(new ConnectionListItem
                 {
-                    Name = App.XmlFiles[i].ConnectionName,
-                    Type = App.XmlFiles[i].ConnectionType.ToString(),
+                    Name = App.XmlFiles[i].Name,
+                    Type = App.XmlFiles[i].Type.ToString(),
                     Tag = App.XmlFiles[i],
                     UserQueries = App.XmlFiles[i].UserQueries
                 });
@@ -151,7 +153,7 @@ namespace FullFeaturedDemo.Connection
 
                 for (var i = 0; i < App.Connections.Count; i++)
                 {
-                    if (App.Connections[i].ConnectionName != name) continue;
+                    if (App.Connections[i].Name != name) continue;
 
                     found = true;
                     break;
@@ -175,7 +177,7 @@ namespace FullFeaturedDemo.Connection
 
                 for (var i = 0; i < App.XmlFiles.Count; i++)
                 {
-                    if (App.XmlFiles[i].ConnectionName != name) continue;
+                    if (App.XmlFiles[i].Name != name) continue;
                     found = true;
                     break;
                 }
@@ -186,7 +188,7 @@ namespace FullFeaturedDemo.Connection
 
         private void ButtonAddConnection_OnClick(object sender, RoutedEventArgs e)
         {
-            var ci = new ConnectionInfo(ConnectionTypes.MSSQL, GetNewConnectionEntryName(), null, false, null, "");
+            var ci = new ConnectionInfo(ConnectionTypes.MSSQL, GetNewConnectionEntryName(), null, false,  "");
 
             var cef = new AddConnectionWindow(ci) {Owner = this};
 
@@ -194,8 +196,8 @@ namespace FullFeaturedDemo.Connection
             {
                 var item = new ConnectionListItem()
                 {
-                    Name = ci.ConnectionName,
-                    Type = ci.ConnectionType.ToString(),
+                    Name = ci.Name,
+                    Type = ci.Type.ToString(),
                     Tag = ci
                 };
 
@@ -237,8 +239,8 @@ namespace FullFeaturedDemo.Connection
 
             if (cef.ShowDialog() == true)
             {
-                item.Name = ci.ConnectionName;
-                item.Type = ci.ConnectionType.ToString();
+                item.Name = ci.Name;
+                item.Type = ci.Type.ToString();
             }
 
             LvConnections.Focus();
@@ -246,7 +248,7 @@ namespace FullFeaturedDemo.Connection
 
         private void ButtonAddXml_OnClick(object sender, RoutedEventArgs e)
         {
-            var ci = new ConnectionInfo(ConnectionTypes.MSSQL, GetNewXmlFileEntryName(), null, true, null, "");
+            var ci = new ConnectionInfo(ConnectionTypes.MSSQL, GetNewXmlFileEntryName(), null, true, "");
 
             var cef = new AddConnectionWindow(ci) {Owner = this};
 
@@ -254,8 +256,8 @@ namespace FullFeaturedDemo.Connection
             {
                 var item = new ConnectionListItem()
                 {
-                    Name = ci.ConnectionType.ToString(),
-                    Type = ci.ConnectionType.ToString(),
+                    Name = ci.Type.ToString(),
+                    Type = ci.Type.ToString(),
                     Tag = ci
                 };
 
@@ -305,8 +307,8 @@ namespace FullFeaturedDemo.Connection
 
             if (cef.ShowDialog() == true)
             {
-                item.Name = ci.ConnectionName;
-                item.Type = ci.ConnectionType.ToString();
+                item.Name = ci.Name;
+                item.Type = ci.Type.ToString();
             }
 
             LvXmlFiles.Focus();

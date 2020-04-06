@@ -23,6 +23,8 @@ using ActiveQueryBuilder.View.QueryView;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
+using GeneralAssembly;
+using GeneralAssembly.Windows.QueryInformationWindows;
 using SQLParsingException = ActiveQueryBuilder.Core.SQLParsingException;
 
 namespace FullFeaturedMdiDemo.Common
@@ -207,7 +209,7 @@ namespace FullFeaturedMdiDemo.Common
 
         public SQLQuery SqlQuery { private set; get; }
 
-        public Helpers.SourceType SqlSourceType { set; get; }
+        public SourceType SqlSourceType { set; get; }
 
         public string FormattedQueryText
         {
@@ -231,7 +233,7 @@ namespace FullFeaturedMdiDemo.Common
 
             SqlContext = sqlContext;
 
-            SqlSourceType = Helpers.SourceType.New;
+            SqlSourceType = SourceType.New;
 
             SqlQuery = new SQLQuery(SqlContext);
 
@@ -275,18 +277,8 @@ namespace FullFeaturedMdiDemo.Common
 
             CBuilder.QueryTransformer.SQLUpdated += QueryTransformer_SQLUpdated;
 
-            DataGridResult.QueryTransformer = CBuilder.QueryTransformer;
-            DataGridResult.SqlQuery = SqlQuery;
-
-            // The pagination panel is displayed if the current SyntaxProvider has support for pagination
-            PaginationPanel.Visibility = (CBuilder.QueryTransformer.IsSupportLimitCount ||
-                                          CBuilder.QueryTransformer.IsSupportLimitOffset) && SqlContext.SyntaxProvider != null
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-
-
-            PaginationPanel.IsSupportLimitCount = CBuilder.QueryTransformer.IsSupportLimitCount;
-            PaginationPanel.IsSupportLimitOffset = CBuilder.QueryTransformer.IsSupportLimitOffset;
+            DataViewerResult.QueryTransformer = CBuilder.QueryTransformer;
+            DataViewerResult.SqlQuery = SqlQuery;
 
             UpdateStateButtons();
         }
@@ -316,12 +308,12 @@ namespace FullFeaturedMdiDemo.Common
 
         private void CheckParameters()
         {
-            if (Helpers.CheckParameters(SqlContext.MetadataProvider, SqlContext.SyntaxProvider, SqlQuery.QueryParameters))
+            if (SqlHelpers.CheckParameters(SqlContext.MetadataProvider, SqlContext.SyntaxProvider, SqlQuery.QueryParameters))
                 HideParametersErrorPanel();
             else
             {
                 var acceptableFormats =
-                    Helpers.GetAcceptableParametersFormats(SqlContext.MetadataProvider, SqlContext.SyntaxProvider);
+                    SqlHelpers.GetAcceptableParametersFormats(SqlContext.MetadataProvider, SqlContext.SyntaxProvider);
                 ShowParametersErrorPanel(acceptableFormats);
             }
         }
@@ -363,7 +355,7 @@ namespace FullFeaturedMdiDemo.Common
             stats += "\r\n\r\n" + "Output Expressions (" + qs.OutputColumns.Count + "):\r\n";
             stats = qs.OutputColumns.Aggregate(stats, (current, t) => current + ("\r\n" + t.Expression));
 
-            var f = new QueryStatisticsWindow { textBox = { Text = stats } };
+            var f = new QueryStatisticsWindow(stats);
 
             f.ShowDialog();
         }
@@ -476,7 +468,6 @@ namespace FullFeaturedMdiDemo.Common
 
             if (TabItemQueryText.IsSelected) return BoxSqlCurrentSubQuery;
 
-
             return BoxSql;
         }
 
@@ -556,10 +547,9 @@ namespace FullFeaturedMdiDemo.Common
             }
         }
 
-
         private void TimerStartingExecuteSql_Elapsed(object state)
         {
-            Dispatcher.BeginInvoke((Action)FillFastResult);
+            if (Dispatcher != null) Dispatcher.BeginInvoke((Action) FillFastResult);
         }
 
         private static void SqlQueryOnQueryAwake(QueryRoot sender, ref bool abort)
@@ -610,20 +600,27 @@ namespace FullFeaturedMdiDemo.Common
         {
             // Handle the event raised by Query Transformer object that the text of SQL query is changed
             // update the text box
-            if (DataGridResult.QueryTransformer == null || !TabItemData.IsSelected ||
-                BoxSqlTransformer.Text == DataGridResult.QueryTransformer.SQL) return;
+            try
+            {
+                if (DataViewerResult.QueryTransformer == null || !TabItemData.IsSelected ||
+                    BoxSqlTransformer.Text == DataViewerResult.QueryTransformer.SQL) return;
 
-            BoxSqlTransformer.Text = DataGridResult.QueryTransformer.SQL;
+                BoxSqlTransformer.Text = DataViewerResult.QueryTransformer.SQL;
 
-            DataGridResult.FillDataGrid(DataGridResult.QueryTransformer.SQL);
-            
+                DataViewerResult.FillData(DataViewerResult.QueryTransformer.SQL);
+            }
+            catch (Exception ex)
+            {
+                //ignore
+            }
+
         }
 
         private void LanguageChanged(object sender, EventArgs e)
         {
             DockPanelPropertiesBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strPropertiesBarCaption",
                 ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
-                LocalizableConstantsUI.strPropertiesBarCaption);
+                LocalizableConstantsUI.strProperties);
             DockPanelSubQueryNavBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strSubQueryStructureBarCaption",
                 ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
                 LocalizableConstantsUI.strSubQueryStructureBarCaption);
@@ -633,7 +630,7 @@ namespace FullFeaturedMdiDemo.Common
         {
             DockPanelPropertiesBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strPropertiesBarCaption",
                 ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
-                LocalizableConstantsUI.strPropertiesBarCaption);
+                LocalizableConstantsUI.strProperties);
             DockPanelSubQueryNavBar.Title = ActiveQueryBuilder.View.WPF.Helpers.Localizer.GetString("strSubQueryStructureBarCaption",
                 ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
                 LocalizableConstantsUI.strSubQueryStructureBarCaption);
@@ -690,44 +687,6 @@ namespace FullFeaturedMdiDemo.Common
             ErrorBox.Show(null, SqlContext.SyntaxProvider);
         }
 
-        private void ResetPagination()
-        {
-            PaginationPanel.Reset();
-            CBuilder.QueryTransformer.Skip("");
-            CBuilder.QueryTransformer.Take("");
-        }
-
-        private void PaginationPanel_OnCurrentPageChanged(object sender, RoutedEventArgs e)
-        {
-            if (PaginationPanel.CurrentPage == 1)
-            {
-                CBuilder.QueryTransformer.Skip("");
-                return;
-            }
-
-            // Select next n records
-            CBuilder.QueryTransformer.Skip(
-                (PaginationPanel.PageSize * (PaginationPanel.CurrentPage - 1)).ToString());
-        }
-
-        private void PaginationPanel_OnEnabledPaginationChanged(object sender, RoutedEventArgs e)
-        {
-            // Turn paging on and off
-            if (PaginationPanel.IsEnabled)
-            {
-                CBuilder.QueryTransformer.Take(PaginationPanel.PageSize.ToString());
-            }
-            else
-            {
-                ResetPagination();
-            }
-        }
-
-        private void PaginationPanel_OnPageSizeChanged(object sender, RoutedEventArgs e)
-        {
-            CBuilder.QueryTransformer.Take(PaginationPanel.PageSize.ToString());
-        }
-
         private void SetSqlTextCurrentSubQuery()
         {
             ErrorBoxCurrentSunQuery.Show(null, QView.Query.SQLContext.SyntaxProvider);
@@ -753,20 +712,7 @@ namespace FullFeaturedMdiDemo.Common
         {
             var result = _transformerSql.Take("10");
 
-            try
-            {
-                var dv = Helpers.ExecuteSql(result.SQL, (SQLQuery)_transformerSql.Query);
-
-                ListViewFastResultSql.ItemsSource = dv;
-                BorderError.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception exception)
-            {
-                BorderError.Visibility = Visibility.Visible;
-                LabelError.Text = exception.Message;
-
-                ListViewFastResultSql.ItemsSource = null;
-            }
+            dataViewerFastResultSql.FillData(result.SQL, (SQLQuery) _transformerSql.Query);
         }
 
         private void ButtonRefreshFastResult_OnClick(object sender, RoutedEventArgs e)
@@ -778,18 +724,6 @@ namespace FullFeaturedMdiDemo.Common
         {
             if (ButtonRefreashFastResult == null || CheckBoxAutoRefreash == null) return;
             ButtonRefreashFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;
-        }
-
-        private void CloseImage_OnMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            BorderError.Visibility = Visibility.Collapsed;
-        }
-
-        private void DataGridResult_OnRowsLoaded(object sender, EventArgs e)
-        {
-            if (!PaginationPanel.IsEnabled)
-                PaginationPanel.CountRows = DataGridResult.CountRows;
-            BorderBlockPagination.Visibility = Visibility.Collapsed;
         }
 
         private void BoxSqlCurrentSubQuery_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -836,17 +770,14 @@ namespace FullFeaturedMdiDemo.Common
             if (SqlContext == null ||
                 (SqlContext.SyntaxProvider == null || !TabItemData.IsSelected))
             {
-                DataGridResult.StopFill();
                 return;
             }
 
-            ResetPagination();
             BoxSqlTransformer.Text = BoxSql.Text;
 
             if (!TabItemData.IsSelected) return;
 
-            BorderBlockPagination.Visibility = Visibility.Visible;
-            DataGridResult.FillDataGrid(CBuilder.SQL);
+            DataViewerResult.FillData(CBuilder.SQL);
         }
 
         private void TabControlSqlText_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

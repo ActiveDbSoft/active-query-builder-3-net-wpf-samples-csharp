@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="MetadataEditorDemo.Common.LoadingWizardPages.ConnectionTypeWizardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600" x:ClassModifier="internal">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Common/GlobalStyleDictionary.xaml"/>
+                <ResourceDictionary>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}" x:Key="CaptionTextBlockStyle">
+                        <Setter Property="Margin" Value="0,0,40,0"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        
+        <Border Grid.Row="0" Padding="5" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Style="{StaticResource BorderBaseStyle}">
+            <TextBlock x:Name="TextBlockTitle" FontWeight="Bold" Text="Connection Type"/>
+        </Border>
+        
+        <Grid Row="1"  Margin="8,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource TextBlockBaseStyle}" x:Name="TextBlockWelcome" Grid.Row="0"
+                       Text="This step allows you to specify database server from which you want to load metadata." TextWrapping="Wrap" Margin="0,0,0,10"/>
+            <Grid Row="1" Margin="0,10,0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Select connection type:" x:Name="TextBlockConnectionType" Style="{StaticResource CaptionTextBlockStyle}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Select SQL syntax provider:" x:Name="TextBlockSyntaxProvider" Style="{StaticResource CaptionTextBlockStyle}"
+                           Visibility="Collapsed"/>
+                
+                <ComboBox Grid.Row="0" Grid.Column="1" Style="{StaticResource ComboBoxBaseStyle}" VerticalAlignment="Center" x:Name="ComboBoxConnectionType"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" Style="{StaticResource ComboBoxBaseStyle}" VerticalAlignment="Center" x:Name="ComboBoxSyntaxProvider"
+                          Visibility="Collapsed"/>
+            </Grid>
+            <Grid x:Name="PanelSyntaxOpts" Row="2" Margin="0,0,0,5"></Grid>
+            <TextBlock HorizontalAlignment="Right" Grid.Row="3"
+                       x:Name="TextBlockNextToContinue" Text="Click Next to continue or Cancel to quit the wizard." Style="{StaticResource TextBlockBaseStyle}"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -45,29 +45,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
+    <Reference Include="ActiveQueryBuilder.AdvantageMetadataProvider, Version=3.6.1.1160, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -279,10 +258,28 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\disk.ico" />
+    <Resource Include="Resources\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\cancel.png" />
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\disk.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\copy.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

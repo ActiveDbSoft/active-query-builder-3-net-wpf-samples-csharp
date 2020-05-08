@@ -158,7 +158,7 @@
                     </MenuItem.Resources>
                 </MenuItem>
                 <MenuItem Header="Properties" x:Name="MenuItemProperties" Click="MenuItemProperties_OnClick"/>
-                <MenuItem Header="Edit user expression" x:Name="MenuItemUserExpression" Click="MenuItemUserExpression_OnClick"/>
+                <MenuItem Header="Edit Predefined Conditions" x:Name="MenuItemUserExpression" Click="MenuItemUserExpression_OnClick"/>
             </MenuItem>
             <MenuItem Header="About..." Click="MenuItem_About_OnClick"/>
         </Menu>

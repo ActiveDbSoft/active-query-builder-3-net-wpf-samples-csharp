@@ -1,0 +1,279 @@
+﻿<UserControl x:Class="MetadataEditorDemo.Common.MetadataEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:MetadataEditorDemo.Common"
+             xmlns:databaseSchemaView="clr-namespace:ActiveQueryBuilder.View.WPF.DatabaseSchemaView;assembly=ActiveQueryBuilder.View.WPF"
+             xmlns:queryView="clr-namespace:ActiveQueryBuilder.View.WPF.QueryView;assembly=ActiveQueryBuilder.View.WPF"
+
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Common/GlobalStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Border" x:Key="BorderHeaderStyle" BasedOn="{StaticResource BorderBaseStyle}">
+                <Setter Property="BorderThickness" Value="2,2,2,0"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                <Setter Property="Margin" Value="0,0,4,0"/>
+            </Style>
+            <Style TargetType="Border" x:Key="BorderContainerStyle" BasedOn="{StaticResource BorderBaseStyle}">
+                <Setter Property="BorderThickness" Value="2,0,2,2"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                <Setter Property="Margin" Value="0,0,4,0"/>
+            </Style>
+            <Style TargetType="Border" x:Key="BorderMenuStyle" BasedOn="{StaticResource BorderBaseStyle}">
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"/>
+                <Setter Property="Margin" Value="0,0,4,0"/>
+            </Style>
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}" x:Key="TextBlockCaptionStyle">
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" x:Key="SeparatorVerticalStyle"/>
+            <Style TargetType="GridSplitter" x:Key="GridSplitterStyle" BasedOn="{StaticResource {x:Type GridSplitter}}">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="Width" Value="2"/>
+                <Setter Property="Margin" Value="0,0,1,0"/>
+            </Style>
+            <Style TargetType="CheckBox" x:Key="CheckBoxListStyle" BasedOn="{StaticResource CheckBoxBaseStyle}">
+                <Setter Property="Margin" Value="0,0,0,5"/>
+            </Style>
+            <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:Key="MenuItemHeaderStyle">
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Opacity" Value=".3"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+
+    <Grid x:Name="GridRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100" x:Name="ColumnDefinitionSchema"/>
+            <ColumnDefinition MinWidth="100" x:Name="ColumnDefinitionStructure"/>
+            <ColumnDefinition MinWidth="100" x:Name="ColumnDefinitionProperties"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Header cells-->
+        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource BorderHeaderStyle}" Background="Snow">
+            <TextBlock x:Name="LabelHeaderDatabase" Text="Database Schema" Style="{StaticResource TextBlockCaptionStyle}"/>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderHeaderStyle}" Background="Ivory">
+            <TextBlock x:Name="LabelHeaderMeatdaStructure" Text="Metadata Structure" Style="{StaticResource TextBlockCaptionStyle}"/>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderHeaderStyle}" Background="Silver" Margin="0" BorderThickness="1">
+            <TextBlock x:Name="LabelHeaderProperties" Text="Properties"  Style="{StaticResource TextBlockCaptionStyle}" Foreground="White" HorizontalAlignment="Center"/>
+        </Border>
+        <!--End header cells-->
+
+        <!--Menu cells-->
+        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource BorderMenuStyle}">
+            <Menu x:Name="DatabaseMainMenu">
+                <MenuItem x:Name="MenuItemMetadataLoadAll" Padding="0" Margin="0" Style="{StaticResource MenuItemHeaderStyle}">
+                    <MenuItem.Icon>
+                        <Image Source="/MetadataEditorDemo;component/Resources/load.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator Style="{StaticResource SeparatorVerticalStyle}"/>
+
+                <MenuItem Padding="0" x:Name="MenuItemDatabaseAddRoot" Style="{StaticResource MenuItemHeaderStyle}">
+                    <MenuItem.Resources>
+                        <Style TargetType="common:ImageBox">
+                            <Setter Property="Opacity" Value="1"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=IsEnabled}" Value="False">
+                                    <DataTrigger.Setters>
+                                        <Setter Property="Opacity" Value=".3"/>
+                                    </DataTrigger.Setters>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Resources>
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Width="16" Height="16" VerticalAlignment="Center" Source="/MetadataEditorDemo;component/Resources/add.png"/>
+                            <Polyline SnapsToDevicePixels="True" Fill="Black" VerticalAlignment="Center">
+                                <Polyline.Points>
+                                    <Point X ="0" Y ="0"/>
+                                    <Point X="8" Y="0"/>
+                                    <Point X="4" Y ="4"/>
+                                </Polyline.Points>
+                            </Polyline>
+                        </StackPanel>
+                    </MenuItem.Header>
+
+                    <MenuItem x:Name="MenuItemAddLinkedServer" Header="Linked Server">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/server_database.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddDatabase" Header="Database">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/database.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddSchema" Header="Schema">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/schema.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddPackage" Header="Package">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/package.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem x:Name="MenuItemAddTable" Header="Table">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/table.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddView" Header="View">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/view.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddProcedure" Header="Procedure">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/procedure.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddSynonym" Header="Synonym">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/synonym.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem x:Name="MenuItemAddField" Header="Field (Column)">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/field.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemAddForeignKey" Header="Foreign Key">
+                        <MenuItem.Icon>
+                            <Image Source="../Resources/relation.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="MenuItemDatabaseDelete" Padding="0" Margin="0" Style="{StaticResource MenuItemHeaderStyle}">
+                    <MenuItem.Icon>
+                        <Image Source="/ActiveQueryBuilder.View.WPF;component/Resources/delete.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator Style="{StaticResource SeparatorVerticalStyle}"/>
+            </Menu>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderMenuStyle}" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" Margin="0,0,4,0">
+            <Grid>
+                <Menu x:Name="MetadataStructureMainMenu" HorizontalAlignment="Left">
+                    <MenuItem x:Name="MenuItemMetadataStructureAdd" Padding="0" Margin="0" Style="{StaticResource MenuItemHeaderStyle}">
+                        <MenuItem.Icon>
+                            <Image Source="/MetadataEditorDemo;component/Resources/add.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="MenuItemMetadataStructureDelete" Padding="0" Margin="0" Style="{StaticResource MenuItemHeaderStyle}">
+                        <MenuItem.Icon>
+                            <Image Source="/MetadataEditorDemo;component/Resources/delete.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator Style="{StaticResource SeparatorVerticalStyle}"/>
+                </Menu>
+
+                <Menu x:Name="MetadataStructureAdditionallyMenu" HorizontalAlignment="Right"  Margin="0,0,3,0" VerticalAlignment="Center">
+                    <MenuItem x:Name="MenuItemMetadataStructureFillFromSchema" Style="{StaticResource MenuItemHeaderStyle}" VerticalContentAlignment="Center">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/ActiveQueryBuilder.View.WPF;component/Resources/wand.png" Margin="0,0,4,0"/>
+                                <TextBlock Text="Fill structure from schema" VerticalAlignment="Center" x:Name="BlockText"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </Menu>
+                <Popup x:Name="FillStructureFromSchemaPopup" PlacementTarget="{Binding ElementName=MenuItemMetadataStructureFillFromSchema}" StaysOpen="False">
+                    <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Padding="5" 
+                            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" MinWidth="240">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxListStyle}" Content="Group by server" x:Name="CheckBoxByServer"/>
+                            <CheckBox Style="{StaticResource CheckBoxListStyle}" Content="Group by database" x:Name="CheckBoxByDatabase"/>
+                            <CheckBox Style="{StaticResource CheckBoxListStyle}" Content="Group by schema" x:Name="CheckBoxBySchema"/>
+                            <CheckBox Style="{StaticResource CheckBoxListStyle}" Content="Group by types" x:Name="CheckBoxByTypes"/>
+                            <CheckBox Style="{StaticResource CheckBoxListStyle}" Content="Generate objects" x:Name="CheckBoxGenerateObjects"/>
+                            <TextBlock x:Name="TextBlockWarning" TextWrapping="Wrap" Margin="0,5,0,0"
+                                       Text="Warning: the current metadata stucture tree will be deleted!" Foreground="Maroon" MaxWidth="260" Visibility="Collapsed"/>
+                            <Grid Margin="10,10,10,0">
+                                <Button HorizontalAlignment="Left" Style="{StaticResource ButtonBaseStyle}" Content="Procced" Padding="15,2" MinWidth="75" x:Name="ButtonProceed"/>
+                                <Button HorizontalAlignment="Right" Style="{StaticResource ButtonBaseStyle}" Content="Cancel" Padding="15,2" MinWidth="75" x:Name="ButtonCancel"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <!--End menu cells-->
+
+        <!--Grid splitter-->
+        <GridSplitter x:Name="GridSplitterLeft" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource GridSplitterStyle}"/>
+        <Expander Grid.Column="0" Grid.Row="0" 
+                  Grid.RowSpan="3"
+                  ExpandDirection="Left" 
+                  HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" 
+                  IsExpanded="True" 
+                  Panel.ZIndex="1" Margin="0,0,-6.5,0" 
+                  SnapsToDevicePixels="True" 
+                  ClipToBounds="True"
+                  Expanded="ColumnStructureExpander_OnExpanded"
+                  Collapsed="ColumnStructureExpander_OnCollapsed"
+                  ToolTip="Show/Hide Metadata Structure Tree"
+                  MouseRightButtonUp="Separator_OnMouseRightButtonUp">
+            <Expander.LayoutTransform>
+                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+            </Expander.LayoutTransform>
+        </Expander>
+        <GridSplitter x:Name="GridSplitterMiddle" Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Style="{StaticResource GridSplitterStyle}"/>
+        <!--End Grid splitter-->
+
+        <Border x:Name="GridDatabase" Grid.Column="0" Grid.Row="2" Style="{StaticResource BorderContainerStyle}">
+            <databaseSchemaView:DatabaseSchemaView x:Name="DatabaseSchemaTree" 
+                                                   ShowInnerBorder="False" 
+                                                   KeyDown="DatabaseSchemaTree_OnKeyDown" 
+                                                   ValidateItemContextMenu="DatabaseSchemaTree_OnValidateItemContextMenu"/>
+        </Border>
+        <Border x:Name="GridMetadataStructure" Grid.Column="1" Grid.Row="2" Style="{StaticResource BorderContainerStyle}">
+            <databaseSchemaView:DatabaseSchemaView x:Name="MetadataStructureTree" 
+                                                   ShowInnerBorder="False" 
+                                                   KeyDown="MetadataStructureTree_OnKeyDown" 
+                                                   ValidateItemContextMenu="MetadataStructureTree_OnValidateItemContextMenu"/>
+        </Border>
+        <Border x:Name="GridProperties" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Style="{StaticResource BorderContainerStyle}" Margin="0">
+            <Grid x:Name="PropertiesPanelArea">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" KeyDown="Container_OnKeyDown">
+                    <queryView:PropertiesBar x:Name="PropertiesBarControl"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <common:InformationMessageControl Grid.RowSpan="3" VerticalAlignment="Top" HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="0" 
+                                                  x:Name="InformationMessageControl"/>
+    </Grid>
+</UserControl>
+

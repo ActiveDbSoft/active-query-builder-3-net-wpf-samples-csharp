@@ -1,0 +1,62 @@
+﻿<Window x:Class="MetadataEditorDemo.MetadataEditorStandalone"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:common="clr-namespace:MetadataEditorDemo.Common"
+        mc:Ignorable="d"
+        Title="MetadataEditorStandalone" Height="480" Width="986" x:ClassModifier="internal">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Menu VerticalAlignment="Center" x:Name="MainMenu">
+                <MenuItem x:Name="containerToolStripMenuItem" Header="Container">
+                    <MenuItem x:Name="tsmiLoadFromDatabase" Header="Load from database"/>
+                    <MenuItem x:Name="tsmiImportContainer" Header="Import from XML"/>
+                    <MenuItem x:Name="tsmiExportContainer" Header="Export to XML"/>
+                </MenuItem>
+                <MenuItem x:Name="structureToolStripMenuItem" Header="Structure">
+                    <MenuItem x:Name="tsmiImportStructure" Header="Import from XML"/>
+                    <MenuItem x:Name="tsmiExportStructure" Header="Export to XML"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel Grid.Column="1" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" Orientation="Horizontal" >
+                <TextBlock x:Name="toolStripLabel" Text="Syntax Provider:" Margin="0,0,5,0" VerticalAlignment="Center" Background="Transparent"/>
+                <ComboBox IsEditable="True" Width="200" Margin="0,2,5,2" x:Name="cbSyntaxProvider" DisplayMemberPath="Description">
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <Grid Row="1">
+            <common:MetadataEditorControl x:Name="MetadataEditor"/>
+        </Grid>
+
+        <Grid Row="2" Margin="5">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Grid>
+                    <ProgressBar x:Name="ProgressBarLoading" Visibility="Collapsed"/>
+                    <TextBlock Text="Status message..." x:Name="LabelStatusMessage" Padding="10,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                </Grid>
+                <TextBlock x:Name="LabelLoadingIbjects" Text="Loading objects..." Margin="7,0,0,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                <common:ButtonWithImage x:Name="ButtonBreakLoading" Margin="7,0,0,0" Padding="2" Visibility="Collapsed"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="MinWidth" Value="70"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button x:Name="BtnPreview" Content="Preview" Margin="0,0,10,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

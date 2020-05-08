@@ -1,0 +1,20 @@
+﻿<Label x:Class="MetadataEditorDemo.Common.LabelTextBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" VerticalContentAlignment="Center" Padding="0" Margin="0" x:ClassModifier="internal">
+    <Label.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Common/GlobalStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Label.Resources>
+    <Label.Content>
+        <TextBlock Style="{StaticResource TextBlockBaseStyle}" 
+                   Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Label}, Path=Text, Mode=TwoWay}" 
+                   x:Name="TextBlockContent"
+                   TextTrimming="CharacterEllipsis"/>
+    </Label.Content>
+</Label>

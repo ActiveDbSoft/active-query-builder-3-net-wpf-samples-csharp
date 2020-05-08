@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="MetadataEditorDemo.Common.LoadingWizardPages.WelcomeWizardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="363" d:DesignWidth="566" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+			 x:ClassModifier="internal">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Microsoft Sans Serif"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+          <Grid.RowDefinitions>
+              <RowDefinition Height="27"/>
+              <RowDefinition Height="*"/>
+          </Grid.RowDefinitions>  
+        <Grid Grid.Row="0" Background="{x:Static SystemColors.WindowBrush}">
+            <TextBlock Text="Welcome to the Active Query Builder Load Metadata Wizard" VerticalAlignment="Center" Margin="12,0,0,0" FontFamily="Arial" FontWeight="Bold" FontSize="12"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="137"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Background="White" Margin="3">
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Image Source="/ActiveQueryBuilder.View.WPF;component/Resources/logo3.png"/>
+                </Border>
+            </Grid>
+            <StackPanel Grid.Column="1" Margin="3">
+                <TextBlock x:Name="lWelcome" Text="This wizard will guide you through the metadata loading process." Height="35" Width="388" Margin="0,3,0,0"/>
+                <TextBlock Text="Please check the &quot;Clear Metadata Container before loading&quot; checkbox if you don't want to save previous content of Metadata Container." 
+                           Height="64" Width="388" TextWrapping="Wrap" />
+                <CheckBox Content="Clear Metadata Container before loading" Width="388" x:Name="cbClearBeforeLoading"/>
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="Click Next to continue or Cancel to quit the wizard." 
+                       VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,8,10"/>
+        </Grid>
+    </Grid>
+</UserControl>

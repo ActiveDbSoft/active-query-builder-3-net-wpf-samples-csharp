@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="MetadataEditorDemo.Common.InformationPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:MetadataEditorDemo.Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" x:Name="InfPanel">
+    <UserControl.Resources>
+        <common:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+    <Border Background="{DynamicResource {x:Static SystemColors.InfoBrushKey}}" Padding="5">
+        <Grid x:Name="GridRoot">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="TextBlockBorder" Grid.Column="0">
+                <TextBlock  VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:InformationPanel}}, Path=InfoText}" 
+                            MaxWidth="{Binding ElementName=TextBlockBorder, Path=ActualWidth}"/>
+            </Border>
+
+            <Image x:Name="Icon" Grid.Column="1"  Margin="5,0,0,0"
+                   Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:InformationPanel}}, Path=ShowIcon, 
+                Converter={StaticResource BoolToVisibilityConverter}}" Source="../Resources/info.png" Stretch="Uniform"  Width="17" Height="17">
+                <Image.ToolTip>
+                    <ToolTip Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:InformationPanel}}, Path=IconTooltip}"/>
+                </Image.ToolTip>
+            </Image>
+        </Grid>
+    </Border>
+</UserControl>

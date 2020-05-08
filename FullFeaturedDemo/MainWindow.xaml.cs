@@ -289,7 +289,7 @@ namespace FullFeaturedDemo
 
                 // create new SqlConnection object using the connections string from the connection form
                 if (!_selectedConnection.IsXmlFile)
-                    metadataProvaider = _selectedConnection.ConnectionDescriptor?.MetadataProvider;
+                    metadataProvaider = _selectedConnection.ConnectionDescriptor.MetadataProvider;
 
                 // setup the query builder with metadata and syntax providers
                 QBuilder.SQLContext.MetadataContainer.Clear();

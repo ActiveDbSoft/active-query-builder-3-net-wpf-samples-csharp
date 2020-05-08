@@ -1,0 +1,27 @@
+<Window x:Class="MetadataEditorDemo.Common.MetadataContainerLoadForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Load Metadata Wizard" Height="414" Width="612" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+        WindowStartupLocation="Manual" x:ClassModifier="internal">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Common/DictionaryStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="GridRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="GridContent" Row="0"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,0,10" x:Name="panelBottom">
+            <Button Style="{StaticResource StyleButton}" Content="&lt; _Back" Margin="0,0,7,0" x:Name="bBack"/>
+            <Button Style="{StaticResource StyleButton}" Content="_Next &gt;" Margin="0,0,7,0" x:Name="bNext"/>
+            <Button Style="{StaticResource StyleButton}" Content="_Cancel" Margin="0,0,7,0" x:Name="bCancel" IsCancel="True" Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

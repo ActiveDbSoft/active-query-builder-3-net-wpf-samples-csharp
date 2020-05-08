@@ -1,0 +1,24 @@
+﻿<Button x:Class="MetadataEditorDemo.Common.ButtonWithImage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:MetadataEditorDemo.Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" x:ClassModifier="internal">
+    <Button.Resources>
+        <common:IsNotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
+    </Button.Resources>
+    <Button.Content>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:ButtonWithImage}}, Path=Text}" 
+                           VerticalAlignment="Center"/>
+                <common:ImageBox VerticalAlignment="Center" 
+                                         Margin="5,0,0,0"
+                                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:ButtonWithImage}}, Path=Icon, Converter={StaticResource NotNullToVisibilityConverter}}"
+                                         Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:ButtonWithImage}}, Path=Icon}"/>
+            </StackPanel>
+        </StackPanel>
+    </Button.Content>
+</Button>

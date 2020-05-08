@@ -101,25 +101,25 @@ namespace FullFeaturedMdiDemo.Connection
 
         private void AddPresets()
         {
-            var presets = new List<ConnectionInfo>
-            {
-                new ConnectionInfo("Northwind.xml", "Northwind.xml", ConnectionTypes.ODBC)
-                {
-                    IsXmlFile = true
-                },
+            //var presets = new List<ConnectionInfo>
+            //{
+            //    new ConnectionInfo("Northwind.xml", "Northwind.xml", ConnectionTypes.ODBC)
+            //    {
+            //        IsXmlFile = true
+            //    },
 
-                new ConnectionInfo(new SQLiteConnectionDescriptor(), "SQLite", ConnectionTypes.SQLite, @"data source=northwind.sqlite"),
-                new ConnectionInfo(new MSAccessConnectionDescriptor(), "MS Access", ConnectionTypes.MSAccess, @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Nwind.mdb")
-            };
+            //    new ConnectionInfo(new SQLiteConnectionDescriptor(), "SQLite", ConnectionTypes.SQLite, @"data source=northwind.sqlite"),
+            //    new ConnectionInfo(new MSAccessConnectionDescriptor(), "MS Access", ConnectionTypes.MSAccess, @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Nwind.mdb")
+            //};
 
-            foreach (var preset in presets)
-            {
-                if (!FindConnectionInfo(preset))
-                    if (preset.IsXmlFile)
-                        App.XmlFiles.Add(preset);
-                    else
-                        App.Connections.Add(preset);
-            }
+            //foreach (var preset in presets)
+            //{
+            //    if (!FindConnectionInfo(preset))
+            //        if (preset.IsXmlFile)
+            //            App.XmlFiles.Add(preset);
+            //        else
+            //            App.Connections.Add(preset);
+            //}
         }
 
         private bool FindConnectionInfo(ConnectionInfo connectionInfo)

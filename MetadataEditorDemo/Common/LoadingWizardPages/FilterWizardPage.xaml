@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="MetadataEditorDemo.Common.LoadingWizardPages.FilterWizardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="340" d:DesignWidth="600" Background="{x:Static SystemColors.ControlBrush}"
+			 x:ClassModifier="internal">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Common/GlobalStyleDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Padding="5" Grid.Row="0" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Style="{StaticResource BorderBaseStyle}">
+            <TextBlock x:Name="TextBlockTitle" Text="Metadata Loading Options" FontWeight="Bold" Style="{StaticResource TextBlockBaseStyle}"/>
+        </Border>
+        <StackPanel Grid.Row="1" Margin="10">
+            <TextBlock x:Name="TextBlockInfo" Style="{StaticResource TextBlockBaseStyle}" Text="This step allows you to fine-tune the metadata loading process." 
+                       TextWrapping="Wrap" Margin="0,0,0,20"/>
+            <CheckBox Style="{StaticResource CheckBoxBaseStyle}" Content="Load fields" x:Name="CheckBoxLoadFields" Margin="0,0,0,5"/>
+            <TextBlock x:Name="TextBlockLoadFieldsDescription" Text="Loading fields from all tables may take a long time in the case of a large database schema. If your end-users are connected to the database, fields are loaded automatically on demand. Select this option only if you need a full snapshot of the schema."
+                       TextWrapping="Wrap" Style="{StaticResource TextBlockBaseStyle}" Margin="0,0,0,20"/>
+            <Button Content="Advanced Metadata Filtration" x:Name="ButtonAdvanced" HorizontalAlignment="Left" Padding="20,2" Click="bntAdvanced_Click" Style="{StaticResource ButtonBaseStyle}" Margin="0,0,0,5"/>
+            <TextBlock Text="You can instruct to load only part of the schema by specifying masks for database objects, schema and field names." Style="{StaticResource TextBlockBaseStyle}" 
+                       x:Name="TextBlockAdvanced" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <TextBlock Text="Click Load to start loading or Cancel to quit the wizard." HorizontalAlignment="Right" Grid.Row="2" Margin="8,10" 
+                   Style="{StaticResource TextBlockBaseStyle}" x:Name="TextBlockLabelToStart"/>
+    </Grid>
+</UserControl>

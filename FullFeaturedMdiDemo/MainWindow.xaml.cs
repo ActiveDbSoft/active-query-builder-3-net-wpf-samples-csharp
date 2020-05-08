@@ -238,6 +238,8 @@ namespace FullFeaturedMdiDemo
             MenuItemProperties.Header =
                 MenuItemProperties.IsEnabled ? "Properties" : "Properties (open a query to edit)";
 
+            MenuItemUserExpression.IsEnabled = MenuItemAddObject.IsEnabled = MdiContainer1.ActiveChild != null;
+
             foreach (var item in MetadataItemMenu.Items.Cast<FrameworkElement>().Where(x => x is MenuItem).ToList())
             {
                 item.IsEnabled = _sqlContext != null;
@@ -944,6 +946,17 @@ namespace FullFeaturedMdiDemo
         private void QueriesView_OnSelectedItemChanged(object sender, EventArgs e)
         {
             MenuItemExecuteUserQuery.IsEnabled = QueriesView.FocusedItem != null && !QueriesView.FocusedItem.IsFolder();
+        }
+
+        private void MenuItemUserExpression_OnClick(object sender, RoutedEventArgs e)
+        {
+            var activeWindow = MdiContainer1.ActiveChild as ChildWindow;
+
+            if (activeWindow == null) return;
+
+            var window = new EditUserExpressionWindow { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
+            window.Load(activeWindow.QueryView);
+            window.ShowDialog();
         }
     }
 }

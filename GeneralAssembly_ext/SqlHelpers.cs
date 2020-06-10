@@ -35,7 +35,7 @@ namespace GeneralAssembly
                 return new List<string> { AtNameParamFormat };
             }
 
-            if (metadataProvider is OracleNativeMetadataProvider)
+            if (metadataProvider is OracleMetadataProvider)
             {
                 return new List<string> { ColonNameParamFormat };
             }

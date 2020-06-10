@@ -61,10 +61,8 @@ namespace FullFeaturedMdiDemo.Connection
 
         private void FillConnectionTypes()
         {            
-            foreach (var name in GeneralAssembly.Misc.ConnectionDescriptorNames)
-            {
+            foreach (var name in Misc.ConnectionDescriptorNames)
                 cbConnectionType.Items.Add(name);
-            }
         }
 
         private void FillSyntaxTypes()

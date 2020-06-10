@@ -25,18 +25,23 @@ namespace GeneralAssembly
 
     public enum ConnectionTypes
     {
+        MSAccess,
+        Excel,
         MSSQL,
         MSSQLAzure,
-        MSAccess,
-        Oracle,
         MySQL,
+        OracleNative,
         PostgreSQL,
-        OLEDB,
         ODBC,
+        OLEDB,
         SQLite,
-        DB2,
         Firebird,
-        Excel
+        VistaDB5,
+        DB2,
+        Advantage,
+        Sybase,
+        Informix,
+        MSSQLCE
     }
 
     [Serializable]
@@ -243,7 +248,7 @@ namespace GeneralAssembly
                     case ConnectionTypes.MySQL:
                         ConnectionDescriptor = new MySQLConnectionDescriptor();
                         return;
-                    case ConnectionTypes.Oracle:
+                    case ConnectionTypes.OracleNative:
                         ConnectionDescriptor = new OracleNativeConnectionDescriptor();
                         return;
                     case ConnectionTypes.PostgreSQL:
@@ -264,6 +269,26 @@ namespace GeneralAssembly
                     case ConnectionTypes.Excel:
                         ConnectionDescriptor = new ExcelConnectionDescriptor();
                         return;
+                    case ConnectionTypes.VistaDB5:
+                        ConnectionDescriptor = new VistaDB5ConnectionDescriptor();
+                        break;
+                    case ConnectionTypes.DB2:
+                        ConnectionDescriptor = new DB2ConnectionDescriptor();
+                        break;
+                    case ConnectionTypes.Advantage:
+                        ConnectionDescriptor = new AdvantageConnectionDescriptor();
+                        break;
+                    case ConnectionTypes.Sybase:
+                        ConnectionDescriptor = new SybaseConnectionDescriptor();
+                        break;
+                    case ConnectionTypes.Informix:
+                        ConnectionDescriptor = new InformixConnectionDescriptor();
+                        break;
+                    case ConnectionTypes.MSSQLCE:
+                        ConnectionDescriptor = new MSSQLCEConnectionDescriptor();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             finally
@@ -300,7 +325,7 @@ namespace GeneralAssembly
             }
             if (descriptorType == typeof(OracleNativeConnectionDescriptor))
             {
-                return ConnectionTypes.Oracle;
+                return ConnectionTypes.OracleNative;
             }
             if (descriptorType == typeof(ODBCConnectionDescriptor))
             {
@@ -318,6 +343,18 @@ namespace GeneralAssembly
             {
                 return ConnectionTypes.SQLite;
             }
+            if (descriptorType == typeof(VistaDB5ConnectionDescriptor))
+                return ConnectionTypes.VistaDB5;
+            if (descriptorType == typeof(DB2ConnectionDescriptor))
+                return ConnectionTypes.DB2;
+            if (descriptorType == typeof(AdvantageConnectionDescriptor))
+                return ConnectionTypes.Advantage;
+            if (descriptorType == typeof(SybaseConnectionDescriptor))
+                return ConnectionTypes.Sybase;
+            if (descriptorType == typeof(InformixConnectionDescriptor))
+                return ConnectionTypes.Informix;
+            if (descriptorType == typeof(MSSQLCEConnectionDescriptor))
+                return ConnectionTypes.MSSQLCE;
 
             return ConnectionTypes.MSSQL;
         }
@@ -352,7 +389,13 @@ namespace GeneralAssembly
             typeof(ODBCConnectionDescriptor),
             typeof(OLEDBConnectionDescriptor),
             typeof(SQLiteConnectionDescriptor),
-            typeof(FirebirdConnectionDescriptor)
+            typeof(FirebirdConnectionDescriptor),
+            typeof(VistaDB5ConnectionDescriptor),
+            typeof(DB2ConnectionDescriptor),
+            typeof(AdvantageConnectionDescriptor),
+            typeof(SybaseConnectionDescriptor),
+            typeof(InformixConnectionDescriptor),
+            typeof(MSSQLCEConnectionDescriptor)
         };
 
         public static readonly List<string> ConnectionDescriptorNames = new List<string>
@@ -364,10 +407,16 @@ namespace GeneralAssembly
             "MySQL",
             "Oracle Native",
             "PostgreSQL",
-            "Generic ODBC Connection",
-            "Generic OLEDB Connection",
+            "ODBC",
+            "OLEDB",
             "SQLite",
-            "Firebird"
+            "Firebird",
+            "VistaDB5",
+            "DB2",
+            "Advantage",
+            "Sybase",
+            "Informix",
+            "MSSQLCE"
         };
     }
 }

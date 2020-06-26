@@ -144,8 +144,21 @@ namespace GeneralAssembly
     {
         private ConnectionTypes _type = ConnectionTypes.MSSQL;
         public string Name { get; set; }
+
+        private BaseConnectionDescriptor _connectionDescriptor;
         [XmlIgnore]
-        public BaseConnectionDescriptor ConnectionDescriptor { get; set; }
+        public BaseConnectionDescriptor ConnectionDescriptor
+        {
+            get { return _connectionDescriptor;}
+            set
+            {
+                _connectionDescriptor = value;
+                if(_connectionDescriptor?.MetadataProvider?.Connection != null && string.IsNullOrEmpty(_connectionDescriptor.MetadataProvider.Connection.ConnectionString)  && !string.IsNullOrEmpty(ConnectionString) && !IsXmlFile)
+                {
+                    _connectionDescriptor.MetadataProvider.Connection.ConnectionString = ConnectionString;
+                }
+            }
+        }
         [XmlIgnore]
         public BaseSyntaxProvider SyntaxProvider { get; set; }
 

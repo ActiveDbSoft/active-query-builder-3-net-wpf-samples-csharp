@@ -8,14 +8,45 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
-using System.Windows;
 using System.Windows.Threading;
+using CriteriaBuilderCustomize.Properties;
+using GeneralAssembly;
 using GeneralAssembly.Windows;
 
-namespace GeneralAssembly
+namespace CriteriaBuilderCustomize
 {
-    public partial class App : Application
+    /// <summary>
+    /// Логика взаимодействия для App.xaml
+    /// </summary>
+    public partial class App
     {
+        public static ConnectionList Connections = new ConnectionList();
+        public static ConnectionList XmlFiles = new ConnectionList();
+
+        public App()
+        {
+            //if new version, import upgrade from previous version
+            if (Settings.Default.CallUpgrade)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.CallUpgrade = false;
+            }
+
+            if (Settings.Default.Connections != null)
+            {
+                Connections = Settings.Default.Connections;
+            }
+
+            if (Settings.Default.XmlFiles != null)
+            {
+                XmlFiles = Settings.Default.XmlFiles;
+            }
+
+            Settings.Default.Connections = Connections;
+            Settings.Default.XmlFiles = XmlFiles;
+            Settings.Default.Save();
+        }
+
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             var errorWindow = new ExceptionWindow

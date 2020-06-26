@@ -1,0 +1,51 @@
+﻿<Window x:Class="CriteriaBuilderCustomize.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:criteriaBuilder="clr-namespace:ActiveQueryBuilder.View.WPF.CriteriaBuilder;assembly=ActiveQueryBuilder.View.WPF"
+        xmlns:wpf="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="700" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Menu VerticalAlignment="Top" Grid.Row="0">
+            <MenuItem Header="Connect">
+                <MenuItem Header="Connect to ..." Click="ConnectTo_OnClick"/>
+                <Separator Margin="0" Padding="0"></Separator>
+                <MenuItem Header="Fill the query builder programmatically" Click="FillProgrammatically_OnClick"/>
+            </MenuItem>
+        </Menu>
+
+        <TabControl Grid.Row="1">
+            <TabItem Header="QueryBuilder">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="100"/>
+                    </Grid.RowDefinitions>
+                    <wpf:QueryBuilder  x:Name="queryBuilder" Grid.Row="0" SQLUpdated="QueryBuilder_OnSQLUpdated"/>
+                    <TextBox Grid.Row="1" Padding="5" TextWrapping="Wrap" AcceptsReturn="True" x:Name="TextBoxSql" LostKeyboardFocus="TextBoxSql_OnLostKeyboardFocus"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="CriteriaBuilder">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Margin="5">
+                        <CheckBox Content="Use custom editor" x:Name="CheckBoxEditor" IsChecked="True"/>
+                        <CheckBox Content="Use custom lookup button" x:Name="CheckBoxLookupButton" IsChecked="True" Margin="15,0,0,0"/>
+                        <CheckBox Content="Use custom lookup list" x:Name="CheckBoxLookupList" IsChecked="True" Margin="15,0,0,0"/>
+                    </WrapPanel>
+                    <criteriaBuilder:CriteriaBuilder x:Name="CriteriaBuilder" Grid.Row="1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

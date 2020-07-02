@@ -45,11 +45,11 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <Reference Include="ActiveQueryBuilder.AdvantageMetadataProvider, Version=3.6.6.1164, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
+    <Reference Include="ActiveQueryBuilder.AdvantageMetadataProvider, Version=3.6.7.1165, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
     
-    <Reference Include="ActiveQueryBuilder.FirebirdMetadataProvider, Version=3.6.6.1164, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
-    <Reference Include="ActiveQueryBuilder.InformixMetadataProvider, Version=3.6.6.1164, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
-    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.6.6.1164, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
+    <Reference Include="ActiveQueryBuilder.FirebirdMetadataProvider, Version=3.6.7.1165, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
+    <Reference Include="ActiveQueryBuilder.InformixMetadataProvider, Version=3.6.7.1165, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
+    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.6.7.1165, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
     
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

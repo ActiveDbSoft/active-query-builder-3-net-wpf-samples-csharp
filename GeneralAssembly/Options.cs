@@ -97,18 +97,16 @@ namespace GeneralAssembly
                 {
                     var service = new OptionsSerializationService(xmlBuilder) {SerializeDefaultValues = true};
                     XmlSerializerExtensions.Builder = xmlBuilder;
-                    var root = xmlBuilder.BeginObject("Options");
+                    using (var root = xmlBuilder.BeginObject("Options"))
                     {
                         foreach (var option in _options)
                         {
-                            var optionHandle = xmlBuilder.BeginObjectProperty(root, option.GetType().Name);
+                            using (var optionHandle = xmlBuilder.BeginObjectProperty(root, option.GetType().Name))
                             {
                                 service.EncodeObject(optionHandle, option);
                             }
-                            xmlBuilder.EndObjectProperty(optionHandle);
                         }
                     }
-                    xmlBuilder.EndObject(root);
                 }
 
                 stream.Position = 0;

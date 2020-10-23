@@ -8,6 +8,7 @@
 //       RESTRICTIONS.                                               //
 //*******************************************************************//
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -97,7 +98,7 @@ namespace GeneralAssembly
                 {
                     var service = new OptionsSerializationService(xmlBuilder) {SerializeDefaultValues = true};
                     XmlSerializerExtensions.Builder = xmlBuilder;
-                    using (var root = xmlBuilder.BeginObject("Options"))
+                    using (IDisposable root = xmlBuilder.BeginObject("Options"))
                     {
                         foreach (var option in _options)
                         {

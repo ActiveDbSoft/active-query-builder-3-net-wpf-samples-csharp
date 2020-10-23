@@ -67,9 +67,8 @@ namespace CriteriaBuilderCustomize
             get { return new CPoint((int)HorizontalOffset, (int)VerticalOffset); }
             set
             {
-                var point = ((UIElement)Owner).PointFromScreen(value.ToNativePoint());
-                HorizontalOffset = point.X;
-                VerticalOffset = point.Y;
+                HorizontalOffset = value.X;
+                VerticalOffset = value.Y;
             }
         }
 

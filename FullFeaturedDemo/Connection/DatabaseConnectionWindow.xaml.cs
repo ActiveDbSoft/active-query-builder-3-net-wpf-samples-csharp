@@ -55,65 +55,8 @@ namespace FullFeaturedDemo.Connection
 
             GridHint.Visibility = showHint ? Visibility.Visible : Visibility.Collapsed;
 
-            var sourcelvConnection = new ObservableCollection<ConnectionListItem>();
-
-            // fill connection list
-            for (var i = 0; i < App.Connections.Count; i++)
-            {
-                sourcelvConnection.Add(new ConnectionListItem
-                {
-                    Name = App.Connections[i].Name,
-                    Type = App.Connections[i].Type.ToString(),
-                    Tag = App.Connections[i]
-                });
-            }
-
-            LvConnections.ItemsSource = sourcelvConnection;
-
-            if (LvConnections.Items.Count > 0)
-            {
-                LvConnections.SelectedItem = LvConnections.Items[0];
-            }
-
-            // add preset
-            var found = false;
-            var northwind = new ConnectionInfo(ConnectionTypes.MSSQL, "Northwind.xml", "Northwind.xml", true, "")
-                {SyntaxProvider = new MSSQLSyntaxProvider()};
-
-            for (var i = 0; i < App.XmlFiles.Count; i++)
-            {
-                if (App.XmlFiles[i].Equals(northwind))
-                {
-                    found = true;
-                }
-            }
-
-            if (!found)
-            {
-                App.XmlFiles.Insert(0, northwind);
-            }
-
-            var sourceXmlfiles = new ObservableCollection<ConnectionListItem>();
-
-            // fill XML files list
-            for (var i = 0; i < App.XmlFiles.Count; i++)
-            {
-                sourceXmlfiles.Add(new ConnectionListItem
-                {
-                    Name = App.XmlFiles[i].Name,
-                    Type = App.XmlFiles[i].Type.ToString(),
-                    Tag = App.XmlFiles[i],
-                    UserQueries = App.XmlFiles[i].UserQueries
-                });
-            }
-
-            LvXmlFiles.ItemsSource = sourceXmlfiles;
-
-            if (LvXmlFiles.Items.Count > 0)
-            {
-                LvXmlFiles.SelectedItem = LvXmlFiles.Items[0];
-            }
             Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive += Hooks_DispatcherInactive;
+            LoadConnection();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -209,8 +152,76 @@ namespace FullFeaturedDemo.Connection
             }
 
             LvConnections.Focus();
+
+            SaveConnection();
+        }
+
+        private void LoadConnection()
+        {
+            var sourcelvConnection = new ObservableCollection<ConnectionListItem>();
+
+            // fill connection list
+            for (var i = 0; i < App.Connections.Count; i++)
+            {
+                sourcelvConnection.Add(new ConnectionListItem
+                {
+                    Name = App.Connections[i].Name,
+                    Type = App.Connections[i].Type.ToString(),
+                    Tag = App.Connections[i]
+                });
+            }
+
+            LvConnections.ItemsSource = sourcelvConnection;
+
+            if (LvConnections.Items.Count > 0)
+            {
+                LvConnections.SelectedItem = LvConnections.Items[0];
+            }
+
+            // add preset
+            var found = false;
+            var northwind = new ConnectionInfo(ConnectionTypes.MSSQL, "Northwind.xml", "Northwind.xml", true, "")
+                { SyntaxProvider = new MSSQLSyntaxProvider() };
+
+            for (var i = 0; i < App.XmlFiles.Count; i++)
+            {
+                if (App.XmlFiles[i].Equals(northwind))
+                {
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                App.XmlFiles.Insert(0, northwind);
+            }
+
+            var sourceXmlfiles = new ObservableCollection<ConnectionListItem>();
+
+            // fill XML files list
+            for (var i = 0; i < App.XmlFiles.Count; i++)
+            {
+                sourceXmlfiles.Add(new ConnectionListItem
+                {
+                    Name = App.XmlFiles[i].Name,
+                    Type = App.XmlFiles[i].Type.ToString(),
+                    Tag = App.XmlFiles[i],
+                    UserQueries = App.XmlFiles[i].UserQueries
+                });
+            }
+
+            LvXmlFiles.ItemsSource = sourceXmlfiles;
+
+            if (LvXmlFiles.Items.Count > 0)
+                LvXmlFiles.SelectedItem = LvXmlFiles.Items[0];
+        }
+
+        private static void SaveConnection()
+        {
+            App.Connections.SaveData();
+            App.XmlFiles.SaveData();
+
             Properties.Settings.Default.XmlFiles = App.XmlFiles;
-            
             Properties.Settings.Default.Connections = App.Connections;
             Properties.Settings.Default.Save();
         }
@@ -226,6 +237,7 @@ namespace FullFeaturedDemo.Connection
             App.Connections.Remove((ConnectionInfo) item.Tag);
 
             LvConnections.Focus();
+            SaveConnection();
         }
 
         private void ButtonConfigureConnection_OnClick(object sender, RoutedEventArgs e)
@@ -241,6 +253,7 @@ namespace FullFeaturedDemo.Connection
             {
                 item.Name = ci.Name;
                 item.Type = ci.Type.ToString();
+                SaveConnection();
             }
 
             LvConnections.Focus();
@@ -266,14 +279,10 @@ namespace FullFeaturedDemo.Connection
 
                 App.XmlFiles.Add(ci);
                 LvXmlFiles.SelectedItem = item;
+                SaveConnection();
             }
 
             LvXmlFiles.Focus();
-
-            Properties.Settings.Default.XmlFiles = App.XmlFiles;
-
-            Properties.Settings.Default.Connections = App.Connections;
-            Properties.Settings.Default.Save();
         }
 
         private void ButtonRemoveXml_OnClick(object sender, RoutedEventArgs e)
@@ -290,10 +299,7 @@ namespace FullFeaturedDemo.Connection
 
             LvXmlFiles.Focus();
 
-            Properties.Settings.Default.XmlFiles = App.XmlFiles;
-
-            Properties.Settings.Default.Connections = App.Connections;
-            Properties.Settings.Default.Save();
+            SaveConnection();
         }
 
         private void ButtonConfigureXml_OnClick(object sender, RoutedEventArgs e)
@@ -309,6 +315,7 @@ namespace FullFeaturedDemo.Connection
             {
                 item.Name = ci.Name;
                 item.Type = ci.Type.ToString();
+                SaveConnection();
             }
 
             LvXmlFiles.Focus();

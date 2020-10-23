@@ -32,14 +32,14 @@ namespace FullFeaturedMdiDemo.Connection
         private class ListViewItem
         {
             public string Name { get; set; }
-            public CImage Icon { get; set; } 
+            public CImage Icon { get; set; }
         }
 
         private readonly ConnectionInfo _connection;
 
         public ConnectionEditWindow()
         {
-            InitializeComponent();           
+            InitializeComponent();
         }
 
         public ConnectionEditWindow(ConnectionInfo connectionInfo)
@@ -60,7 +60,7 @@ namespace FullFeaturedMdiDemo.Connection
         }
 
         private void FillConnectionTypes()
-        {            
+        {
             foreach (var name in Misc.ConnectionDescriptorNames)
                 cbConnectionType.Items.Add(name);
         }
@@ -249,17 +249,17 @@ namespace FullFeaturedMdiDemo.Connection
         private void RecreateConnectionFrame()
         {
             RemoveConnectionPropertiesFrame();
-			ClearProperties(_connection.ConnectionDescriptor.MetadataProperties);
+            ClearProperties(_connection.ConnectionDescriptor.MetadataProperties);
             var container = PropertiesFactory.GetPropertiesContainer(_connection.ConnectionDescriptor.MetadataProperties);
             (pbConnection as IPropertiesControl).SetProperties(container);
         }
 
         private void RemoveConnectionPropertiesFrame()
         {
-            pbConnection.ClearProperties();            
+            pbConnection.ClearProperties();
         }
 
-        private void ClearProperties(ObjectProperties properties)
+        private static void ClearProperties(ObjectProperties properties)
         {
             properties.GroupProperties.Clear();
             properties.PropertiesEditors.Clear();
@@ -319,19 +319,16 @@ namespace FullFeaturedMdiDemo.Connection
 
         private void CbLoadFromDefaultDatabase_OnChecked(object sender, RoutedEventArgs e)
         {
-            _connection.ConnectionDescriptor.MetadataLoadingOptions.LoadDefaultDatabaseOnly = cbLoadFromDefaultDatabase.IsChecked ?? default(bool);
+            _connection.ConnectionDescriptor.MetadataLoadingOptions.LoadDefaultDatabaseOnly =
+                cbLoadFromDefaultDatabase.IsChecked ?? default(bool);
         }
 
         private void BtnAdd_OnClick(object sender, RoutedEventArgs e)
         {
-            if (tcFilter.SelectedItem == tpInclude)
-            {
+            if (Equals(tcFilter.SelectedItem, tpInclude))
                 AddIncludeFilter(databaseSchemaView1.SelectedItems);
-            }
-            else if (tcFilter.SelectedItem == tpExclude)
-            {
+            else if (Equals(tcFilter.SelectedItem, tpExclude))
                 AddExcludeFilter(databaseSchemaView1.SelectedItems);
-            }            
         }
 
         private void AddIncludeFilter(MetadataStructureItem[] items)
@@ -348,7 +345,7 @@ namespace FullFeaturedMdiDemo.Connection
                 if (metadataItem.Type.IsNamespace())
                 {
                     filter.Schemas.Add(metadataItem.NameFull);
-                    lvInclude.Items.Add(new ListViewItem {Name = metadataItem.NameFull, Icon = GetImage(metadataItem)});
+                    lvInclude.Items.Add(new ListViewItem { Name = metadataItem.NameFull, Icon = GetImage(metadataItem) });
                 }
                 else if (metadataItem.Type.IsObject())
                 {
@@ -455,7 +452,7 @@ namespace FullFeaturedMdiDemo.Connection
                 var itemsToDelete = new List<ListViewItem>();
                 foreach (ListViewItem selectedItem in lvInclude.SelectedItems)
                 {
-                    itemsToDelete.Add(selectedItem);                    
+                    itemsToDelete.Add(selectedItem);
                 }
 
                 foreach (var item in itemsToDelete)
@@ -468,7 +465,7 @@ namespace FullFeaturedMdiDemo.Connection
                 var itemsToDelete = new List<ListViewItem>();
                 foreach (ListViewItem selectedItem in lvExclude.SelectedItems)
                 {
-                    itemsToDelete.Add(selectedItem);                    
+                    itemsToDelete.Add(selectedItem);
                 }
 
                 foreach (var item in itemsToDelete)

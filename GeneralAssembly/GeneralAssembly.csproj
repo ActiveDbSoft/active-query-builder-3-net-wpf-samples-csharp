@@ -45,6 +45,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
+    <Reference Include="ActiveQueryBuilder.AdvantageMetadataProvider, Version=3.7.4.1178, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL" />
+    
     
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -95,6 +97,7 @@
       <DependentUpon>XmlFileFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="Connection\IConnectionFrame.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="QueryBuilderProperties\DatabaseSchemaViewPage.xaml.cs">
       <DependentUpon>DatabaseSchemaViewPage.xaml</DependentUpon>
     </Compile>

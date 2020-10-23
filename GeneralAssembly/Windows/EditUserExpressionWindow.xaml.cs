@@ -76,7 +76,7 @@ namespace GeneralAssembly.Windows
                 {
                     throw new SQLParsingException(
                         string.Format(
-                            Helpers.Localizer.GetString(nameof(LocalizableConstantsUI.strInvalidCondition),
+                            ActiveQueryBuilder.Core.Helpers.Localizer.GetString(nameof(LocalizableConstantsUI.strInvalidCondition),
                                 ActiveQueryBuilder.View.WPF.Helpers.ConvertLanguageFromNative(Language),
                                 LocalizableConstantsUI.strInvalidCondition), TextBoxExpression.Text),
                         token);
@@ -251,7 +251,7 @@ namespace GeneralAssembly.Windows
 
             if (index - 1 < 0) return;
 
-            Helpers.IListMove(_queryView.UserPredefinedConditions, index, index - 1);
+            ActiveQueryBuilder.Core.Helpers.IListMove(_queryView.UserPredefinedConditions, index, index - 1);
 
             Load(null);
 
@@ -268,7 +268,7 @@ namespace GeneralAssembly.Windows
 
             if (index + 1 >= _source.Count) return;
 
-            Helpers.IListMove(_queryView.UserPredefinedConditions, index, index + 1);
+            ActiveQueryBuilder.Core.Helpers.IListMove(_queryView.UserPredefinedConditions, index, index + 1);
 
             Load(null);
 

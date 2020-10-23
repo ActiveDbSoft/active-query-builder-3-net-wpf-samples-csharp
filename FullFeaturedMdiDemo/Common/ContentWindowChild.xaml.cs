@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -23,8 +24,11 @@ using ActiveQueryBuilder.View.QueryView;
 using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
+using FullFeaturedMdiDemo.CommonWindow;
+using FullFeaturedMdiDemo.Reports;
 using GeneralAssembly;
 using GeneralAssembly.Windows.QueryInformationWindows;
+using Microsoft.Win32;
 using SQLParsingException = ActiveQueryBuilder.Core.SQLParsingException;
 
 namespace FullFeaturedMdiDemo.Common
@@ -300,6 +304,9 @@ namespace FullFeaturedMdiDemo.Common
 
             UpdateStateButtons();
             CheckParameters();
+
+            ButtonCVS.IsEnabled = ButtonExcel.IsEnabled = ButtonReport.IsEnabled =
+                !string.IsNullOrEmpty(FormattedQueryText) && SqlContext.MetadataProvider != null;
 
             if (!TabItemFastResult.IsSelected || CheckBoxAutoRefreash.IsChecked == false) return;
 
@@ -820,6 +827,84 @@ namespace FullFeaturedMdiDemo.Common
         {
             BoxSqlCurrentSubQuery.Text = _lastValidSql;
             BoxSqlCurrentSubQuery.Focus();
+        }
+
+        private void CreateFastReport(DataTable dataTable)
+        {
+            if (dataTable == null)
+                throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
+
+            var reportWindow =
+                new FastReportWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
+
+            reportWindow.ShowDialog();
+        }
+
+        private void CreateStimulsoftReport(DataTable dataTable)
+        {
+            if (dataTable == null)
+                throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
+
+            var reportWindow =
+                new StimulsoftWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
+
+            reportWindow.ShowDialog();
+        }
+
+        private void CreateActiveReport(DataTable dataTable)
+        {
+            if (dataTable == null)
+                throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
+
+            var reportWindow =
+                new ActiveReportsWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this), ShowInTaskbar = false };
+
+            reportWindow.ShowDialog();
+        }
+
+        private void GenerateReport_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new CreateReportWindow { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
+
+            var result = window.ShowDialog();
+
+            if (result != true || window.SelectedReportType == null) return;
+            var dataTable = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+
+            switch (window.SelectedReportType)
+            {
+                case ReportType.ActiveReports14:
+                    CreateActiveReport(dataTable);
+                    break;
+                case ReportType.Stimulsoft:
+                    CreateStimulsoftReport(dataTable);
+                    break;
+                case ReportType.FastReport:
+                    CreateFastReport(dataTable);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void ExportToExcel_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dt = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+
+            var saveDialog = new SaveFileDialog { AddExtension = true, DefaultExt = "xlsx", FileName = "Export.xlsx" };
+            if (saveDialog.ShowDialog(ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this)) != true) return;
+
+            ExportHelpers.ExportToExcel(dt, saveDialog.FileName);
+        }
+
+        private void ExportToCSV_OnClick(object sender, RoutedEventArgs e)
+        {
+            var saveDialog = new SaveFileDialog { AddExtension = true, DefaultExt = "csv", FileName = "Data.csv" };
+            var result = saveDialog.ShowDialog(ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this));
+            if (result != true) return;
+
+            var dt = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+            ExportHelpers.ExportToCSV(dt, saveDialog.FileName);
         }
     }
 }

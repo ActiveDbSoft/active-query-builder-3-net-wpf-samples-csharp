@@ -56,12 +56,15 @@ namespace GeneralAssembly
             var xmlSerializer = new ActiveQueryBuilder.Core.Serialization.XmlSerializer();
             foreach (ConnectionInfo connection in _connections)
             {
-                connection.ConnectionString = connection.ConnectionDescriptor.ConnectionString;
+				if(!connection.IsXmlFile)
+					connection.SyntaxProviderName = connection.ConnectionDescriptor.SyntaxProvider.GetType().ToString();
+                connection.ConnectionString =
+                    connection.ConnectionDescriptor.MetadataProvider.Connection.ConnectionString;
                 connection.LoadingOptions =
                     xmlSerializer.Serialize(connection.ConnectionDescriptor.MetadataLoadingOptions);
                 connection.SyntaxProviderState =
                     xmlSerializer.SerializeObject(connection.ConnectionDescriptor.SyntaxProvider);
-            }            
+            }
         }
 
         public void RemoveObsoleteConnectionInfos()
@@ -88,26 +91,40 @@ namespace GeneralAssembly
 
             foreach (ConnectionInfo connection in _connections)
             {
-                if (connection.ConnectionDescriptor == null) continue;
-
-                connection.ConnectionDescriptor.ConnectionString = connection.ConnectionString;
-
-                if (!string.IsNullOrEmpty(connection.LoadingOptions))
+                try
                 {
-                    xmlSerializer.Deserialize(connection.LoadingOptions,
-                        connection.ConnectionDescriptor.MetadataLoadingOptions);
+                    if (connection.ConnectionDescriptor == null) continue;
+
+                    connection.ConnectionDescriptor.ConnectionString = connection.ConnectionString;
+
+                    if (!string.IsNullOrEmpty(connection.LoadingOptions))
+                    {
+                        xmlSerializer.Deserialize(connection.LoadingOptions,
+                            connection.ConnectionDescriptor.MetadataLoadingOptions);
+                    }
+
+                    if (!string.IsNullOrEmpty(connection.SyntaxProviderName) && connection.IsGenericConnection())
+                    {
+                        connection.ConnectionDescriptor.SyntaxProvider =
+                            ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
+                    }
+
+                    if (!string.IsNullOrEmpty(connection.SyntaxProviderState))
+                    {
+                        if (!string.IsNullOrEmpty(connection.SyntaxProviderName))
+                        {
+                            connection.ConnectionDescriptor.SyntaxProvider =
+                                ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
+                        }
+
+                        xmlSerializer.DeserializeObject(connection.SyntaxProviderState,
+                            connection.ConnectionDescriptor.SyntaxProvider);
+                        connection.ConnectionDescriptor.RecreateSyntaxProperties();
+                    }
                 }
-
-                if (!string.IsNullOrEmpty(connection.SyntaxProviderName) && connection.IsGenericConnection())
+                catch
                 {
-                    connection.ConnectionDescriptor.SyntaxProvider =
-                        ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
-                }
-
-                if (!string.IsNullOrEmpty(connection.SyntaxProviderState))
-                {
-                    xmlSerializer.DeserializeObject(connection.SyntaxProviderState, connection.ConnectionDescriptor.SyntaxProvider);
-                    connection.ConnectionDescriptor.RecreateSyntaxProperties();
+                    //ignore
                 }
             }
         }
@@ -407,8 +424,8 @@ namespace GeneralAssembly
             "MySQL",
             "Oracle Native",
             "PostgreSQL",
-            "ODBC",
-            "OLEDB",
+            "Generic ODBC Connection",
+            "Generic OLEDB Connection",
             "SQLite",
             "Firebird",
             "VistaDB5",

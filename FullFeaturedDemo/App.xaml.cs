@@ -33,18 +33,13 @@ namespace FullFeaturedDemo
             }
 
             if (Settings.Default.Connections != null)
-            {
                 Connections = Settings.Default.Connections;
-            }
 
             if (Settings.Default.XmlFiles != null)
-            {
                 XmlFiles = Settings.Default.XmlFiles;
-            }
 
-            Settings.Default.Connections = Connections;
-            Settings.Default.XmlFiles = XmlFiles;
-            Settings.Default.Save();
+            Connections.RestoreData();
+            XmlFiles.RestoreData();
         }
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

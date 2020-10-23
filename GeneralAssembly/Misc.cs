@@ -51,12 +51,14 @@ namespace GeneralAssembly
             var xmlSerializer = new ActiveQueryBuilder.Core.Serialization.XmlSerializer();
             foreach (ConnectionInfo connection in _connections)
             {
-                connection.ConnectionString = connection.ConnectionDescriptor.ConnectionString;
+                connection.SyntaxProviderName = connection.ConnectionDescriptor.SyntaxProvider.GetType().ToString();
+                connection.ConnectionString =
+                    connection.ConnectionDescriptor.MetadataProvider.Connection.ConnectionString;
                 connection.LoadingOptions =
                     xmlSerializer.Serialize(connection.ConnectionDescriptor.MetadataLoadingOptions);
                 connection.SyntaxProviderState =
                     xmlSerializer.SerializeObject(connection.ConnectionDescriptor.SyntaxProvider);
-            }            
+            }
         }
 
         public void RemoveObsoleteConnectionInfos()
@@ -83,26 +85,40 @@ namespace GeneralAssembly
 
             foreach (ConnectionInfo connection in _connections)
             {
-                if (connection.ConnectionDescriptor == null) continue;
-
-                connection.ConnectionDescriptor.ConnectionString = connection.ConnectionString;
-
-                if (!string.IsNullOrEmpty(connection.LoadingOptions))
+                try
                 {
-                    xmlSerializer.Deserialize(connection.LoadingOptions,
-                        connection.ConnectionDescriptor.MetadataLoadingOptions);
+                    if (connection.ConnectionDescriptor == null) continue;
+
+                    connection.ConnectionDescriptor.ConnectionString = connection.ConnectionString;
+
+                    if (!string.IsNullOrEmpty(connection.LoadingOptions))
+                    {
+                        xmlSerializer.Deserialize(connection.LoadingOptions,
+                            connection.ConnectionDescriptor.MetadataLoadingOptions);
+                    }
+
+                    if (!string.IsNullOrEmpty(connection.SyntaxProviderName) && connection.IsGenericConnection())
+                    {
+                        connection.ConnectionDescriptor.SyntaxProvider =
+                            ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
+                    }
+
+                    if (!string.IsNullOrEmpty(connection.SyntaxProviderState))
+                    {
+                        if (!string.IsNullOrEmpty(connection.SyntaxProviderName))
+                        {
+                            connection.ConnectionDescriptor.SyntaxProvider =
+                                ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
+                        }
+
+                        xmlSerializer.DeserializeObject(connection.SyntaxProviderState,
+                            connection.ConnectionDescriptor.SyntaxProvider);
+                        connection.ConnectionDescriptor.RecreateSyntaxProperties();
+                    }
                 }
-
-                if (!string.IsNullOrEmpty(connection.SyntaxProviderName) && connection.IsGenericConnection())
+                catch
                 {
-                    connection.ConnectionDescriptor.SyntaxProvider =
-                        ConnectionInfo.GetSyntaxByName(connection.SyntaxProviderName);
-                }
-
-                if (!string.IsNullOrEmpty(connection.SyntaxProviderState))
-                {
-                    xmlSerializer.DeserializeObject(connection.SyntaxProviderState, connection.ConnectionDescriptor.SyntaxProvider);
-                    connection.ConnectionDescriptor.RecreateSyntaxProperties();
+                    //ignore
                 }
             }
         }
@@ -159,10 +175,27 @@ namespace GeneralAssembly
                 }
             }
         }
-        [XmlIgnore]
-        public BaseSyntaxProvider SyntaxProvider { get; set; }
 
-        public string ConnectionString { get; set; }
+        private BaseSyntaxProvider _syntaxProvider;
+
+        [XmlIgnore]
+        public BaseSyntaxProvider SyntaxProvider
+        {
+            get
+            {
+                return _connectionDescriptor?.SyntaxProvider ?? _syntaxProvider;
+            }
+            set
+            {
+                _syntaxProvider = value;
+
+                if (_connectionDescriptor != null)
+                    _connectionDescriptor.SyntaxProvider = value;
+            }
+        }
+
+        public string ConnectionString { get; 
+            set; }
         public bool IsXmlFile { get;set; }
         public string XMLPath { get; set; }
         public string UserQueries { get; set; }
@@ -178,7 +211,7 @@ namespace GeneralAssembly
 
         public static BaseSyntaxProvider GetSyntaxByName(string name)
         {
-            foreach (Type syntax in Helpers.SyntaxProviderList)
+            foreach (Type syntax in ActiveQueryBuilder.Core.Helpers.SyntaxProviderList)
             {
                 if (syntax.ToString() == name)
                 {

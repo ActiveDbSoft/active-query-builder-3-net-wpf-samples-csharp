@@ -43,7 +43,7 @@
                         </Border>
                         <QueryView:PropertiesBar x:Name="pbSyntax" Margin="0, 0, 0, 3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                         <QueryView:PropertiesBar x:Name="pbConnection" Margin="0, 0, 0, 3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                        <CheckBox x:Name="cbLoadFromDefaultDatabase" Content="Load from default database" Margin="5, 5, 0, 0" Checked="CbLoadFromDefaultDatabase_OnChecked"/>
+                        <CheckBox x:Name="cbLoadFromDefaultDatabase" Content="Load from default database" Margin="5, 5, 0, 0" Checked="CbLoadFromDefaultDatabase_OnChecked" Unchecked="CbLoadFromDefaultDatabase_OnChecked"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem x:Name="tpFilter" Header="Filter" Visibility="Collapsed">

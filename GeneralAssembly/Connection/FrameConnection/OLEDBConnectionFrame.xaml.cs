@@ -158,7 +158,7 @@ namespace GeneralAssembly.Connection.FrameConnection
 
             try
             {
-                syntaxProviderType = Helpers.AutodetectSyntaxProvider(metadataProvider);
+                syntaxProviderType = ActiveQueryBuilder.Core.Helpers.AutodetectSyntaxProvider(metadataProvider);
             }
             catch (Exception exception)
             {

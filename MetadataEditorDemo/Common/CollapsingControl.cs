@@ -14,6 +14,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ActiveQueryBuilder.Core.PropertiesEditors;
 using ActiveQueryBuilder.View.PropertiesEditors;
 using ActiveQueryBuilder.View.WPF.PropertiesEditors;
 
@@ -21,6 +22,9 @@ namespace MetadataEditorDemo.Common
 {
     internal class CollapsingControl : Expander
     {
+        private const double SpaceRow = 5;
+        private static Thickness DefaultMarginNextColumn = new Thickness(10, 0, 0, 0);
+
         public event EventHandler<EventArgs> OnCollapse;
         public event EventHandler<EventArgs> OnExpand;
 
@@ -390,6 +394,132 @@ namespace MetadataEditorDemo.Common
             _collapsingDivider?.OnCollapse();
         }
 
+        public static void AddControlAtGrid(Grid panel, UIElement control)
+        {
+            var compositeEditor = control as ICompositeEditor;
+            if (panel == null) return;
+
+            //add empty space row
+            panel.RowDefinitions.Add(new RowDefinition { Height = new GridLength(SpaceRow) });
+
+            //add current row
+            panel.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+            var indexRow = panel.RowDefinitions.Count - 1;
+
+            if (compositeEditor == null)
+            {
+                control.SetValue(Grid.RowProperty, indexRow);
+                control.SetValue(Grid.ColumnProperty, 0);
+                control.SetValue(Grid.ColumnSpanProperty, panel.ColumnDefinitions.Count - 1);
+
+                panel.Add(control);
+                return;
+            }
+            var editor = control as IPropertyEditor;
+
+            var labelElement = editor != null && !string.IsNullOrEmpty(editor.Label)
+                ? compositeEditor.LabelElement
+                : null;
+            var contentElement = compositeEditor.ContentElement;
+            var additionalElement = compositeEditor.AdditionalElement;
+
+            if (compositeEditor.DirectionLabelAndContent == DirectionLabelAndContent.Vertical)
+            {
+                var stackPanel = new StackPanel { Name = "StackPanelVerticalOrientation" };
+
+                stackPanel.SetValue(Grid.ColumnProperty, 0);
+                stackPanel.SetValue(Grid.RowProperty, indexRow);
+                stackPanel.SetValue(Grid.ColumnSpanProperty, 3);
+
+                if (labelElement != null)
+                {
+                    stackPanel.Add(labelElement);
+                    if (contentElement != null)
+                        stackPanel.AddSpace(SpaceRow);
+                }
+
+                if (contentElement != null)
+                {
+                    stackPanel.Add(contentElement);
+                    if (additionalElement != null)
+                        stackPanel.AddSpace(SpaceRow);
+                }
+
+                if (additionalElement != null)
+                    stackPanel.Add(additionalElement);
+
+                panel.Add(stackPanel);
+                return;
+            }
+
+            if (compositeEditor.DirectionLabelAndContent == DirectionLabelAndContent.Horizontal)
+            {
+                if (labelElement != null)
+                {
+                    labelElement.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+                    labelElement.SetValue(Grid.RowProperty, indexRow);
+                    labelElement.SetValue(Grid.ColumnProperty, 0);
+
+                    if (contentElement == null && additionalElement == null)
+                        labelElement.SetValue(Grid.ColumnSpanProperty, 3);
+
+                    if (contentElement == null && additionalElement != null)
+                        labelElement.SetValue(Grid.ColumnSpanProperty, 2);
+
+                    panel.Add(labelElement);
+                }
+
+                if (contentElement != null)
+                {
+                    contentElement.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+                    contentElement.SetValue(Grid.RowProperty, indexRow);
+                    contentElement.SetValue(Grid.ColumnProperty, labelElement == null ? 0 : 1);
+
+                    if (labelElement == null && additionalElement == null)
+                        contentElement.SetValue(Grid.ColumnSpanProperty, 3);
+
+                    if (labelElement != null && additionalElement == null)
+                        contentElement.SetValue(Grid.ColumnSpanProperty, 2);
+
+                    panel.Add(contentElement);
+                }
+
+                if (additionalElement != null)
+                {
+                    additionalElement.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+                    additionalElement.SetValue(Grid.RowProperty, indexRow);
+
+                    if (labelElement == null && contentElement == null)
+                    {
+                        additionalElement.SetValue(Grid.ColumnProperty, 0);
+                        additionalElement.SetValue(Grid.ColumnSpanProperty, 3);
+                    }
+
+                    if (labelElement != null && contentElement == null)
+                    {
+                        additionalElement.SetValue(Grid.ColumnProperty, 1);
+                        additionalElement.SetValue(Grid.ColumnSpanProperty, 2);
+                    }
+
+                    if (labelElement != null && contentElement != null)
+                    {
+                        additionalElement.SetValue(Grid.ColumnProperty, 2);
+                    }
+
+                    panel.Add(additionalElement);
+                }
+
+                if (contentElement != null && (int)contentElement.GetValue(Grid.ColumnProperty) > 0)
+                    contentElement.Margin = DefaultMarginNextColumn;
+
+                if (additionalElement != null && (int)additionalElement.GetValue(Grid.ColumnProperty) > 0)
+                    additionalElement.Margin = DefaultMarginNextColumn;
+
+                return;
+            }
+        }
+
         protected void AlignmentFirstPanel()
         {
             for (var rowId = 0; rowId < PrimaryPanel.RowDefinitions.Count; rowId++)
@@ -516,13 +646,13 @@ namespace MetadataEditorDemo.Common
         {
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
 
-            OnChildrenCollectionChnged(EventArgs.Empty);
+            OnChildrenCollectionChanged(EventArgs.Empty);
         }
 
-        protected virtual void OnChildrenCollectionChnged(EventArgs e)
+        protected virtual void OnChildrenCollectionChanged(EventArgs e)
         {
             var handler = ChildrenCollectionChanged;
-            if (handler != null) handler(this, e);
+            handler?.Invoke(this, e);
         }
     }
 
@@ -547,6 +677,23 @@ namespace MetadataEditorDemo.Common
         {
             var handler = ChildrenCollectionChanged;
             if (handler != null) handler(this, e);
+        }
+    }
+
+    internal static class CollectionChildrenHelpers
+    {
+        public static void Add(this Grid grid, UIElement child)
+        {
+            grid.Children.Add(child);
+        }
+        public static void Add(this StackPanel panel, UIElement child)
+        {
+            panel.Children.Add(child);
+        }
+
+        public static void AddSpace(this StackPanel panel, double space)
+        {
+            panel.Children.Add(new Border { Height = space, Opacity = 0, Visibility = Visibility.Hidden });
         }
     }
 }

@@ -27,6 +27,7 @@ namespace GeneralAssembly.Connection
     {
         private readonly ConnectionInfo _connectionInfo;
         private IConnectionFrame _currentConnectionFrame;
+        private bool _isLockUpdate = false;
 
         public AddConnectionWindow()
         {
@@ -56,9 +57,13 @@ namespace GeneralAssembly.Connection
                             _currentConnectionFrame.ConnectionString = Regex.Replace(_currentConnectionFrame.ConnectionString,
                               "Integrated Security=.*?;", "");
                         }
+
+                        if (_connectionInfo.ConnectionDescriptor.MetadataProvider.Connected)
+                            _connectionInfo.ConnectionDescriptor.MetadataProvider.Disconnect();
+
                         _connectionInfo.ConnectionDescriptor.MetadataProvider.Connection.ConnectionString = _currentConnectionFrame.ConnectionString;
                     }
-                    _connectionInfo.ConnectionString = _currentConnectionFrame.ConnectionString;
+
                     e.Cancel = false;
                     Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive -= Hooks_DispatcherInactive;
                 }
@@ -190,6 +195,8 @@ namespace GeneralAssembly.Connection
 
         private void FillSyntax()
         {
+            _isLockUpdate = true;
+
             BoxSyntaxProvider.Items.Clear();
             BoxServerVersion.Items.Clear();
 
@@ -336,8 +343,9 @@ namespace GeneralAssembly.Connection
                 BoxSyntaxProvider.SelectedItem = SyntaxToString(_connectionInfo.SyntaxProvider);
             }
 
-
             FillVersions();
+
+            _isLockUpdate = false;
         }
 
         private void FillVersions()
@@ -653,6 +661,9 @@ namespace GeneralAssembly.Connection
             }
 
             FillSyntax();
+
+            BoxSyntaxProvider.IsEnabled = _connectionInfo.Type == ConnectionTypes.ODBC ||
+                                         _connectionInfo.Type == ConnectionTypes.OLEDB;
         }
 
         private void SetActiveConnectionTypeFrame()
@@ -722,7 +733,9 @@ namespace GeneralAssembly.Connection
 
         private void BoxSyntaxProvider_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch (((string)BoxSyntaxProvider.SelectedItem))
+            if (_isLockUpdate) return;
+
+            switch ((string) BoxSyntaxProvider.SelectedItem)
             {
                 case "ANSI SQL-2003":
                     _connectionInfo.SyntaxProvider = new SQL2003SyntaxProvider();
@@ -776,6 +789,8 @@ namespace GeneralAssembly.Connection
 
         private void BoxServerVersion_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_isLockUpdate) return;
+
             if (BoxServerVersion.SelectedItem == null)
             {
                 return;
@@ -866,7 +881,7 @@ namespace GeneralAssembly.Connection
                 }
                 else if ((string)BoxServerVersion.SelectedItem == "SQL Server 2019")
                 {
-                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2017;
+                    ((MSSQLSyntaxProvider)_connectionInfo.SyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2019;
                 }
             }
             else if (_connectionInfo.SyntaxProvider is MySQLSyntaxProvider)

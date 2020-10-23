@@ -182,7 +182,7 @@ namespace GeneralAssembly
             return command;
         }
 
-        public static DataView GetDataView(string sqlCommand, SQLQuery sqlQuery)
+        public static DataTable GetDataTable(string sqlCommand, SQLQuery sqlQuery)
         {
             if (string.IsNullOrEmpty(sqlCommand)) return null;
 
@@ -209,19 +209,22 @@ namespace GeneralAssembly
             {
 
                 for (int i = 0; i < dbReader.FieldCount; i++)
-                {
-                    table.Columns.Add(dbReader.GetName(i));
-                }
+                    table.Columns.Add(dbReader.GetName(i), dbReader.GetFieldType(i) ?? typeof(string));
 
                 while (dbReader.Read())
                 {
-                    object[] values = new object[dbReader.FieldCount];
+                    var values = new object[dbReader.FieldCount];
                     dbReader.GetValues(values);
                     table.Rows.Add(values);
                 }
-
-                return table.DefaultView;
             }
+            return table;
+        }
+
+        public static DataView GetDataView(string sqlCommand, SQLQuery sqlQuery)
+        {
+            var table = GetDataTable(sqlCommand, sqlQuery);
+            return table?.DefaultView;
         }
     }
 }

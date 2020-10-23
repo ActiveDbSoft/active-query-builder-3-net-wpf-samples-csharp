@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FullFeaturedMdiDemo</RootNamespace>
     <AssemblyName>FullFeaturedMdiDemo</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -41,7 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,6 +78,14 @@
   <ItemGroup>
     <None Include="project.json" />
     
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -88,9 +96,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ChildWindow.cs" />
+    <Compile Include="CommonWindow\CreateReportWindow.xaml.cs">
+      <DependentUpon>CreateReportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\ContentWindowChild.xaml.cs">
       <DependentUpon>ContentWindowChild.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\ExportHelpers.cs" />
+    <Compile Include="Common\ReportType.cs" />
     <Compile Include="Common\WindowNameQuery.xaml.cs">
       <DependentUpon>WindowNameQuery.xaml</DependentUpon>
     </Compile>
@@ -133,6 +146,19 @@
     <Compile Include="Connection\XmlConnectionEditWindow.xaml.cs">
       <DependentUpon>XmlConnectionEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reports\ActiveReportsWindow.xaml.cs">
+      <DependentUpon>ActiveReportsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\FastReportWindow.xaml.cs">
+      <DependentUpon>FastReportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\StimulsoftWindow.xaml.cs">
+      <DependentUpon>StimulsoftWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CommonWindow\CreateReportWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Common\ContentWindowChild.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -205,6 +231,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Reports\ActiveReportsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Reports\FastReportWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Reports\StimulsoftWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MdiControl\ButtonsIcon\BaseButtonIcon.cs" />
@@ -228,6 +266,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -323,6 +362,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>echo. 2&gt;"$(ProjectDir)\Properties\licenses.licx"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -77,11 +77,11 @@
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Syntax Provider" Margin="0,5,0,0" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="1" Grid.Column="1" Margin="8,5,10,0" x:Name="BoxSyntaxProvider" VerticalAlignment="Center" 
-                              VerticalContentAlignment="Center" Height="23" SelectionChanged="BoxSyntaxProvider_OnSelectionChanged"/>
+                              VerticalContentAlignment="Center" Height="23" SelectionChanged="BoxSyntaxProvider_OnSelectionChanged" IsEnabled="False"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Server Version" Margin="0,5,0,0" VerticalAlignment="Center"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" Margin="8,5,10,0" x:Name="BoxServerVersion" VerticalAlignment="Center" 
-                              VerticalContentAlignment="Center" Height="23" SelectionChanged="BoxServerVersion_OnSelectionChanged"/>
+                              VerticalContentAlignment="Center" Height="23" SelectionChanged="BoxServerVersion_OnSelectionChanged" IsEnabled="False"/>
                 </Grid>
             </Border>
 

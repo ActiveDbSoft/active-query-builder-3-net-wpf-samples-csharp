@@ -21,15 +21,12 @@ namespace MetadataEditorDemo
             MSSQLConnectionDescriptor.Register();
             ODBCConnectionDescriptor.Register();
             OLEDBConnectionDescriptor.Register();
-            VistaDB5ConnectionDescriptor.Register();
             MySQLConnectionDescriptor.Register();
             DB2ConnectionDescriptor.Register();
-            AdvantageConnectionDescriptor.Register();
             FirebirdConnectionDescriptor.Register();
             SybaseConnectionDescriptor.Register();
             PostgreSQLConnectionDescriptor.Register();
             InformixConnectionDescriptor.Register();
-            MSSQLCEConnectionDescriptor.Register();
         }
     }
 }

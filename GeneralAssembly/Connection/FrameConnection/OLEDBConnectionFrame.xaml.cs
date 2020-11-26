@@ -9,12 +9,15 @@
 //*******************************************************************//
 
 using System;
+using System.Data;
 using System.Data.Odbc;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using ActiveQueryBuilder.Core;
+using Microsoft.Win32;
 
 namespace GeneralAssembly.Connection.FrameConnection
 {
@@ -116,11 +119,12 @@ namespace GeneralAssembly.Connection.FrameConnection
             // select adodb from the .NET tab in Visual Studio .NET's Add Reference Dialog. 
             // You'll also need a reference to the Microsoft OLE DB Service Component 1.0 Type Library 
             // from the COM tab in Visual Studio .NET's Add Reference Dialog.
-
+            
             try
             {
                 var dlg = new MSDASC.DataLinks();
                 var adodbConnection = new ADODB.Connection { ConnectionString = _connectionString };
+
                 object connection = adodbConnection;
 
                 if (dlg.PromptEdit(ref connection))
@@ -145,10 +149,7 @@ namespace GeneralAssembly.Connection.FrameConnection
 
         public void DoSyntaxDetected(Type syntaxType)
         {
-            if (OnSyntaxProviderDetected != null)
-            {
-                OnSyntaxProviderDetected(syntaxType);
-            }
+            OnSyntaxProviderDetected?.Invoke(syntaxType);
         }
 
         private void btnTest_Click(object sender, RoutedEventArgs e)

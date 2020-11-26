@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using ActiveQueryBuilder.Core.PropertiesEditors;
 using ActiveQueryBuilder.View.PropertiesEditors;
+using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.PropertiesEditors;
 
 namespace MetadataEditorDemo.Common

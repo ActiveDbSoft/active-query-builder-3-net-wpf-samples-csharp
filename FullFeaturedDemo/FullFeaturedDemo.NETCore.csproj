@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <LangVersion>6</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ProjectGuid>{685E9A44-42C7-4DAF-A10F-D2E555A421C3}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <LangVersion>6</LangVersion>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <LangVersion>6</LangVersion>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <LangVersion>6</LangVersion>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add_derived_table.png" />
+    <Resource Include="Resources\add_union_subquery.png" />
+    <Resource Include="Resources\App.ico" />
+    <Resource Include="Resources\application_cascade.png" />
+    <Resource Include="Resources\application_tile_horizontal.png" />
+    <Resource Include="Resources\application_tile_vertical.png" />
+    <Resource Include="Resources\connect.png" />
+    <Resource Include="Resources\copy_union_subquery.png" />
+    <Resource Include="Resources\cut.ico" />
+    <Resource Include="Resources\database_save.png" />
+    <Resource Include="Resources\disk.ico" />
+    <Resource Include="Resources\disk_plus.png" />
+    <Resource Include="Resources\drive_disk.png" />
+    <Resource Include="Resources\folder_page.ico" />
+    <Resource Include="Resources\help.ico" />
+    <Resource Include="Resources\new_object.png" />
+    <Resource Include="Resources\page_copy.png" />
+    <Resource Include="Resources\page_paste.png" />
+    <Resource Include="Resources\page_white.ico" />
+    <Resource Include="Resources\query_properties.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cancel.png" />
+    <Resource Include="App.ico" />
+    <Content Include="Northwind.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GeneralAssembly\GeneralAssembly.NETCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.6.1181" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ConnectionListItem.cs" />
+    <Compile Remove="DatabaseConnectionWindow.xaml.cs" />
+    <None Remove="FullFeaturedDemo.csproj.DotSettings" />
+    <None Remove="FullFeaturedDemo.sln.DotSettings" />
+    <Page Remove="DatabaseConnectionWindow.xaml" />
+  </ItemGroup>
+</Project>

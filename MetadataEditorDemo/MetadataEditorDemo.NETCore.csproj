@@ -1,0 +1,106 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ProjectGuid>{23FFB3A8-8225-432D-9FE2-6130FE2DE2A1}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.6.1181" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\alert_exclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\check_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\close_message.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\field.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\load.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\package.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\procedure.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\relation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\schema.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\server_database.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\synonym.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\view.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\wand.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Northwind.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="App.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MainWindow.xaml.cs" />
+    <Page Remove="MainWindow.xaml" />
+  </ItemGroup>
+</Project>

@@ -44,8 +44,7 @@
     
     
     
-    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.7.5.1179, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\Assemblies\Pro\ActiveQueryBuilder.MSSQLCEMetadataProvider.dll</HintPath>
+    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.7.6.1181, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL">
     </Reference>
     
     
@@ -68,7 +67,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />

@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GeneralAssembly</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <UseWPF>true</UseWPF>
+    <ProjectGuid>{141D40B1-2B45-4AA8-B66A-4919797741BD}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>GeneralAssembly.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+    <AssemblyName>GeneralAssembly_ext</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="App.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="app.config" />
+    <None Remove="GeneralAssembly.snk" />
+    <None Remove="GeneralAssembly_ext.nuget.targets" />
+    <None Remove="project.json" />
+    <None Remove="project.lock.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.OracleNativeMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.UniversalMetadataProvider" Version="3.7.6.1181" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.6.1181" />
+    <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\disk.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrowUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\copy.png" />
+  </ItemGroup>
+</Project>

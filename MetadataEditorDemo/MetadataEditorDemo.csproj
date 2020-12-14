@@ -44,7 +44,7 @@
     
     
     
-    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.7.6.1181, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL">
+    <Reference Include="ActiveQueryBuilder.MSSQLCEMetadataProvider, Version=3.7.7.1182, Culture=neutral, PublicKeyToken=49d051b90653c7f4, processorArchitecture=MSIL">
     </Reference>
     
     

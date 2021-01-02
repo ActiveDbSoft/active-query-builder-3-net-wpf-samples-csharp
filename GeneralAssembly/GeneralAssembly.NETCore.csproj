@@ -27,19 +27,19 @@
     <None Remove="project.lock.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.OracleNativeMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.UniversalMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.7.1182" />
+    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.OracleNativeMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.UniversalMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.9.1184" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />

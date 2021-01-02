@@ -86,6 +86,21 @@ namespace MetadataEditorDemo.Common
         #region public property
         public bool OpenContainerLoadFormIfNotConnected { get; set; }
 
+        public static readonly DependencyProperty ContainerViewReadOnlyProperty = DependencyProperty.Register(
+            "ContainerViewReadOnly", typeof(bool), typeof(MetadataEditorControl), new PropertyMetadata(false, ContainerViewPropertyChanged));
+
+        private static void ContainerViewPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = (MetadataEditorControl)d;
+            self.MenuItemDatabaseAddRoot.IsEnabled = !(bool)e.NewValue;
+        }
+
+        public bool ContainerViewReadOnly
+        {
+            get { return (bool)GetValue(ContainerViewReadOnlyProperty); }
+            set { SetValue(ContainerViewReadOnlyProperty, value); }
+        }
+        
         public bool IsChanged
         {
             get { return _controller.IsChanged; }
@@ -512,6 +527,8 @@ namespace MetadataEditorDemo.Common
 
         private void DatabaseSchemaTree_OnKeyDown(object sender, KeyEventArgs e)
         {
+            if (ContainerViewReadOnly) return;
+            
             switch (e.Key)
             {
                 case Key.Delete:
@@ -525,6 +542,8 @@ namespace MetadataEditorDemo.Common
 
         private void DatabaseSchemaTree_OnValidateItemContextMenu(object sender, MetadataStructureItemMenuEventArgs e)
         {
+            if (DatabaseSchemaTree.FocusedItem == null || ContainerViewReadOnly) return;
+            
             _contextMenuSubscriptions = new CompositeDisposable();
 
             var menu = e.Menu;

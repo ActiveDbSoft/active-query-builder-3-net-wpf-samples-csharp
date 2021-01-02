@@ -172,12 +172,12 @@ namespace MetadataEditorDemo.Common
         public void UpdateContainerCommands()
         {
             var focusedItem = _view.ContainerView.FocusedItem;
-            if (focusedItem == null)
+            if (focusedItem == null || _view.ContainerViewReadOnly)
             {
                 DisableContainerCommands();
                 return;
             }
-            
+
             DeleteMetadataItemCommand.CanExecute.Value = focusedItem != _containerStructure && !IsGroupingFolder(focusedItem);
 
             if (IsGroupingFolder(focusedItem))

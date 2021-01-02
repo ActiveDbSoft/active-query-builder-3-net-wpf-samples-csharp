@@ -11,8 +11,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.7.1182" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.7.1182" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.9.1184" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />

@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.10.1185" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />

@@ -17,9 +17,9 @@
     <None Remove="FullFeaturedMdiDemo.sln.DotSettings" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.9.1184" />
-    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.9.1184" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.9.1184" />
+    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.10.1185" />
+    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.10.1185" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.10.1185" />
     <PackageReference Include="Gcef.Data.DataEngine" Version="2.0.186" />
     <PackageReference Include="Gcef.Data.ExpressionInfo" Version="2.0.186" />
     <PackageReference Include="Gcef.Data.VBFunctionLib" Version="2.0.186" />

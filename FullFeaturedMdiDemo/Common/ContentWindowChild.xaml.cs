@@ -869,7 +869,7 @@ namespace FullFeaturedMdiDemo.Common
             var result = window.ShowDialog();
 
             if (result != true || window.SelectedReportType == null) return;
-            var dataTable = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+            var dataTable = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions), SqlQuery);
 
             switch (window.SelectedReportType)
             {
@@ -889,7 +889,8 @@ namespace FullFeaturedMdiDemo.Common
 
         private void ExportToExcel_OnClick(object sender, RoutedEventArgs e)
         {
-            var dt = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+            var dt = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions),
+                SqlQuery);
 
             var saveDialog = new SaveFileDialog { AddExtension = true, DefaultExt = "xlsx", FileName = "Export.xlsx" };
             if (saveDialog.ShowDialog(ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this)) != true) return;
@@ -903,7 +904,7 @@ namespace FullFeaturedMdiDemo.Common
             var result = saveDialog.ShowDialog(ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this));
             if (result != true) return;
 
-            var dt = SqlHelpers.GetDataTable(CBuilder.SQL, SqlQuery);
+            var dt = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions), SqlQuery);
             ExportHelpers.ExportToCSV(dt, saveDialog.FileName);
         }
     }

@@ -17,9 +17,9 @@ using System.Windows;
 [assembly: AssemblyTitle("QueryTransformerDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("QueryTransformerDemo")]
-[assembly: AssemblyCopyright("Copyright © 2006-2020 Active Database Software")]
+[assembly: AssemblyCompany("Active Database Software")]
+[assembly: AssemblyProduct("Active Query Builder. NET")]
+[assembly: AssemblyCopyright("Copyright © 2006-2021 Active Database Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

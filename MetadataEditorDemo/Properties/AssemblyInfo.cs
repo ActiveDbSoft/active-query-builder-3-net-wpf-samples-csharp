@@ -20,9 +20,9 @@ using System.Windows;
 [assembly: AssemblyTitle("MetadataEditorDemo")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MetadataEditorDemo")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCompany("Active Database Software")]
+[assembly: AssemblyProduct("Active Query Builder. NET")]
+[assembly: AssemblyCopyright("Copyright © 2006-2021 Active Database Software")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

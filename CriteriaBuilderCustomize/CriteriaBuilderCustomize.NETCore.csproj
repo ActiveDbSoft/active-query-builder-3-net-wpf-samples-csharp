@@ -11,10 +11,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <PackageReference Include="ActiveQueryBuilder.Core" Version="3.7.10.1185" />
-    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.10.1185" />
-    <PackageReference Include="ActiveQueryBuilder.View" Version="3.7.10.1185" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.10.1185" />
+    <PackageReference Include="ActiveQueryBuilder.Core" Version="3.7.12.1187" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.12.1187" />
+    <PackageReference Include="ActiveQueryBuilder.View" Version="3.7.12.1187" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.12.1187" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneralAssembly\GeneralAssembly.NETCore.csproj" />

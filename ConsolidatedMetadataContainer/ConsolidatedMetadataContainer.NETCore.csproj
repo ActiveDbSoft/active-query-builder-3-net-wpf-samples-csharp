@@ -13,8 +13,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.10.1185" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.10.1185" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.12.1187" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.12.1187" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>

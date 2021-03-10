@@ -12,17 +12,17 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.15.1190" />
-    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.15.1190" />
+    <PackageReference Include="ActiveQueryBuilder.DB2MetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.FirebirdMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.InformixMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.MSSQLMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.MySQLMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.ODBCMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.OLEDBMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.PostgreSQLMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.SQLiteMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.SybaseMetadataProvider" Version="3.7.16.1191" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="3.7.16.1191" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\alert_exclamation.png" />

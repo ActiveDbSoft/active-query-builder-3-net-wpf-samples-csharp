@@ -26,7 +26,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="project.json" />
-    <PackageReference Include="ActiveQueryBuilder.Core" Version="3.7.15.1190" />
+    <PackageReference Include="ActiveQueryBuilder.Core" Version="3.7.16.1191" />
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />

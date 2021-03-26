@@ -34,7 +34,7 @@ namespace MetadataEditorDemo.Common
     delegate void CheckProc();
     delegate void PrepareProc();
 
-    internal partial class MetadataContainerLoadForm: IMetadataContainerLoadForm
+    internal partial class MetadataContainerLoadWindow: IMetadataContainerLoadForm
     {
         private bool _isSaveChanges;
         private readonly List<WizardPageInfo> _pages;
@@ -74,7 +74,7 @@ namespace MetadataEditorDemo.Common
 
         public MetadataContainer TemporaryMetadataContainer { get; }
 
-        public MetadataContainerLoadForm(object owner, MetadataContainer metadataContainer, BaseConnectionDescriptor connection = null)
+        public MetadataContainerLoadWindow(object owner, MetadataContainer metadataContainer, BaseConnectionDescriptor connection = null)
         {
             Debug.Assert(metadataContainer != null);
 
@@ -147,7 +147,7 @@ namespace MetadataEditorDemo.Common
             Loaded += MetadataContainerLoadForm_Loaded;
 
             var propertyLanguage =
-                DependencyPropertyDescriptor.FromProperty(LanguageProperty, typeof(MetadataContainerLoadForm));
+                DependencyPropertyDescriptor.FromProperty(LanguageProperty, typeof(MetadataContainerLoadWindow));
             propertyLanguage.AddValueChanged(this, LanguagePropertyChanged);
 
 

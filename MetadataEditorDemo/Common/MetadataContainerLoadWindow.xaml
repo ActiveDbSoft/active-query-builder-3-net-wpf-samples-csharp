@@ -1,8 +1,8 @@
-﻿<Window x:Class="MetadataEditorDemo.Common.MetadataContainerLoadForm"
+﻿<Window x:Class="MetadataEditorDemo.Common.MetadataContainerLoadWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Load Metadata Wizard" Height="414" Width="612" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-        WindowStartupLocation="Manual" >
+        WindowStartupLocation="Manual" x:ClassModifier="internal">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

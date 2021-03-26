@@ -7,7 +7,7 @@
              mc:Ignorable="d" MinWidth="250" x:ClassModifier="internal" Background="LightGray" BorderBrush="Gray" BorderThickness="1">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Style TargetType="common:LinkLable">
+        <Style TargetType="common:LinkLabel">
             <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
         </Style>
@@ -30,7 +30,7 @@
 
             <StackPanel Grid.Column="2" Margin="5,0,0,0" VerticalAlignment="Center">
                 <Button Padding="0" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent"
-                        Background="Transparent" Click="LinkLableClose_OnLinkClicked" 
+                        Background="Transparent" Click="LinkLabelClose_OnLinkClicked" 
                         Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type common:InformationMessageControl}}, 
                             Path=IsShowCloseButton, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Image  Width="16" Height="16" Source="../Resources/close_message.png" Stretch="Fill" SnapsToDevicePixels="True" RenderOptions.EdgeMode="Aliased" 

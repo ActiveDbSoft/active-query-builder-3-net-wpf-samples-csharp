@@ -530,7 +530,7 @@ namespace MetadataEditorDemo.Common
 
         public void ShowContainerLoadForm()
         {
-            using (var f = new MetadataContainerLoadForm(_view, _sqlContext.MetadataContainer, _containerLoadFormStorage.Connection))
+            using (var f = new MetadataContainerLoadWindow(_view, _sqlContext.MetadataContainer, _containerLoadFormStorage.Connection))
             {
                 f.LoadFields = _containerLoadFormStorage.LoadFields;
                 if (f.ShowDialog() != true)

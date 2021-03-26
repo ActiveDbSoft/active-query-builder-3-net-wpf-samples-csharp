@@ -16,7 +16,7 @@ using System.Windows.Media;
 
 namespace MetadataEditorDemo.Common
 {
-    internal class LinkLable:UserControl, IDisposable
+    internal class LinkLabel:UserControl, IDisposable
     {
         public event RoutedEventHandler LinkClicked;
 
@@ -32,11 +32,11 @@ namespace MetadataEditorDemo.Common
         private TextBlock _textBlock;
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(LinkLable), new PropertyMetadata(default(string), TextChangeCallback));
+            "Text", typeof(string), typeof(LinkLabel), new PropertyMetadata(default(string), TextChangeCallback));
 
         private static void TextChangeCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var obj = dependencyObject as LinkLable;
+            var obj = dependencyObject as LinkLabel;
 
             if(obj == null) return;
 
@@ -50,12 +50,12 @@ namespace MetadataEditorDemo.Common
             set { SetValue(TextProperty, value); }
         }
 
-        public LinkLable()
+        public LinkLabel()
         {
             Init();
         }
 
-        public LinkLable(string text)
+        public LinkLabel(string text)
         {
             _text = text;
             Init();
@@ -63,7 +63,7 @@ namespace MetadataEditorDemo.Common
             SnapsToDevicePixels = true;
         }
 
-        public LinkLable(string text, string url)
+        public LinkLabel(string text, string url)
         {
             _text = text;
             _uri = url;

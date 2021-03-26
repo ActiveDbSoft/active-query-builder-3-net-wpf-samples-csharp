@@ -119,7 +119,7 @@ namespace MetadataEditorDemo.Common
             ImageIcon = null;
         }
 
-        private void LinkLableClose_OnLinkClicked(object sender, RoutedEventArgs e)
+        private void LinkLabelClose_OnLinkClicked(object sender, RoutedEventArgs e)
         {
             Closing?.Invoke(this, EventArgs.Empty);
 

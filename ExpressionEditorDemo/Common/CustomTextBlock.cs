@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -34,7 +34,8 @@ namespace ExpressionEditorDemo.Common
                 var formated = new FormattedText(string.IsNullOrEmpty(Text) ? "" : Text, CultureInfo.CurrentCulture,
                     FlowDirection,
                     Typeface, FontSize,
-                    Foreground);
+                    Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+
                 return new Rect(0, 0, formated.WidthIncludingTrailingWhitespace, formated.Height);
             }
         }
@@ -132,7 +133,7 @@ namespace ExpressionEditorDemo.Common
                 CultureInfo.CurrentCulture,
                 FlowDirection,
                 Typeface, FontSize,
-                Foreground);
+                Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);   
 
             if (SelectionAreas == null || SelectionAreas.Count == 0)
             {
@@ -144,18 +145,23 @@ namespace ExpressionEditorDemo.Common
             var startPosition = 0;
             foreach (var selectionArea in SelectionAreas)
             {
+                if (Text == null) continue;
+
                 var selection = Text.Substring(selectionArea.Start, selectionArea.Length);
                 var textBefore = Text.Substring(startPosition, Math.Abs(selectionArea.Start - startPosition));
                 startPosition = selectionArea.Start + selectionArea.Length;
 
-                var formatTextBefore = new FormattedText(textBefore, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, Foreground);
-                var formatTextSelect = new FormattedText(selection, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, StyleSelection == StyleSelection.Rectangle ? Brushes.White : Foreground);
+                var formatTextBefore = new FormattedText(textBefore, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+                var formatTextSelect = new FormattedText(selection, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, StyleSelection == StyleSelection.Rectangle ? Brushes.White : Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
 
                 chunks.Add(formatTextBefore, false);
                 chunks.Add(formatTextSelect, true);
             }
-            var textAfter = Text.Substring(startPosition);
-            var formatTextAfter = new FormattedText(textAfter, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, Foreground);
+
+            var textAfter = string.IsNullOrEmpty(Text) ? "" : Text.Substring(startPosition);
+
+            var formatTextAfter = new FormattedText(textAfter, CultureInfo.CurrentCulture, FlowDirection, Typeface, FontSize, Foreground, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+
             chunks.Add(formatTextAfter, false);
 
             var startPoint = new Point(Padding.Left, Padding.Top);

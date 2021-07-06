@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -74,6 +74,9 @@ namespace MetadataEditorDemo
             cbSyntaxProvider.SelectionChanged += CbSyntaxProvider_SelectedIndexChanged;
             tsmiLoadFromDatabase.Click += loadFromDatabaseToolStripMenuItem_Click;
 
+            Title = "Metadata Editor - Active Query Builder 3 for .NET";
+            AddAboutMenuItem();
+            Icon = Properties.Resources.application_form.GetImageSource();
 
             UpdateLocalization();
 
@@ -217,10 +220,21 @@ namespace MetadataEditorDemo
                 ActiveQueryBuilder.View.WPF.Commands.Descriptions.MetadataEditor.StopLoading, x => ButtonBreakLoading.IsEnabled = x));
         }
 
+        private MenuItem _aboutMenuItem;
+        private void AddAboutMenuItem()
+        {
+            _aboutMenuItem = new MenuItem();
+            _aboutMenuItem.Click += AboutOnClick;
+            MainMenu.Items.Add(_aboutMenuItem);
+        }
+
+        private void AboutOnClick(object sender, EventArgs e)
+        {
+            QueryBuilder.ShowAboutDialog();
+        }
 
         private void UpdateLocalization()
         {
-            Title = Helpers.Localizer.GetString("strMetadataEditor", Helpers.ConvertLanguageFromNative(Language), LocalizableConstantsInternal.strMetadataEditor);
 
             tsmiLoadFromDatabase.Header = Helpers.Localizer.GetString("strLoadFromDatabase", Helpers.ConvertLanguageFromNative(Language),
                 LocalizableConstantsInternal.strLoadFromDatabase);
@@ -231,6 +245,9 @@ namespace MetadataEditorDemo
             toolStripLabel.Text =
                 Helpers.Localizer.GetString("strSyntaxProvider", Helpers.ConvertLanguageFromNative(Language), LocalizableConstantsInternal.strSyntaxProvider);
 
+            if (_aboutMenuItem != null)
+                _aboutMenuItem.Header =
+                    Helpers.Localizer.GetString("strAboutShort", Helpers.ConvertLanguageFromNative(Language), LocalizableConstantsUI.strAboutShort);
         }
 
         protected override void OnClosed(EventArgs e)

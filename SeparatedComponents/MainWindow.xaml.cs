@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -11,6 +11,7 @@
 using System;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
 using Microsoft.Win32;
@@ -49,32 +50,28 @@ namespace SeparatedComponents
                 LoadingOptions = {OfflineMode = true}
             };
 
-            // Load demo metadata from XML file
             _sqlContext.MetadataContainer.ImportFromXML("Northwind.xml");
 
             databaseSchemaView1.SQLContext = _sqlContext;
             databaseSchemaView1.QueryView = QueryView1;
+
+            // kick the query builder to fill metadata tree
             databaseSchemaView1.InitializeDatabaseSchemaTree();
 
             _sqlQuery = new SQLQuery(_sqlContext);
             _sqlQuery.SQLUpdated += sqlQuery_SQLUpdated;
-            // set example query text
             _sqlQuery.SQL = builder.ToString();
-
+            
             QueryView1.Query = _sqlQuery;
 
             NavBar.Query = _sqlQuery;
             NavBar.QueryView = QueryView1;
-
-            sqlTextEditor.Query = _sqlQuery;
-            sqlTextEditor.Text = builder.ToString();
         }
 
         private void sqlQuery_SQLUpdated(object sender, EventArgs e)
         {
-            // Text of SQL query has been updated.
             // To get the query text, ready for execution on SQL server with real object names just use SQL property.
-            _lastValidSql = sqlTextEditor.Text = FormattedSQLBuilder.GetSQL(_sqlQuery.QueryRoot, new SQLFormattingOptions());
+            _lastValidSql = textBox1.Text = FormattedSQLBuilder.GetSQL(_sqlQuery.QueryRoot, new SQLFormattingOptions());
         }
 
         private void MenuItemLoadMetadata_OnClick(object sender, RoutedEventArgs e)
@@ -141,44 +138,46 @@ namespace SeparatedComponents
             QueryBuilder.ShowAboutDialog();
         }
 
-        private void SqlTextEditor_OnLostFocus(object sender, RoutedEventArgs e)
+		private void TextBox1_LostFocus(object sender, RoutedEventArgs e)
         {
             try
             {
                 // Update the query builder with manually edited query text:
-                _sqlQuery.SQL = sqlTextEditor.Text;
-                ErrorBox.Show(null, sqlTextEditor.SyntaxProvider);
+				_sqlQuery.SQL = textBox1.Text;
+                ErrorBox.Show(null, _sqlContext.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-                _errorPosition = sqlTextEditor.SelectionStart = ex.ErrorPos.pos;
+				_errorPosition = textBox1.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
-                ErrorBox.Show(ex.Message, sqlTextEditor.SyntaxProvider);
+                ErrorBox.Show(ex.Message, _sqlContext.SyntaxProvider);
             }
         }
 
-        private void SqlTextEditor_OnTextChanged(object sender, EventArgs e)
+        private void TextBox1_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if(_sqlContext == null) return;
-            ErrorBox.Show(null, sqlTextEditor.SyntaxProvider);
+            if (_sqlContext == null) return;
+
+            ErrorBox.Show(null, _sqlContext.SyntaxProvider);
         }
 
         private void ErrorBox_OnGoToErrorPosition(object sender, EventArgs e)
         {
-            sqlTextEditor.Focus();
+            textBox1.Focus();
 
             if (_errorPosition == -1) return;
 
-            sqlTextEditor.ScrollToPosition(_errorPosition);
-            sqlTextEditor.CaretOffset = _errorPosition;
+            if (textBox1.LineCount != 1)
+                textBox1.ScrollToLine(textBox1.GetLineIndexFromCharacterIndex(_errorPosition));
+            textBox1.CaretIndex = _errorPosition;
         }
 
         private void ErrorBox_OnRevertValidText(object sender, EventArgs e)
         {
-            sqlTextEditor.Text = _lastValidSql;
-            sqlTextEditor.Focus();
+            textBox1.Text = _lastValidSql;
+            textBox1.Focus();
         }
     }
 }

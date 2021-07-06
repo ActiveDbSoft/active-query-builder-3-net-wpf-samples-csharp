@@ -8,9 +8,9 @@
              xmlns:dockManager="clr-namespace:ActiveQueryBuilder.View.WPF.CommonControls.DockManager;assembly=ActiveQueryBuilder.View.WPF"
              xmlns:criteriaBuilder="clr-namespace:ActiveQueryBuilder.View.WPF.CriteriaBuilder;assembly=ActiveQueryBuilder.View.WPF"
              xmlns:expressionEditor="clr-namespace:ActiveQueryBuilder.View.WPF.ExpressionEditor;assembly=ActiveQueryBuilder.View.WPF"
-             xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_ext"
-             xmlns:dataViewerControl="clr-namespace:GeneralAssembly.Common.DataViewerControl;assembly=GeneralAssembly_ext"
-             xmlns:dataViewerFastResultControl="clr-namespace:GeneralAssembly.Common.DataViewerFastResultControl;assembly=GeneralAssembly_ext"
+             xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_pro.wpf.cs"
+             xmlns:dataViewerControl="clr-namespace:GeneralAssembly.Common.DataViewerControl;assembly=GeneralAssembly_pro.wpf.cs"
+             xmlns:dataViewerFastResultControl="clr-namespace:GeneralAssembly.Common.DataViewerFastResultControl;assembly=GeneralAssembly_pro.wpf.cs"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <Grid>

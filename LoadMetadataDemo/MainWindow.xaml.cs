@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -10,14 +10,12 @@
 
 using System;
 using System.Data;
-using System.Data.Odbc;
-using System.Data.OleDb;
-using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using ActiveQueryBuilder.Core;
 using ActiveQueryBuilder.View.WPF;
-using LoadMetadataDemo.ConnectionWindows;
+using GeneralAssembly;
+using GeneralAssembly.Connection;
 
 namespace LoadMetadataDemo
 {
@@ -26,10 +24,10 @@ namespace LoadMetadataDemo
     /// </summary>
     public partial class MainWindow
     {
-        private IDbConnection _dbConnection;
-        private EventMetadataProvider _way3EventMetadataProvider;
+        private ConnectionInfo _selectedConnection = new ConnectionInfo();
         private string _lastValidSql;
         private int _errorPosition = -1;
+        private readonly EventMetadataProvider _way3EventMetadataProvider = new EventMetadataProvider();
 
         public MainWindow()
         {
@@ -110,11 +108,16 @@ namespace LoadMetadataDemo
             switch (item.Type)
             {
                 case MetadataType.Root:
-                    if ((types & MetadataType.Schema) > 0) item.AddSchema("dbo");
+                    if (types.Contains(MetadataType.Schema))
+                    {
+                        // only one "dbo" schema should be at the root level
+                        if (item.Items.FindItem<MetadataNamespace>("dbo", MetadataType.Schema) == null)
+                            item.AddSchema("dbo");
+                    }
                     break;
 
                 case MetadataType.Schema:
-                    if ((item.Name == "dbo") && (types & MetadataType.Table) > 0)
+                    if (item.Name == "dbo" && types.Contains(MetadataType.Table))
                     {
                         item.AddTable("Orders");
                         item.AddTable("Order Details");
@@ -124,7 +127,7 @@ namespace LoadMetadataDemo
                 case MetadataType.Table:
                     if (item.Name == "Orders")
                     {
-                        if ((types & MetadataType.Field) > 0)
+                        if (types.Contains(MetadataType.Field))
                         {
                             item.AddField("OrderId");
                             item.AddField("CustomerId");
@@ -132,13 +135,13 @@ namespace LoadMetadataDemo
                     }
                     else if (item.Name == "Order Details")
                     {
-                        if ((types & MetadataType.Field) > 0)
+                        if (types.Contains(MetadataType.Field))
                         {
                             item.AddField("OrderId");
                             item.AddField("ProductId");
                         }
 
-                        if ((types & MetadataType.ForeignKey) > 0)
+                        if (types.Contains(MetadataType.ForeignKey))
                         {
                             MetadataForeignKey foreignKey = item.AddForeignKey("OrderDetailsToOrder");
                             foreignKey.Fields.Add("OrderId");
@@ -176,12 +179,13 @@ namespace LoadMetadataDemo
         //////////////////////////////////////////////////////////////////////////
         private void btn3Way_Click(object sender, EventArgs e)
         {
-            if (_dbConnection != null)
+            var dbConnection = _selectedConnection?.ConnectionDescriptor?.MetadataProvider?.Connection;
+            if (dbConnection != null)
             {
                 try
                 {
-                    _dbConnection.Close();
-                    _dbConnection.Open();
+                    dbConnection.Close();
+                    dbConnection.Open();
 
                     // allow QueryBuilder to request metadata
                     QBuilder.MetadataLoadingOptions.OfflineMode = false;
@@ -191,7 +195,7 @@ namespace LoadMetadataDemo
                     QBuilder.MetadataProvider = _way3EventMetadataProvider;
                     QBuilder.InitializeDatabaseSchemaTree();
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     MessageBox.Show(ex.Message, "btn3Way_Click()");
                 }
@@ -206,9 +210,11 @@ namespace LoadMetadataDemo
         {
             dataReader = null;
 
-            if (_dbConnection != null)
+            var dbConnection = _selectedConnection?.ConnectionDescriptor?.MetadataProvider?.Connection;
+
+            if (dbConnection != null)
             {
-                IDbCommand command = _dbConnection.CreateCommand();
+                IDbCommand command = dbConnection.CreateCommand();
                 command.CommandText = sql;
                 dataReader = command.ExecuteReader();
             }
@@ -322,80 +328,7 @@ namespace LoadMetadataDemo
             // update the text box
             SqlTextBox.Text = QBuilder.FormattedSQL;
         }
-
-        private void connectToMSSQLServerMenuItem_Click(object sender, EventArgs e)
-        {
-            // Connect to MS SQL Server
-
-            MSSQLConnectionWindow f = new MSSQLConnectionWindow();
-
-            if (f.ShowDialog() == true)
-            {
-                if (_dbConnection != null)
-                {
-                    _dbConnection.Close();
-                    _dbConnection.Dispose();
-                }
-
-                _dbConnection = new SqlConnection(f.ConnectionString);
-            }
-
-        }
-
-        private void connectToAccessDatabaseMenuItem_Click(object sender, EventArgs e)
-        {
-            // Connect to MS Access database using OLE DB provider
-
-            AccessConnectionWindow f = new AccessConnectionWindow();
-
-            if (f.ShowDialog() == true)
-            {
-                if (_dbConnection != null)
-                {
-                    _dbConnection.Close();
-                    _dbConnection.Dispose();
-                }
-
-                _dbConnection = new OleDbConnection(f.ConnectionString);
-            }
-        }
-
-        private void connectOleDbMenuItem_Click(object sender, EventArgs e)
-        {
-            // Connect to a database through the OLE DB provider
-
-            OLEDBConnectionWindow f = new OLEDBConnectionWindow();
-
-            if (f.ShowDialog() == true)
-            {
-                if (_dbConnection != null)
-                {
-                    _dbConnection.Close();
-                    _dbConnection.Dispose();
-                }
-
-                _dbConnection = new OleDbConnection(f.ConnectionString);
-            }
-        }
-
-        private void connectODBCMenuItem_Click(object sender, EventArgs e)
-        {
-            // Connect to a database through the ODBC provider
-
-            ODBCConnectionWindow f = new ODBCConnectionWindow();
-
-            if (f.ShowDialog() == true)
-            {
-                if (_dbConnection != null)
-                {
-                    _dbConnection.Close();
-                    _dbConnection.Dispose();
-                }
-
-                _dbConnection = new OdbcConnection(f.ConnectionString);
-            }
-        }
-
+        
         private static DbType TypeToDbType(Type type)
         {
             if (type == typeof(string)) return DbType.String;
@@ -466,6 +399,48 @@ namespace LoadMetadataDemo
         {
             SqlTextBox.Text = _lastValidSql;
             SqlTextBox.Focus();
+        }
+
+        private void MenuItemConnectTo_OnClick(object sender, RoutedEventArgs e)
+        {
+            var cf = new Connection.DatabaseConnectionWindow() { Owner = this };
+
+            if (cf.ShowDialog() != true) return;
+            _selectedConnection = cf.SelectedConnection;
+
+            InitializeSqlContext();
+        }
+
+        private void InitializeSqlContext()
+        {
+            try
+            {
+                QBuilder.Clear();
+
+                BaseMetadataProvider metadataProvider = null;
+
+                if (_selectedConnection == null) return;
+
+                // create new SqlConnection object using the connections string from the connection form
+                if (!_selectedConnection.IsXmlFile)
+                    metadataProvider = _selectedConnection.ConnectionDescriptor?.MetadataProvider;
+
+                // setup the query builder with metadata and syntax providers
+                QBuilder.SQLContext.MetadataContainer.Clear();
+                QBuilder.MetadataProvider = metadataProvider;
+                QBuilder.SyntaxProvider = _selectedConnection.ConnectionDescriptor?.SyntaxProvider;
+                QBuilder.MetadataLoadingOptions.OfflineMode = metadataProvider == null;
+
+                if (metadataProvider == null)
+                {
+                    QBuilder.MetadataContainer.ImportFromXML(_selectedConnection.ConnectionString);
+                }
+
+                // Instruct the query builder to fill the database schema tree
+                QBuilder.InitializeDatabaseSchemaTree();
+
+            }
+            finally { }
         }
     }
 }

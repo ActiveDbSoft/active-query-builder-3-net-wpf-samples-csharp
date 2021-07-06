@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -37,7 +37,7 @@ namespace GeneralAssembly.Connection.FrameConnection
 
         private OpenFileDialog _openFileDialog1;
 
-        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+        public event SyntaxProviderDetected SyntaxProviderDetected;
 
         public string ConnectionString
         {
@@ -224,6 +224,11 @@ namespace GeneralAssembly.Connection.FrameConnection
             }
 
             return true;
+        }
+
+        protected virtual void OnSyntaxProviderDetected(Type syntaxtype)
+        {
+            SyntaxProviderDetected?.Invoke(syntaxtype);
         }
     }
 }

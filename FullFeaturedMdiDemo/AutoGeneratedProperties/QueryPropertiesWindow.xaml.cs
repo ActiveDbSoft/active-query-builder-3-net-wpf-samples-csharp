@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -32,7 +32,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
     /// </summary>
     public partial class QueryPropertiesWindow
     {
-        private readonly Dictionary<TextBlock, Grid> _linkToPageGeneral = new Dictionary<TextBlock, Grid>();
+        private readonly Dictionary<TextBlock, FrameworkElement> _linkToPageGeneral = new Dictionary<TextBlock, FrameworkElement>();
         private readonly Dictionary<TextBlock, UserControl> _linkToPageFormatting = new Dictionary<TextBlock, UserControl>();
 
         private readonly UserControl _sqlGenerationControl;
@@ -126,7 +126,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             _childWindow.ContentControl.TextEditorSqlOptions = _textEditorSqlOptions;
         }
 
-        private Grid GetPropertyPage(ObjectProperties propertiesObject)
+        private FrameworkElement GetPropertyPage(ObjectProperties propertiesObject)
         {
             var propertiesContainer = PropertiesFactory.GetPropertiesContainer(propertiesObject);
 
@@ -159,7 +159,7 @@ namespace FullFeaturedMdiDemo.PropertiesForm
             SwitchGeneralPage(_linkToPageGeneral[_currentGeneralSelectedLink]);
         }
 
-        private void SwitchGeneralPage(Grid page)
+        private void SwitchGeneralPage(FrameworkElement page)
         {
             gridGeneral.Children.Clear();
             page.Margin = new Thickness(10, 10, 0, 0);

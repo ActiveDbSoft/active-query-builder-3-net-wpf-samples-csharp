@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -10,6 +10,7 @@
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using ActiveQueryBuilder.Core;
 
 namespace SubQueryTextEditingDemo
@@ -41,21 +42,18 @@ namespace SubQueryTextEditingDemo
 
             Builder.SyntaxProvider = new MSSQLSyntaxProvider();
 
+            // Load demo metadata from XML file
             Builder.MetadataContainer.LoadingOptions.OfflineMode = true;
             Builder.MetadataContainer.ImportFromXML(@"Northwind.xml");
 
             Builder.InitializeDatabaseSchemaTree();
 
-            TextEditor.QueryProvider = Builder;
-
+            // set example query text
             Builder.SQL = "Select * From Customers";
 
-            Breadcrumb.QueryView = Builder.QueryView;
             
             Builder.ActiveUnionSubQueryChanging += Builder_ActiveUnionSubQueryChanging;
             Builder.ActiveUnionSubQueryChanged += Builder_ActiveUnionSubQueryChanged;
-
-            Breadcrumb.SizeChanged += Breadcrumb_SizeChanged;
         }
 
         private void Breadcrumb_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -63,11 +61,14 @@ namespace SubQueryTextEditingDemo
             BottomGrid.InvalidateVisual();
         }
 
-        private SQLParsingException CheckSql()
+        /// <summary>
+        /// Validating the query in the text editor.
+        /// </summary>
+        private SQLParsingException ValidateSql()
         {
             try
             {
-                var sql =TextEditor.Text.Trim();
+                var sql = TextEditor.Text.Trim();
 
                 switch (_mode)
                 {
@@ -76,8 +77,6 @@ namespace SubQueryTextEditingDemo
                             Builder.SQLContext.ParseSelect(sql);
                         break;
                     case ModeEditor.SubQuery:
-                        Builder.SQLContext.ParseSelect(sql);
-                        break;
                     case ModeEditor.Expression:
                         Builder.SQLContext.ParseSelect(sql);
                         break;
@@ -98,6 +97,9 @@ namespace SubQueryTextEditingDemo
             ApplyText();
         }
 
+        /// <summary>
+        /// Sets the query text depending on the selected sub-query editing mode.
+        /// </summary>
         private void ApplyText()
         {
             var sqlFormattingOptions = Builder.SQLFormattingOptions;
@@ -126,23 +128,24 @@ namespace SubQueryTextEditingDemo
 
         private void Builder_ActiveUnionSubQueryChanging(object sender, ActiveQueryBuilder.View.SubQueryChangingEventArgs e)
         {
-            var exception = CheckSql();
+        	// Validating the query text before switching to another sub-query.
+            var exception = ValidateSql();
 
             if(exception == null) return;
 
             e.Abort = true;
 
             ErrorBox.Show(exception.Message, Builder.SyntaxProvider);
-            _errorPosition = exception.ErrorPos.pos;
         }
 
         private void Builder_OnSQLUpdated(object sender, EventArgs e)
         {
             ApplyText();
         }
-        
+
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
+            // Selecting the sub-query editing mode.
             try
             {
                 PopupSwitch.IsOpen = false;
@@ -176,6 +179,7 @@ namespace SubQueryTextEditingDemo
         {
             var text = TextEditor.Text.Trim();
 
+
             Builder.BeginUpdate();
 
             try
@@ -183,6 +187,7 @@ namespace SubQueryTextEditingDemo
                 if (!string.IsNullOrEmpty(text))
                     Builder.SQLContext.ParseSelect(text);
 
+                // Updating the needed query part with the manually edited SQL query text.
                 switch (_mode)
                 {
                     case ModeEditor.Entire:
@@ -202,12 +207,11 @@ namespace SubQueryTextEditingDemo
             }
             catch (Exception exception)
             {
-                var sqlParsingException = exception as SQLParsingException;
-
-                if (sqlParsingException != null)
+                var exceptionParsing = exception as SQLParsingException;
+                if (exceptionParsing != null)
                 {
-                    ErrorBox.Show(sqlParsingException.Message, Builder.SyntaxProvider);
-                    _errorPosition = sqlParsingException.ErrorPos.pos;
+                    ErrorBox.Show(exceptionParsing.Message, Builder.SyntaxProvider);
+                    _errorPosition = exceptionParsing.ErrorPos.pos;
                 }
             }
             finally
@@ -216,7 +220,7 @@ namespace SubQueryTextEditingDemo
             }
         }
 
-        private void TextEditor_OnTextChanged(object sender, EventArgs e)
+        private void TextEditor_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ErrorBox.Show(null, Builder.SyntaxProvider);
         }
@@ -227,8 +231,9 @@ namespace SubQueryTextEditingDemo
 
             if (_errorPosition == -1) return;
 
-            TextEditor.CaretOffset = _errorPosition;
-            TextEditor.ScrollToPosition(_errorPosition);
+            if (TextEditor.LineCount != 1)
+                TextEditor.ScrollToLine(TextEditor.GetLineIndexFromCharacterIndex(_errorPosition));
+            TextEditor.CaretIndex = _errorPosition;
         }
 
         private void ErrorBox_OnRevertValidText(object sender, EventArgs e)

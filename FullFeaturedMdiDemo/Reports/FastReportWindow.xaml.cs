@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -10,7 +10,6 @@
 
 using System.Data;
 using System.Windows;
-using System.Windows.Forms;
 using ActiveQueryBuilder.View.WPF.Annotations;
 using FastReport;
 using FastReport.Utils;
@@ -81,7 +80,8 @@ namespace FullFeaturedMdiDemo.Reports
                 {
                     Bounds = new System.Drawing.RectangleF(0, 0, width * Units.Millimeters, Units.Centimeters * 0.5f),
                     Text = "[" + DataTable.TableName + "." + column.ColumnName + "]",
-                    Parent = dataBand, Dock = DockStyle.Left,
+                    Parent = dataBand,
+                    Dock = System.Windows.Forms.DockStyle.Left,
                 };
                 empNameText.CreateUniqueName();
             }

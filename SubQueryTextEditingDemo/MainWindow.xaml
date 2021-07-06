@@ -4,9 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:aqb="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
-        xmlns:navigationBar="clr-namespace:ActiveQueryBuilder.View.WPF.NavigationBar;assembly=ActiveQueryBuilder.View.WPF"
-        xmlns:expressionEditor="clr-namespace:ActiveQueryBuilder.View.WPF.ExpressionEditor;assembly=ActiveQueryBuilder.View.WPF"
-        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly_ext"
+        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly.wpf.cs"
         mc:Ignorable="d"
         Title="SubQuery Text Editing Demo" Height="800" Width="1100">
     
@@ -25,13 +23,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
 
-            <Button  VerticalAlignment="Center" Margin="5,0,2,0" x:Name="ButtonSwitch" ToolTip="Sub-query text edit mode" Click="ButtonSwitch_OnClick"
+            <Button  VerticalAlignment="Top" Margin="5,3,2,0" x:Name="ButtonSwitch" ToolTip="Sub-query text edit mode" Click="ButtonSwitch_OnClick"
                      Padding="3" Background="White" Grid.Row="0" Grid.Column="0">
                 <Image Source="img.png" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" Width="16" Height="14"/>
             </Button>
@@ -51,14 +44,16 @@
                 </Grid>
             </Popup>
 
-            <navigationBar:SubQueryBreadcrumbsBar Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Background="#F0F0F0" x:Name="Breadcrumb" BorderThickness="1" BorderBrush="LightGray"/>
-            
-            <Border  SnapsToDevicePixels="True" Grid.Column="1" Grid.Row="1" Margin="0,3,0,0">
-                <expressionEditor:SqlTextEditor x:Name="TextEditor"
-                                                TextChanged="TextEditor_OnTextChanged" LostFocus="TextEditor_OnPreviewLostKeyboardFocus"/>
+            <Border  SnapsToDevicePixels="True" Grid.Column="1" Grid.Row="0" Margin="0,3,0,0">
+                <TextBox x:Name="TextEditor" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                         AcceptsReturn="True"
+                         LostFocus="TextEditor_OnPreviewLostKeyboardFocus"
+                         TextChanged="TextEditor_OnTextChanged">
+                </TextBox>
             </Border>
-            <common:SqlErrorBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox" GoToErrorPosition="ErrorBox_OnGoToErrorPosition"
-                             RevertValidText="ErrorBox_OnRevertValidText"/>
+
+            <common:SqlErrorBox Grid.Column="1" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,3,3" x:Name="ErrorBox"
+                             GoToErrorPosition="ErrorBox_OnGoToErrorPosition" RevertValidText="ErrorBox_OnRevertValidText"/>
         </Grid>
     </Grid>
 </Window>

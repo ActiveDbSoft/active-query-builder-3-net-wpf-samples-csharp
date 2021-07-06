@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -53,9 +53,6 @@ namespace CustomExpressionBuilderDemo
 										[Order Details].UnitPrice, [Order Details].Quantity, [Order Details].Discount
 									  FROM Orders INNER JOIN [Order Details] ON Orders.OrderID = [Order Details].OrderID
 									  WHERE Orders.OrderID > 0 AND [Order Details].Discount > 0";
-
-                QBuilder.QueryColumnListOptions.UseCustomExpressionBuilder = AffectedColumns.ConditionColumns &
-                                                                             AffectedColumns.ExpressionColumn;
             }
             catch (Exception ex)
             {
@@ -88,20 +85,11 @@ namespace CustomExpressionBuilderDemo
             }
         }
 
-        private void QBuilder_OnCustomExpressionBuilder(QueryColumnListItem querycolumnlistitem, int conditionIndex, string expression)
+        private void QBuilder_OnCustomExpressionBuilder(object sender, ExpressionEditorParameters param)
         {
-            var msg = new MessageContainer(this) { Title = "Edit " + (conditionIndex != -1 ? "condition" : "expression"), TextContent = expression };
+            var msg = new MessageContainer(this) { Title = "Edit " + (param.TypeExpression == QueryColumnListItemProperty.Condition ? "condition" : "expression"), TextContent = param.OldExpression };
             if (msg.ShowDialog() != true) return;
-
-            // Update the criteria list with new expression text.
-            if (conditionIndex > -1) // it's one of condition columns
-            {
-                querycolumnlistitem.ConditionStrings[conditionIndex] = msg.TextContent;
-            }
-            else // it's the Expression column
-            {
-                querycolumnlistitem.ExpressionString = msg.TextContent;
-            }
+            param.NewExpression = msg.TextContent;
         }
 
         public class MessageContainer: Window

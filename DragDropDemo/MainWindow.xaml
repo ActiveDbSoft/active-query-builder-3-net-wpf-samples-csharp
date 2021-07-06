@@ -4,7 +4,7 @@
         xmlns:wpf="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:view="clr-namespace:ActiveQueryBuilder.View;assembly=ActiveQueryBuilder.View"
         xmlns:core="clr-namespace:ActiveQueryBuilder.Core;assembly=ActiveQueryBuilder.Core"
-        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly"
+        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly.wpf.cs"
         Title="DragDropDemo" Height="770" Width="1035" Background="{x:Static SystemColors.ControlBrush}">
     
     <Window.Resources>

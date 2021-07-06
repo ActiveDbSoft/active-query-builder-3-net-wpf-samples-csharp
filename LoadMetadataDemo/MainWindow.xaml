@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:aqb="clr-namespace:ActiveQueryBuilder.View.WPF;assembly=ActiveQueryBuilder.View.WPF"
         xmlns:Core="clr-namespace:ActiveQueryBuilder.Core;assembly=ActiveQueryBuilder.Core"
-        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly"
+        xmlns:common="clr-namespace:GeneralAssembly.Common;assembly=GeneralAssembly.wpf.cs"
         x:Class="LoadMetadataDemo.MainWindow"
         Title="LoadMetadataDemo" Height="677" Width="1086.75">
     <Grid>
@@ -15,13 +15,8 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" Padding="0,2">
-            <MenuItem Header="Conntect">
-                <MenuItem Header="Connect to Microsoft SQL Server" Click="connectToMSSQLServerMenuItem_Click"/>
-                <MenuItem Header="Connect to Microsoft Access database" Click="connectToAccessDatabaseMenuItem_Click"/>
-                <Separator/>
-                <MenuItem Header="Connect to database through OLE DB" Click="connectOleDbMenuItem_Click"/>
-                <MenuItem Header="Connect to database through ODBC" Click="connectODBCMenuItem_Click"/>
-            </MenuItem>
+            <MenuItem Header="Conntect" x:Name="MenuItemConnectTo"  Click="MenuItemConnectTo_OnClick"/>
+
             <MenuItem Header="About" Click="aboutMenuItem_Click"/>
         </Menu>
 
@@ -43,7 +38,9 @@
             </TabItem>
             <TabItem Header="Using the ExecSQL event" x:Name="tabPageExecSql">
                 <StackPanel>
-                    <TextBox TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsEnabled="False" Height="82" Text="This method demonstrates loading of metadata through .NET data providers unsupported by our QueryBuilder component. If such data provider is able to execute SQL queries, you can use our EventMetadataProvider with handling it's ExecSQL event. In this event the EventMetadataProvider will provide you SQL queries it use for the metadata retrieval. You have to execute a query and return resulting data reader object.&#xA;&#xA;Note: In this sample we are using GenericSyntaxProvider that tries to detect the the server type automatically. In some conditions it's unable to detect the server type and it also has limited syntax parsing abilities. For this reason you have to use specific syntax providers in your application, e.g. MySQLSyntaxProver, OracleSyntaxProvider, etc." Padding="4"/>
+                    <TextBox TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                             Height="82" IsReadOnlyCaretVisible="True"
+                             Text="This method demonstrates loading of metadata through .NET data providers unsupported by our QueryBuilder component. If such data provider is able to execute SQL queries, you can use our EventMetadataProvider with handling it's ExecSQL event. In this event the EventMetadataProvider will provide you SQL queries it use for the metadata retrieval. You have to execute a query and return resulting data reader object.&#xA;&#xA;Note: In this sample we are using GenericSyntaxProvider that tries to detect the the server type automatically. In some conditions it's unable to detect the server type and it also has limited syntax parsing abilities. For this reason you have to use specific syntax providers in your application, e.g. MySQLSyntaxProver, OracleSyntaxProvider, etc." Padding="4"/>
                     <Grid>
                         <TextBlock HorizontalAlignment="Left" Foreground="OrangeRed" 
 							Text="Please setup a database connection by clicking on the 'Connect' menu item before testing this method."

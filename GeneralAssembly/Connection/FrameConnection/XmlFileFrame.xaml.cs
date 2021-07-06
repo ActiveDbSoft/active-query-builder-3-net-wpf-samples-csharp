@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -32,7 +32,7 @@ namespace GeneralAssembly.Connection.FrameConnection
             set { tbXmlFile.Text = value; }
         }
 
-        public event SyntaxProviderDetected OnSyntaxProviderDetected;
+        public event SyntaxProviderDetected SyntaxProviderDetected;
 
         public void SetServerType(string serverType)
         {
@@ -63,6 +63,11 @@ namespace GeneralAssembly.Connection.FrameConnection
             {
                 ConnectionString = _openFileDialog1.FileName;
             }
+        }
+
+        protected virtual void OnSyntaxProviderDetected(Type syntaxtype)
+        {
+            SyntaxProviderDetected?.Invoke(syntaxtype);
         }
     }
 }

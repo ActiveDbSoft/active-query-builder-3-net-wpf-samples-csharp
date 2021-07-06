@@ -1,7 +1,7 @@
-﻿//*******************************************************************//
+//*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2019 Active Database Software              //
+//       Copyright © 2006-2021 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -670,7 +670,7 @@ namespace GeneralAssembly.Connection
         {
             if (GridFrames.Children.Contains((FrameworkElement)_currentConnectionFrame))
             {
-                _currentConnectionFrame.OnSyntaxProviderDetected -= CurrentConnectionFrame_SyntaxProviderDetected;
+                _currentConnectionFrame.SyntaxProviderDetected -= CurrentConnectionFrame_SyntaxProviderDetected;
                 GridFrames.Children.Remove((FrameworkElement)_currentConnectionFrame);
                 _currentConnectionFrame = null;
             }
@@ -710,7 +710,7 @@ namespace GeneralAssembly.Connection
             if (_currentConnectionFrame != null)
             {
                 GridFrames.Children.Add((FrameworkElement)_currentConnectionFrame);
-                _currentConnectionFrame.OnSyntaxProviderDetected += CurrentConnectionFrame_SyntaxProviderDetected;
+                _currentConnectionFrame.SyntaxProviderDetected += CurrentConnectionFrame_SyntaxProviderDetected;
             }
         }
 

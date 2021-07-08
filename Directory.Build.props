@@ -3,6 +3,10 @@
   <PropertyGroup>
     <SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
 
   <!-- common props -->
   <PropertyGroup>
@@ -24,17 +28,21 @@
     <NoWarn>$(NoWarn);1591;1574</NoWarn>
   </PropertyGroup>
 
+  <!-- use nuget ActiveQueryBuilder references instead of ProjectReference -->
+  <PropertyGroup>
+    <UseNugetAqbReferences>true</UseNugetAqbReferences>
+  </PropertyGroup>
+  
   <!-- resources -->
   <PropertyGroup>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
+	
+	<PackageReference Include="ActiveQueryBuilder.Core" Version="$(Version)" />
+    <PackageReference Include="ActiveQueryBuilder.View" Version="$(Version)" />
+    <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="$(Version)" />
   </ItemGroup>
-
-  <!-- use nuget ActiveQueryBuilder references instead of ProjectReference -->
-  <PropertyGroup>
-    <UseNugetAqbReferences>true</UseNugetAqbReferences>
-  </PropertyGroup>
 
 </Project>

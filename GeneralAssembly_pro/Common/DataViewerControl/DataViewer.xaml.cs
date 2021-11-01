@@ -38,21 +38,24 @@ namespace GeneralAssembly.Common.DataViewerControl
 
         public QueryTransformer QueryTransformer
         {
-            get { return _queryTransformer; }
-            set
+            get 
             {
+                return _queryTransformer;
+            }
+            set {
                 _queryTransformer = value;
                 if (value != null)
-                    _sqlQuery = (SQLQuery)_queryTransformer.Query;
+                    _sqlQuery = (SQLQuery) _queryTransformer.Query;
                 CheckCanPagination();
             }
         }
 
         public SQLGenerationOptions SqlGenerationOptions
         {
-            get { return _sqlGenerationOptions; }
-            set
-            {
+            get {
+                return _sqlGenerationOptions;
+            }
+            set {
                 _sqlGenerationOptions = value;
                 if (value != null && _queryTransformer != null)
                     _queryTransformer.SQLGenerationOptions = _sqlGenerationOptions;
@@ -60,22 +63,23 @@ namespace GeneralAssembly.Common.DataViewerControl
         }
         public SQLQuery SqlQuery
         {
-            set
-            {
+            set {
                 _sqlQuery = value;
 
                 if (_sqlQuery == null) return;
 
                 if (_queryTransformer != null) return;
 
-                _queryTransformer = new QueryTransformer {Query = _sqlQuery};
+                _queryTransformer = new QueryTransformer { Query = _sqlQuery };
 
                 if (_sqlGenerationOptions != null)
                     _queryTransformer.SQLGenerationOptions = _sqlGenerationOptions;
 
                 CheckCanPagination();
             }
-            get { return _sqlQuery; }
+            get {
+                return _sqlQuery;
+            }
         }
 
         public int CountRows => DataView.Items.Count;
@@ -148,13 +152,21 @@ namespace GeneralAssembly.Common.DataViewerControl
 
             try
             {
+                var table = SqlHelpers.GetDataView(sqlCommand, SqlQuery);
 
-                DataView table = SqlHelpers.GetDataView(sqlCommand, SqlQuery);
+                Dispatcher.BeginInvoke((Action) delegate {
+                    BorderSuccessExecuteQuery.Visibility = Visibility.Visible;
+                    TextBlockLoadedRowsCount.Text = table.Table.Rows.Count.ToString();
+                });
+
                 return table;
 
             }
             catch (Exception ex)
             {
+                Dispatcher.BeginInvoke((Action) delegate {
+                    BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
+                });
                 ShowException(ex);
             }
 
@@ -166,14 +178,13 @@ namespace GeneralAssembly.Common.DataViewerControl
             if (_currentTask != null && (_currentTask.Status == TaskStatus.Running ||
                                          _currentTask.Status == TaskStatus.WaitingToRun))
                 return;
-            
+
             if (_currentTask != null)
             {
-                Dispatcher?.Invoke(delegate
-                {
+                Dispatcher?.Invoke(delegate {
                     GridLoadMessage.Visibility = Visibility.Visible;
                 });
-                
+
                 _currentTask.ContinueWith(TaskCompleted);
 
                 _currentTask.Start();
@@ -192,8 +203,7 @@ namespace GeneralAssembly.Common.DataViewerControl
         {
             _currentTask = null;
 
-            Dispatcher?.Invoke(delegate
-            {
+            Dispatcher?.Invoke(delegate {
                 DataView.ItemsSource = obj.Result;
 
                 GridLoadMessage.Visibility = _currentTask != null ? Visibility.Visible : Visibility.Collapsed;
@@ -205,8 +215,7 @@ namespace GeneralAssembly.Common.DataViewerControl
 
         private void ShowException(Exception ex)
         {
-            Dispatcher?.BeginInvoke((Action) delegate
-            {
+            Dispatcher?.BeginInvoke((Action) delegate {
                 BorderError.Visibility = Visibility.Visible;
                 LabelError.Text = ex.Message;
             });
@@ -338,11 +347,16 @@ namespace GeneralAssembly.Common.DataViewerControl
 
         private void ResetPagination()
         {
-            if(_queryTransformer == null) return;
+            if (_queryTransformer == null) return;
 
             PaginationPanel.Reset();
             _queryTransformer.Skip("");
             _queryTransformer.Take("");
+        }
+
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
         }
     }
 }

@@ -10,13 +10,13 @@
 
   <!-- common props -->
   <PropertyGroup>
-    <AssetsPath>$(SolutionDir)assets\</AssetsPath>
+    <AssetsPath>$(MSBuildThisFileDirectory)assets\</AssetsPath>
 
-    <Version>$([System.IO.File]::ReadAllText("$(SolutionDir)version"))</Version>
+    <Version>$([System.IO.File]::ReadAllText("$(MSBuildThisFileDirectory)version"))</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
 
-    <Edition>$([System.IO.File]::ReadAllText("$(SolutionDir)edition"))</Edition>
+    <Edition>$([System.IO.File]::ReadAllText("$(MSBuildThisFileDirectory)edition"))</Edition>
 
     <Product>Active Query Builder 3 .NET $(Edition) Edition</Product>
     <Company>Active Database Software</Company>
@@ -40,9 +40,14 @@
   <ItemGroup>
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
 	
-	<PackageReference Include="ActiveQueryBuilder.Core" Version="$(Version)" />
+    <PackageReference Include="ActiveQueryBuilder.Core" Version="$(Version)" />
     <PackageReference Include="ActiveQueryBuilder.View" Version="$(Version)" />
     <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="$(Version)" />
   </ItemGroup>
+
+  <!-- enable GrapeCity's ActiveReports support in Demos -->
+  <PropertyGroup>
+    <EnableActiveReportsSupport>false</EnableActiveReportsSupport>
+  </PropertyGroup>
 
 </Project>

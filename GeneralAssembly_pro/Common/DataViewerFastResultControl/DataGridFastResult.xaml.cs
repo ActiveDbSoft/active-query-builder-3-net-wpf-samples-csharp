@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections;
+using System.Windows;
 using ActiveQueryBuilder.Core;
 
 namespace GeneralAssembly.Common.DataViewerFastResultControl
@@ -41,12 +42,22 @@ namespace GeneralAssembly.Common.DataViewerFastResultControl
                 var dv = SqlHelpers.GetDataView(resultSql, query);
 
                 ItemsSource = dv;
+                BorderSuccessExecuteQuery.Visibility = Visibility.Visible;
+
+                TextBlockLoadedRowsCount.Text = dv == null ? "0" : dv.Table.Rows.Count.ToString();
             }
             catch (Exception exception)
             {
+                BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
+
                 ErrorMessage = exception.Message;
                 ItemsSource = null;
             }
+        }
+
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
         }
     }
 }

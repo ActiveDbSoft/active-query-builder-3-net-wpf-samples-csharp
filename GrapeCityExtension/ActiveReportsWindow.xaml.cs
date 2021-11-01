@@ -14,12 +14,14 @@ using System.Windows;
 using ActiveQueryBuilder.View.WPF.Annotations;
 using GrapeCity.ActiveReports;
 using GrapeCity.ActiveReports.Document.Section;
-using GrapeCity.ActiveReports.Drawing;
 using GrapeCity.ActiveReports.SectionReportModel;
 using Color = System.Drawing.Color;
 
-namespace FullFeaturedMdiDemo.Reports
+namespace GrapeCityExtension
 {
+    /// <summary>
+    /// Interaction logic for ActiveReportsWindow.xaml
+    /// </summary>
     public partial class ActiveReportsWindow
     {
         private DataTable DataTable { get; set; }

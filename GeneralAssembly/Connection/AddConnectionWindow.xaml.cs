@@ -63,6 +63,10 @@ namespace GeneralAssembly.Connection
 
                         _connectionInfo.ConnectionDescriptor.MetadataProvider.Connection.ConnectionString = _currentConnectionFrame.ConnectionString;
                     }
+                    else
+                    {
+                        _connectionInfo.ConnectionString = _currentConnectionFrame.ConnectionString;
+                    }
 
                     e.Cancel = false;
                     Dispatcher.CurrentDispatcher.Hooks.DispatcherInactive -= Hooks_DispatcherInactive;

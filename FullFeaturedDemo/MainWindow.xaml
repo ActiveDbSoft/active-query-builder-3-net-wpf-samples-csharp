@@ -354,7 +354,7 @@
                                     <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0">
                                         <CheckBox VerticalAlignment="Center" Content="Auto-refresh preview" Margin="0,0,10,0" x:Name="CheckBoxAutoRefreash"
                                               Checked="CheckBoxAutoRefresh_OnChecked" Unchecked="CheckBoxAutoRefresh_OnChecked" IsChecked="True"/>
-                                        <Button Content="Refresh" Padding="10,2" x:Name="ButtonRefreashFastResult" Click="ButtonRefreshFastResult_OnClick" IsEnabled="False"/>
+                                        <Button Content="Refresh" Padding="10,2" x:Name="ButtonRefreshFastResult" Click="ButtonRefreshFastResult_OnClick" IsEnabled="False"/>
                                     </StackPanel>
 
                                     <dataViewerFastResultControl:DataGridFastResult Grid.Row="1" x:Name="ListViewFastResultSql" Margin="0,5,0,0"/>

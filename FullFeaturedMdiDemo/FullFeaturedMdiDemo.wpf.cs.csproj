@@ -34,6 +34,13 @@
   <ItemGroup>
     <ProjectReference Include="..\GeneralAssembly_pro\GeneralAssembly_pro.wpf.cs.csproj" />
   </ItemGroup>
+	
+  <ItemGroup Condition="$(EnableActiveReportsSupport)">
+    <ProjectReference Include="..\GrapeCityExtension\GrapeCityExtension.wpf.cs.csproj" />
+  </ItemGroup>
+  <PropertyGroup Condition="$(EnableActiveReportsSupport)">
+    <DefineConstants>ENABLE_ACTIVEREPORTS_SUPPORT</DefineConstants>
+  </PropertyGroup>
 
   <!-- reporting -->
   <ItemGroup>
@@ -41,8 +48,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
     <PackageReference Include="NPOI" Version="2.5.1" />
-    <PackageReference Include="GrapeCity.ActiveReports" Version="15.0.7" />
-    <PackageReference Include="GrapeCity.ActiveReports.Viewer.Wpf" Version="15.0.7" />
     <PackageReference Include="Stimulsoft.Reports.Engine" Version="2021.2.3" />
     <PackageReference Include="Stimulsoft.Reports.Wpf" Version="2021.2.3" />
     <Reference Include="FastReport">

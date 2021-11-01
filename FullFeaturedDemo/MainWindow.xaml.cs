@@ -58,7 +58,7 @@ namespace FullFeaturedDemo
             // Replace virtual objects with derived tables
             QBuilder.SQLGenerationOptions = new SQLGenerationOptions { ExpandVirtualObjects = true };
 
-            
+
 
             Closing += MainWindow_Closing;
             Dispatcher.Hooks.DispatcherInactive += Hooks_DispatcherInactive;
@@ -685,7 +685,7 @@ namespace FullFeaturedDemo
                 DataGridResult.FillData(BoxSql.Text);
             }
         }
-        
+
         private void BoxSql_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ErrorBox.Show(null, QBuilder.SyntaxProvider);
@@ -701,28 +701,34 @@ namespace FullFeaturedDemo
             ErrorBox2.Show(null, QBuilder.SyntaxProvider);
 
             if (_transformerSql == null) return;
-
-            var activeUnionSubQuery = QBuilder.ActiveUnionSubQuery;
-            if (activeUnionSubQuery == null || QBuilder.SleepMode)
+            try
             {
-                BoxSqlCurrentSubQuery.Text = "";
-                _transformerSql.Query = null;
-                return;
+                var activeUnionSubQuery = QBuilder.ActiveUnionSubQuery;
+                if (activeUnionSubQuery == null || QBuilder.SleepMode)
+                {
+                    BoxSqlCurrentSubQuery.Text = "";
+                    _transformerSql.Query = null;
+                    return;
+                }
+
+                var parentSubQuery = activeUnionSubQuery.ParentSubQuery;
+
+                var sqlForDataPreview = parentSubQuery.GetSqlForDataPreview();
+                _transformerSql.Query = new SQLQuery(activeUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
+
+                var sql = parentSubQuery.GetResultSQL(QBuilder.SQLFormattingOptions);
+                BoxSqlCurrentSubQuery.Text = sql;
             }
-
-            var parentSubQuery = activeUnionSubQuery.ParentSubQuery;
-
-            var sqlForDataPreview = parentSubQuery.GetSqlForDataPreview();
-            _transformerSql.Query = new SQLQuery(activeUnionSubQuery.SQLContext) { SQL = sqlForDataPreview };
-
-            var sql = parentSubQuery.GetResultSQL(QBuilder.SQLFormattingOptions);
-            BoxSqlCurrentSubQuery.Text = sql;
+            catch (SQLParsingException ex)
+            {
+                ErrorBox2.Show(ex.Message, QBuilder.SyntaxProvider);
+            }
         }
 
         private void FillFastResult()
         {
             var result = _transformerSql.Take("10");
-            ListViewFastResultSql.FillData(result.SQL, (SQLQuery) _transformerSql.Query);
+            ListViewFastResultSql.FillData(result.SQL, (SQLQuery)_transformerSql.Query);
         }
 
         private void TabControlSql_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -735,15 +741,12 @@ namespace FullFeaturedDemo
             FillFastResult();
         }
 
-        private void ButtonRefreshFastResult_OnClick(object sender, RoutedEventArgs e)
-        {
-            FillFastResult();
-        }
+        private void ButtonRefreshFastResult_OnClick(object sender, RoutedEventArgs e) => FillFastResult();
 
         private void CheckBoxAutoRefresh_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (ButtonRefreashFastResult == null || CheckBoxAutoRefreash == null) return;
-            ButtonRefreashFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;
+            if (ButtonRefreshFastResult == null || CheckBoxAutoRefreash == null) return;
+            ButtonRefreshFastResult.IsEnabled = CheckBoxAutoRefreash.IsChecked == false;
         }
 
         private void BoxSqlCurrentSubQuery_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -753,12 +756,12 @@ namespace FullFeaturedDemo
             {
                 ErrorBox.Show(null, QBuilder.SyntaxProvider);
 
-                QBuilder.ActiveUnionSubQuery.ParentSubQuery.SQL = ((TextBox) sender).Text;
+                QBuilder.ActiveUnionSubQuery.ParentSubQuery.SQL = ((TextBox)sender).Text;
 
                 var sql = QBuilder.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(QBuilder.SQLFormattingOptions);
 
                 _transformerSql.Query = new SQLQuery(QBuilder.ActiveUnionSubQuery.SQLContext) { SQL = sql };
-                _lastValidText1 = ((TextBox) sender).Text;
+                _lastValidText1 = ((TextBox)sender).Text;
             }
             catch (SQLParsingException ex)
             {
@@ -788,7 +791,7 @@ namespace FullFeaturedDemo
             BoxSql.Text = _lastValidText;
             BoxSql.Focus();
         }
-        
+
         private void ErrorBox_OnGoToErrorPositionEvent(object sender, EventArgs e)
         {
             BoxSqlCurrentSubQuery.Focus();
@@ -808,7 +811,7 @@ namespace FullFeaturedDemo
 
         private void MenuItemUserExpression_OnClick(object sender, RoutedEventArgs e)
         {
-            var window = new EditUserExpressionWindow {Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner};
+            var window = new EditUserExpressionWindow { Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner };
             window.Load(QBuilder.QueryView);
             window.ShowDialog();
         }

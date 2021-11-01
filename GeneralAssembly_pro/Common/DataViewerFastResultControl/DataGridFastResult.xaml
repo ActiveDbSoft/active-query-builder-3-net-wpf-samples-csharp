@@ -16,7 +16,30 @@
                 </Style>
             </DataGrid.CellStyle>
         </DataGrid>
-
+        <Border Padding="3" 
+                BorderThickness="1" 
+                BorderBrush="DarkGray" 
+                Background="{StaticResource {x:Static SystemColors.InfoBrushKey}}" 
+                x:Name="BorderSuccessExecuteQuery" 
+                Visibility="Collapsed" 
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0,0,5,5"
+                CornerRadius="5">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="0,0,5,0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" Text="Query executed successfully. Loaded"/>
+                <TextBlock x:Name="TextBlockLoadedRowsCount" Text="0" FontWeight="Bold"/>
+                <TextBlock  Text="rows."/>
+                <TextBlock FontWeight="Bold">
+                    <Hyperlink Click="Hyperlink_OnClick">Close</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Border>
         <dataViewerFastResultControl:GridInformMessage VerticalAlignment="Bottom" x:Name="ErrorMessageBox"/>
     </Grid>
     

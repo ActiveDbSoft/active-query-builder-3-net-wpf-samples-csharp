@@ -108,28 +108,28 @@ namespace GeneralAssembly.Connection.FrameConnection
             }
         }
 
-        public  bool TestConnection()
-		{
-			Mouse.OverrideCursor = Cursors.Wait;
+        public bool TestConnection()
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
 
-			try
-			{
-				SqlConnection connection = new SqlConnection(ConnectionString);
-				connection.Open();
-				connection.Close();
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.Message, Assembly.GetEntryAssembly().GetName().Name);
-				return false;
-			}
-			finally
-			{
-			    Mouse.OverrideCursor = null;
-			}
+            try
+            {
+                SqlConnection connection = new SqlConnection(ConnectionString);
+                connection.Open();
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, Assembly.GetEntryAssembly().GetName().Name);
+                return false;
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
+            }
 
-			return true;
-		}
+            return true;
+        }
 
         private void cmbIntegratedSecurity_SelectedIndexChanged(object sender, EventArgs e)
         {

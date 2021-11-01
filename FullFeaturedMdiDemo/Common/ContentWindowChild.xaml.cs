@@ -290,6 +290,7 @@ namespace FullFeaturedMdiDemo.Common
         private void QueryView_ActiveUnionSubQueryChanged(object sender, EventArgs e)
         {
             SetSqlTextCurrentSubQuery();
+            FillFastResult();
         }
 
         private void SqlQuery_SQLUpdated(object sender, EventArgs e)
@@ -719,6 +720,13 @@ namespace FullFeaturedMdiDemo.Common
         {
             var result = _transformerSql.Take("10");
 
+            if (_transformerSql.Query == null)
+            {
+                var sql = QueryView.ActiveUnionSubQuery.ParentSubQuery.GetResultSQL(SqlFormattingOptions);
+
+                _transformerSql.Query = new SQLQuery(QueryView.ActiveUnionSubQuery.SQLContext) {SQL = sql};
+            }
+
             dataViewerFastResultSql.FillData(result.SQL, (SQLQuery) _transformerSql.Query);
         }
 
@@ -856,10 +864,15 @@ namespace FullFeaturedMdiDemo.Common
             if (dataTable == null)
                 throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
 
+#if ENABLE_ACTIVEREPORTS_SUPPORT
             var reportWindow =
                 new ActiveReportsWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this), ShowInTaskbar = false };
 
             reportWindow.ShowDialog();
+#else
+            MessageBox.Show("To test the integration with GrapeCity ActiveReports, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableActiveReportsSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+                            "You may also need to activate the trial version of ActiveReports on the GrapeCity website.", "ActiveReports support", MessageBoxButton.OK, MessageBoxImage.Information);
+#endif
         }
 
         private void GenerateReport_OnClick(object sender, RoutedEventArgs e)

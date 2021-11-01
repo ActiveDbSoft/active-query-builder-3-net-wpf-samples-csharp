@@ -148,13 +148,23 @@ namespace GeneralAssembly.Common.DataViewerControl
 
             try
             {
+                var table = SqlHelpers.GetDataView(sqlCommand, SqlQuery);
 
-                DataView table = SqlHelpers.GetDataView(sqlCommand, SqlQuery);
+                Dispatcher.BeginInvoke((Action) delegate
+                {
+                    BorderSuccessExecuteQuery.Visibility = Visibility.Visible;
+                    TextBlockLoadedRowsCount.Text = table.Table.Rows.Count.ToString();
+                });
+                
                 return table;
 
             }
             catch (Exception ex)
             {
+                Dispatcher.BeginInvoke((Action) delegate
+                {
+                    BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
+                });
                 ShowException(ex);
             }
 
@@ -343,6 +353,11 @@ namespace GeneralAssembly.Common.DataViewerControl
             PaginationPanel.Reset();
             _queryTransformer.Skip("");
             _queryTransformer.Take("");
+        }
+
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            BorderSuccessExecuteQuery.Visibility = Visibility.Collapsed;
         }
     }
 }

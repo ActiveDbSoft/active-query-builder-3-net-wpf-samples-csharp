@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dataViewerFastResultControl="clr-namespace:GeneralAssembly.Common.DataViewerFastResultControl"
-             mc:Ignorable="d" >
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="200">
     <Grid>
         <DataGrid x:Name="DGrid" AutoGenerateColumns="True" 
                   CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserSortColumns="False" 
@@ -17,6 +17,30 @@
             </DataGrid.CellStyle>
         </DataGrid>
 
+        <Border Padding="3" 
+                BorderThickness="1" 
+                BorderBrush="DarkGray" 
+                Background="{StaticResource {x:Static SystemColors.InfoBrushKey}}" 
+                x:Name="BorderSuccessExecuteQuery" 
+                Visibility="Collapsed" 
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0,0,5,5"
+                CornerRadius="5">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="0,0,5,0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" Text="Query executed successfully. Loaded"/>
+                <TextBlock x:Name="TextBlockLoadedRowsCount" Text="0" FontWeight="Bold"/>
+                <TextBlock  Text="rows."/>
+                <TextBlock FontWeight="Bold">
+                    <Hyperlink Click="Hyperlink_OnClick">Close</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Border>
         <dataViewerFastResultControl:GridInformMessage VerticalAlignment="Bottom" x:Name="ErrorMessageBox"/>
     </Grid>
     

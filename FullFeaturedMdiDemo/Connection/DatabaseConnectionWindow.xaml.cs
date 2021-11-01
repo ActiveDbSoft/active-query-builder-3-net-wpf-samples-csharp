@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using ActiveQueryBuilder.Core;
@@ -61,6 +62,10 @@ namespace FullFeaturedMdiDemo.Connection
             // fill connection list
             for (var i = 0; i < App.Connections.Count; i++)
             {
+                if (sourcelvConnection.Any(connection =>
+                    connection.Name.Equals(App.Connections[i].Name, StringComparison.CurrentCultureIgnoreCase)))
+                    continue;
+                
                 sourcelvConnection.Add(new ConnectionListItem
                 {
                     Name = App.Connections[i].Name,
@@ -81,6 +86,9 @@ namespace FullFeaturedMdiDemo.Connection
             // fill XML files list
             for (var i = 0; i < App.XmlFiles.Count; i++)
             {
+                if (sourceXmlfiles.Any(connection =>
+                    connection.Name.Equals(App.XmlFiles[i].Name, StringComparison.CurrentCultureIgnoreCase)))
+                    continue;
                 sourceXmlfiles.Add(new ConnectionListItem
                 {
                     Name = App.XmlFiles[i].Name,
@@ -101,25 +109,25 @@ namespace FullFeaturedMdiDemo.Connection
 
         private void AddPresets()
         {
-            //var presets = new List<ConnectionInfo>
-            //{
-            //    new ConnectionInfo("Northwind.xml", "Northwind.xml", ConnectionTypes.ODBC)
-            //    {
-            //        IsXmlFile = true
-            //    },
+            var presets = new List<ConnectionInfo>
+            {
+                new ConnectionInfo("Northwind.xml", "Northwind.xml", ConnectionTypes.ODBC)
+                {
+                    IsXmlFile = true
+                },
 
-            //    new ConnectionInfo(new SQLiteConnectionDescriptor(), "SQLite", ConnectionTypes.SQLite, @"data source=northwind.sqlite"),
-            //    new ConnectionInfo(new MSAccessConnectionDescriptor(), "MS Access", ConnectionTypes.MSAccess, @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Nwind.mdb")
-            //};
+                new ConnectionInfo(new SQLiteConnectionDescriptor(), "SQLite", ConnectionTypes.SQLite, @"data source=northwind.sqlite"),
+                new ConnectionInfo(new MSAccessConnectionDescriptor(), "MS Access", ConnectionTypes.MSAccess, @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=Nwind.mdb")
+            };
 
-            //foreach (var preset in presets)
-            //{
-            //    if (!FindConnectionInfo(preset))
-            //        if (preset.IsXmlFile)
-            //            App.XmlFiles.Add(preset);
-            //        else
-            //            App.Connections.Add(preset);
-            //}
+            foreach (var preset in presets)
+            {
+                if (!FindConnectionInfo(preset))
+                    if (preset.IsXmlFile)
+                        App.XmlFiles.Add(preset);
+                    else
+                        App.Connections.Add(preset);
+            }
         }
 
         private bool FindConnectionInfo(ConnectionInfo connectionInfo)

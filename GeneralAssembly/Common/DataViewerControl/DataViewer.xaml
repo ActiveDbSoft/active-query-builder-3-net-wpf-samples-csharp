@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <DataGrid CanUserAddRows="False" 
                   CanUserDeleteRows="False" 
@@ -94,5 +95,29 @@
                                      EnabledPaginationChanged="PaginationPanel_OnEnabledPaginationChanged" PageSizeChanged="PaginationPanel_OnPageSizeChanged"/>
             <Border x:Name="BorderBlockPagination" Background="Black" Opacity=".2"/>
         </Grid>
+
+        <Border Grid.Row="0"
+                Padding="3" 
+                BorderThickness="1" 
+                BorderBrush="DarkGray" 
+                Background="{StaticResource {x:Static SystemColors.InfoBrushKey}}" 
+                x:Name="BorderSuccessExecuteQuery" 
+                Visibility="Collapsed" 
+                VerticalAlignment="Bottom"
+                CornerRadius="5">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin" Value="0,0,5,0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto" Text="Query executed successfully. Loaded"/>
+                <TextBlock x:Name="TextBlockLoadedRowsCount" Text="0" FontWeight="Bold"/>
+                <TextBlock  Text="rows."/>
+                <TextBlock FontWeight="Bold">
+                    <Hyperlink Click="Hyperlink_OnClick">Close</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

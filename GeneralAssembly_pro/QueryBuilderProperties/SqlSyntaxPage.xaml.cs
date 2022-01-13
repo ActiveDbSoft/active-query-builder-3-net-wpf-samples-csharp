@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -67,7 +67,6 @@ namespace GeneralAssembly.QueryBuilderProperties
             comboSqlDialect.Items.Add("MS SQL Server 2016");
             comboSqlDialect.Items.Add("MS SQL Server 2017");
             comboSqlDialect.Items.Add("MS SQL Server 2019");
-            comboSqlDialect.Items.Add("MS SQL Server Compact Edition");
             comboSqlDialect.Items.Add("MySQL 3.xx");
             comboSqlDialect.Items.Add("MySQL 4.0");
             comboSqlDialect.Items.Add("MySQL 4.1");
@@ -156,10 +155,6 @@ namespace GeneralAssembly.QueryBuilderProperties
                         comboSqlDialect.SelectedItem = "MS Access 2003 (MS Jet 4.0)";
                         break;
                 }
-            }
-            else if (queryBuilder.SyntaxProvider is MSSQLCESyntaxProvider)
-            {
-                comboSqlDialect.SelectedItem = "MS SQL Server Compact Edition";
             }
             else if (queryBuilder.SyntaxProvider is MSSQLSyntaxProvider)
             {
@@ -410,9 +405,6 @@ namespace GeneralAssembly.QueryBuilderProperties
                 case "MS SQL Server 2019":
                     _syntaxProvider = new MSSQLSyntaxProvider();
                     (_syntaxProvider as MSSQLSyntaxProvider).ServerVersion = MSSQLServerVersion.MSSQL2019;
-                    break;
-                case "MS SQL Server Compact Edition":
-                    _syntaxProvider = new MSSQLCESyntaxProvider();
                     break;
                 case "MySQL 3.xx":
                     _syntaxProvider = new MySQLSyntaxProvider();

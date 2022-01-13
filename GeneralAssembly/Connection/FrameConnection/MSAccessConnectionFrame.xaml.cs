@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -102,11 +102,11 @@ namespace GeneralAssembly.Connection.FrameConnection
                         break;
                     }
                 }
-				
-				if (provider == string.Empty)
-				{
-					provider = "Microsoft.ACE.OLEDB.12.0";
-				}					
+                
+                if (provider == string.Empty)
+                {
+                    provider = "Microsoft.ACE.OLEDB.12.0";
+                }                    
             }
             else if (_serverType == "Access 97")
             {

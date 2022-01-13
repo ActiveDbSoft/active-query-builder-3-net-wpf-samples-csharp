@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -48,7 +48,7 @@ namespace BasicDemo
             _openFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
             _saveFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
 
-			sqlTextEditor1.QueryProvider = queryBuilder;
+            sqlTextEditor1.QueryProvider = queryBuilder;
             queryBuilder.SleepModeChanged += QueryBuilder_SleepModeChanged;
             queryBuilder.QueryAwake += QueryBuilder_QueryAwake;
 
@@ -342,28 +342,28 @@ namespace BasicDemo
 
         private void QueryStatistic_OnClick(object sender, RoutedEventArgs e)
         {
-			QueryStatistics queryStatistics = queryBuilder.QueryStatistics;
-			StringBuilder builder = new StringBuilder();
+            QueryStatistics queryStatistics = queryBuilder.QueryStatistics;
+            StringBuilder builder = new StringBuilder();
 
-			builder.Append("Used Objects (").Append(queryStatistics.UsedDatabaseObjects.Count).AppendLine("):");
-			builder.AppendLine();
+            builder.Append("Used Objects (").Append(queryStatistics.UsedDatabaseObjects.Count).AppendLine("):");
+            builder.AppendLine();
 
-			for (int i = 0; i < queryStatistics.UsedDatabaseObjects.Count; i++)
-				builder.AppendLine(queryStatistics.UsedDatabaseObjects[i].ObjectName.QualifiedName);
+            for (int i = 0; i < queryStatistics.UsedDatabaseObjects.Count; i++)
+                builder.AppendLine(queryStatistics.UsedDatabaseObjects[i].ObjectName.QualifiedName);
 
-			builder.AppendLine().AppendLine();
-			builder.Append("Used Columns (").Append(queryStatistics.UsedDatabaseObjectFields.Count).AppendLine("):");
-			builder.AppendLine();
+            builder.AppendLine().AppendLine();
+            builder.Append("Used Columns (").Append(queryStatistics.UsedDatabaseObjectFields.Count).AppendLine("):");
+            builder.AppendLine();
 
-			for (int i = 0; i < queryStatistics.UsedDatabaseObjectFields.Count; i++)
-				builder.AppendLine(queryStatistics.UsedDatabaseObjectFields[i].FullName.QualifiedName);
+            for (int i = 0; i < queryStatistics.UsedDatabaseObjectFields.Count; i++)
+                builder.AppendLine(queryStatistics.UsedDatabaseObjectFields[i].FullName.QualifiedName);
 
-			builder.AppendLine().AppendLine();
-			builder.Append("Output Expressions (").Append(queryStatistics.OutputColumns.Count).AppendLine("):");
-			builder.AppendLine();
+            builder.AppendLine().AppendLine();
+            builder.Append("Output Expressions (").Append(queryStatistics.OutputColumns.Count).AppendLine("):");
+            builder.AppendLine();
 
-			for (int i = 0; i < queryStatistics.OutputColumns.Count; i++)
-				builder.AppendLine(queryStatistics.OutputColumns[i].Expression);
+            for (int i = 0; i < queryStatistics.OutputColumns.Count; i++)
+                builder.AppendLine(queryStatistics.OutputColumns[i].Expression);
 
             var f = new QueryStatisticsWindow(builder.ToString()) {Owner = this};
             f.ShowDialog();

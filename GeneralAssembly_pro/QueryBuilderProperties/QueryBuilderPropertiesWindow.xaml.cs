@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -67,16 +67,16 @@ namespace GeneralAssembly.QueryBuilderProperties
         }
 
         public QueryBuilderPropertiesWindow(QueryBuilder queryBuilder)
-		{
-			Debug.Assert(queryBuilder != null);
+        {
+            Debug.Assert(queryBuilder != null);
 
-			InitializeComponent();
+            InitializeComponent();
 
-			_queryBuilder = queryBuilder;
+            _queryBuilder = queryBuilder;
 
-			BaseSyntaxProvider syntaxProvider = queryBuilder.SyntaxProvider != null
-				? queryBuilder.SyntaxProvider.Clone()
-				: new GenericSyntaxProvider();
+            BaseSyntaxProvider syntaxProvider = queryBuilder.SyntaxProvider != null
+                ? queryBuilder.SyntaxProvider.Clone()
+                : new GenericSyntaxProvider();
 
             _sqlSyntaxPage = new SqlSyntaxPage(_queryBuilder, syntaxProvider);
             _offlineModePage = new OfflineModePage(_queryBuilder.SQLContext);
@@ -92,7 +92,7 @@ namespace GeneralAssembly.QueryBuilderProperties
 
             // Activate the first page
             UIElement_OnMouseLeftButtonUp(linkSqlSyntax, null);
-		}
+        }
 
         private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {

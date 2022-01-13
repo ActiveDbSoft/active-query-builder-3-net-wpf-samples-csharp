@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -128,7 +128,7 @@ namespace SubQueryTextEditingDemo
 
         private void Builder_ActiveUnionSubQueryChanging(object sender, ActiveQueryBuilder.View.SubQueryChangingEventArgs e)
         {
-        	// Validating the query text before switching to another sub-query.
+            // Validating the query text before switching to another sub-query.
             var exception = ValidateSql();
 
             if(exception == null) return;

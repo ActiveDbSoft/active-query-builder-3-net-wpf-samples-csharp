@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -138,18 +138,18 @@ namespace SeparatedComponents
             QueryBuilder.ShowAboutDialog();
         }
 
-		private void TextBox1_LostFocus(object sender, RoutedEventArgs e)
+        private void TextBox1_LostFocus(object sender, RoutedEventArgs e)
         {
             try
             {
                 // Update the query builder with manually edited query text:
-				_sqlQuery.SQL = textBox1.Text;
+                _sqlQuery.SQL = textBox1.Text;
                 ErrorBox.Show(null, _sqlContext.SyntaxProvider);
             }
             catch (SQLParsingException ex)
             {
                 // Set caret to error position
-				_errorPosition = textBox1.SelectionStart = ex.ErrorPos.pos;
+                _errorPosition = textBox1.SelectionStart = ex.ErrorPos.pos;
 
                 // Show banner with error text
                 ErrorBox.Show(ex.Message, _sqlContext.SyntaxProvider);

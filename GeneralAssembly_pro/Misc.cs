@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -40,8 +40,7 @@ namespace GeneralAssembly
         DB2,
         Advantage,
         Sybase,
-        Informix,
-        MSSQLCE
+        Informix
     }
 
     [Serializable]
@@ -56,8 +55,8 @@ namespace GeneralAssembly
             var xmlSerializer = new ActiveQueryBuilder.Core.Serialization.XmlSerializer();
             foreach (ConnectionInfo connection in _connections)
             {
-				if(!connection.IsXmlFile)
-					connection.SyntaxProviderName = connection.ConnectionDescriptor.SyntaxProvider.GetType().ToString();
+                if(!connection.IsXmlFile)
+                    connection.SyntaxProviderName = connection.ConnectionDescriptor.SyntaxProvider.GetType().ToString();
                 connection.ConnectionString =
                     connection.ConnectionDescriptor.MetadataProvider.Connection.ConnectionString;
                 connection.LoadingOptions =
@@ -288,10 +287,19 @@ namespace GeneralAssembly
                         return;
                     case ConnectionTypes.Advantage:
                         ConnectionDescriptor = new AdvantageConnectionDescriptor();
-                        break;
+                        return;
                     case ConnectionTypes.Sybase:
                         ConnectionDescriptor = new SybaseConnectionDescriptor();
-                        break;
+                        return;
+                    case ConnectionTypes.VistaDB5:
+                        ConnectionDescriptor = new VistaDB5ConnectionDescriptor();
+                        return;
+                    case ConnectionTypes.DB2:
+                        ConnectionDescriptor = new DB2ConnectionDescriptor();
+                        return;
+                    case ConnectionTypes.Informix:
+                        ConnectionDescriptor = new InformixConnectionDescriptor();
+                        return;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -356,6 +364,18 @@ namespace GeneralAssembly
             {
                 return ConnectionTypes.Sybase;
             }
+            if (descriptorType == typeof(VistaDB5ConnectionDescriptor))
+            {
+                return ConnectionTypes.VistaDB5;
+            }
+            if (descriptorType == typeof(DB2ConnectionDescriptor))
+            {
+                return ConnectionTypes.DB2;
+            }
+            if (descriptorType == typeof(InformixConnectionDescriptor))
+            {
+                return ConnectionTypes.Informix;
+            }
 
             return ConnectionTypes.MSSQL;
         }
@@ -393,6 +413,9 @@ namespace GeneralAssembly
             typeof(FirebirdConnectionDescriptor),
             typeof(AdvantageConnectionDescriptor),
             typeof(SybaseConnectionDescriptor),
+            typeof(VistaDB5ConnectionDescriptor),
+            typeof(DB2ConnectionDescriptor),
+            typeof(InformixConnectionDescriptor)
         };
 
         public static readonly List<string> ConnectionDescriptorNames = new List<string>
@@ -410,6 +433,9 @@ namespace GeneralAssembly
             "Firebird",
             "Advantage",
             "Sybase",
+            "VistaDB5",
+            "DB2",
+            "Informix"
         };
     }
 }

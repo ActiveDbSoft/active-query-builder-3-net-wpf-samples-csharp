@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
-	
+
     <PackageReference Include="ActiveQueryBuilder.Core" Version="$(Version)" />
     <PackageReference Include="ActiveQueryBuilder.View" Version="$(Version)" />
     <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="$(Version)" />
@@ -48,6 +48,18 @@
   <!-- enable GrapeCity's ActiveReports support in Demos -->
   <PropertyGroup>
     <EnableActiveReportsSupport>false</EnableActiveReportsSupport>
+    <ReportsNetVersion>2022.1.2</ReportsNetVersion>
+  </PropertyGroup>
+
+  <!-- enable Stimulsoft's Reports.Net support in Demos -->
+  <PropertyGroup>
+    <EnableReportsNetSupport>false</EnableReportsNetSupport>
+    <ActiveReportsVersion>15.2.6</ActiveReportsVersion>
+  </PropertyGroup>
+
+  <!-- enable TMS Software FlexCel support in Demos -->
+  <PropertyGroup>
+    <EnableFlexCelSupport>false</EnableFlexCelSupport>
   </PropertyGroup>
 
 </Project>

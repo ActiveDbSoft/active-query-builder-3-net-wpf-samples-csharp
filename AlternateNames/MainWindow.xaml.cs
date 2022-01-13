@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -43,6 +43,12 @@ namespace AlternateNames
 
             try
             {
+                // tune QueryBuilder to normalize tables/fields names mentioned in SQL queries
+                // when this setting is true QueryBuilder replaces all names to "canonical" names returned by the server's database schema
+                // when this setting is false QueryBuilder tries to preserve names as they are written in a query text
+                // to demonstrate AltNames feature turn this setting to true
+                QueryBuilder1.SQLFormattingOptions.ObjectNamesNormalization = true;
+
                 // Load demo metadata from XML file
                 QueryBuilder1.MetadataLoadingOptions.OfflineMode = true;
                 QueryBuilder1.MetadataContainer.ImportFromXML("db2_sample_with_alt_names.xml");
@@ -69,10 +75,10 @@ namespace AlternateNames
 
             // The query text containing in SQL property is unformatted. If you need the formatted text, but with real object names, 
             // do the following:
-            //			SQLFormattingOptions formattingOptions = new SQLFormattingOptions();
-            //			formattingOptions.Assign(queryBuilder1.SQLFormattingOptions); // copy actual formatting options from the QueryBuilder
-            //			formattingOptions.UseAltNames = false; // disable alt names
-            //			TextBox2.Text = FormattedSQLBuilder.GetSQL(queryBuilder1.SQLQuery.QueryRoot, formattingOptions);
+            //            SQLFormattingOptions formattingOptions = new SQLFormattingOptions();
+            //            formattingOptions.Assign(queryBuilder1.SQLFormattingOptions); // copy actual formatting options from the QueryBuilder
+            //            formattingOptions.UseAltNames = false; // disable alt names
+            //            TextBox2.Text = FormattedSQLBuilder.GetSQL(queryBuilder1.SQLQuery.QueryRoot, formattingOptions);
         }
 
         private void TextBox1_OnLostKeyboardFocus(object sender, RoutedEventArgs routedEventArgs)

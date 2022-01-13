@@ -263,11 +263,13 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
                             <Button Content="Generate report" Grid.Column="0" Click="GenerateReport_OnClick" x:Name="ButtonReport"/>
-                            <Button Content="Export to Excel" Margin="10,0" Grid.Column="1" Click="ExportToExcel_OnClick" x:Name="ButtonExcel"/>
-                            <Button Content="Export to CSV" Grid.Column="2" Click="ExportToCSV_OnClick" x:Name="ButtonCVS"/>
+                            <Button Content="Export to Excel (NPOI)" Margin="10,0" Grid.Column="1" Click="ExportToExcelNpoi_OnClick" x:Name="ButtonExcelNpoi"/>
+                            <Button Content="Export to Excel (FlexCel)" Margin="10,0" Grid.Column="2" Click="ExportToExcelFlexCel_OnClick" x:Name="ButtonExcelFlexCel"/>
+                            <Button Content="Export to CSV" Grid.Column="3" Click="ExportToCSV_OnClick" x:Name="ButtonCVS"/>
                         </Grid>
                     </Border>
 

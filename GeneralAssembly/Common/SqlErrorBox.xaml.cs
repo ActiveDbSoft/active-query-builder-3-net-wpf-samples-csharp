@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -24,6 +24,20 @@ namespace GeneralAssembly.Common
         public event SelectionChangedEventHandler SyntaxProviderChanged;
         public event EventHandler GoToErrorPosition;
         public event EventHandler RevertValidText;
+
+        public static readonly DependencyProperty IsVisibleActionLinksProperty = DependencyProperty.Register(
+            "IsVisibleActionLinks", typeof(bool), typeof(SqlErrorBox), new PropertyMetadata(true, OnVisibleActionLinksChanged));
+
+        private static void OnVisibleActionLinksChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var self = (SqlErrorBox) d;
+            self.ActionPanel.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public bool IsVisibleActionLinks
+        {
+            get=> (bool)GetValue(IsVisibleActionLinksProperty);
+            set=> SetValue(IsVisibleActionLinksProperty, value);
+        }
 
         public static readonly DependencyProperty VisibilityCheckSyntaxBlockProperty = DependencyProperty.Register(
             "VisibilityCheckSyntaxBlock", typeof(Visibility), typeof(SqlErrorBox), new PropertyMetadata(Visibility.Collapsed));

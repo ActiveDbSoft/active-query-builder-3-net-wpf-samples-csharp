@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -252,7 +252,7 @@ namespace BasicDemo.ConnectionWindow
         {
             RemoveConnectionPropertiesFrame();
 
-			pbConnection.ClearProperties();
+            pbConnection.ClearProperties();
             var container =
                 PropertiesFactory.GetPropertiesContainer(_connection.MetadataProperties);
             (pbConnection as IPropertiesControl).SetProperties(container);

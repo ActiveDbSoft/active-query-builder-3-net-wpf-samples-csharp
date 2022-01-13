@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -51,7 +51,9 @@ namespace FullFeaturedMdiDemo.Connection
             FillConnectionTypes();
             FillSyntaxTypes();
 
-            cbConnectionType.SelectedItem = _connection.ConnectionDescriptor.GetDescription();
+            cbConnectionType.SelectedIndex =
+                Misc.ConnectionDescriptorList.IndexOf(connectionInfo.ConnectionDescriptor.GetType());
+
             cbLoadFromDefaultDatabase.Visibility = _connection.ConnectionDescriptor.SyntaxProvider.IsSupportDatabases() ? Visibility.Visible : Visibility.Collapsed;
             cbLoadFromDefaultDatabase.IsChecked =
                 _connection.ConnectionDescriptor.MetadataLoadingOptions.LoadDefaultDatabaseOnly;
@@ -281,7 +283,7 @@ namespace FullFeaturedMdiDemo.Connection
         private void RemoveSyntaxFrame()
         {
             pbSyntax.ClearProperties();
-            var syntaxProps = _connection.ConnectionDescriptor.SyntaxProperties;
+            var syntaxProps = _connection?.ConnectionDescriptor?.SyntaxProperties;
             if (syntaxProps == null)
                 return;
 

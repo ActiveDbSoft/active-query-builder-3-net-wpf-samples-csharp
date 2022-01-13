@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -16,7 +16,7 @@ using GeneralAssembly.Windows;
 namespace CriteriaBuilderCustomize
 {
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    /// ������ �������������� ��� App.xaml
     /// </summary>
     public partial class App
     {

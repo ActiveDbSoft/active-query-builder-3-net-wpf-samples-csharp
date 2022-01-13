@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -306,7 +306,7 @@ namespace FullFeaturedMdiDemo.Common
             UpdateStateButtons();
             CheckParameters();
 
-            ButtonCVS.IsEnabled = ButtonExcel.IsEnabled = ButtonReport.IsEnabled =
+            ButtonExcelFlexCel.IsEnabled = ButtonCVS.IsEnabled = ButtonExcelNpoi.IsEnabled = ButtonReport.IsEnabled =
                 !string.IsNullOrEmpty(FormattedQueryText) && SqlContext.MetadataProvider != null;
 
             if (!TabItemFastResult.IsSelected || CheckBoxAutoRefreash.IsChecked == false) return;
@@ -853,10 +853,18 @@ namespace FullFeaturedMdiDemo.Common
             if (dataTable == null)
                 throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
 
-            var reportWindow =
-                new StimulsoftWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
+#if ENABLE_REPORTSNET_SUPPORT
+            var reportWindow = new StimulsoftExtension.StimulsoftWindow(dataTable)
+            {
+                Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this),
+                ShowInTaskbar = false
+            };
 
             reportWindow.ShowDialog();
+#else
+            MessageBox.Show("To test the integration with Stimulsoft Reports.NET, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableSupportReportsNet\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+                            "You may also need to activate the trial version of Reports.NET on the Stimulsoft website.", "Reports.NET reports support", MessageBoxButton.OK, MessageBoxImage.Information);
+#endif
         }
 
         private void CreateActiveReport(DataTable dataTable)
@@ -865,12 +873,15 @@ namespace FullFeaturedMdiDemo.Common
                 throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
 
 #if ENABLE_ACTIVEREPORTS_SUPPORT
-            var reportWindow =
-                new ActiveReportsWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this), ShowInTaskbar = false };
+            var reportWindow = new GrapeCityExtension.ActiveReportsWindow(dataTable)
+            {
+                Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this),
+                ShowInTaskbar = false,
+            };
 
             reportWindow.ShowDialog();
 #else
-            MessageBox.Show("To test the integration with GrapeCity ActiveReports, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableActiveReportsSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+            MessageBox.Show("To test the integration with GrapeCity ActiveReports, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableSupportActiveReports\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
                             "You may also need to activate the trial version of ActiveReports on the GrapeCity website.", "ActiveReports support", MessageBoxButton.OK, MessageBoxImage.Information);
 #endif
         }
@@ -900,7 +911,7 @@ namespace FullFeaturedMdiDemo.Common
             }
         }
 
-        private void ExportToExcel_OnClick(object sender, RoutedEventArgs e)
+        private void ExportToExcelNpoi_OnClick(object sender, RoutedEventArgs e)
         {
             var dt = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions),
                 SqlQuery);
@@ -919,6 +930,19 @@ namespace FullFeaturedMdiDemo.Common
 
             var dt = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions), SqlQuery);
             ExportHelpers.ExportToCSV(dt, saveDialog.FileName);
+        }
+
+        private void ExportToExcelFlexCel_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dt = SqlHelpers.GetDataTable(CBuilder.QueryTransformer.ResultAST.GetSQL(SqlGenerationOptions),
+                SqlQuery);
+
+#if ENABLE_FLEXCEL_SUPPORT
+            TmssoftwareExtension.FlexCelHelper.ExportToExcel(dt);
+#else
+            MessageBox.Show("To test the integration with TMS Software FlexCel, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableFlexCelSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+                            "You may also need to activate the trial version of TMS Software on the FlexCel website.", "FlexCel support", MessageBoxButton.OK, MessageBoxImage.Information);
+#endif
         }
     }
 }

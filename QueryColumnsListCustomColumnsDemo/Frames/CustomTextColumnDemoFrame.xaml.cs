@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -133,7 +133,7 @@ namespace CustomColumnsDemo.Frames
             var grid = (DataGrid) sender;
             if (e.Column.DisplayIndex == 2 && e.Row.GetIndex() < grid.Items.Count - 1)
             {
-                e.Cancel = false; // Change to "true" if you need a read-only cell.	
+                e.Cancel = false; // Change to "true" if you need a read-only cell.    
             }
         }
 

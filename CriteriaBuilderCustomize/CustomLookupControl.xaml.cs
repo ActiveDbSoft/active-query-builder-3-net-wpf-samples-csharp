@@ -1,7 +1,7 @@
 //*******************************************************************//
 //       Active Query Builder Component Suite                        //
 //                                                                   //
-//       Copyright © 2006-2021 Active Database Software              //
+//       Copyright © 2006-2022 Active Database Software              //
 //       ALL RIGHTS RESERVED                                         //
 //                                                                   //
 //       CONSULT THE LICENSE AGREEMENT FOR INFORMATION ON            //
@@ -246,21 +246,21 @@ namespace CriteriaBuilderCustomize
                     //    }
                     break;
                     /*case System.Windows.Forms.Keys.Up:
-						if (SelectedIndex == 0)
-						{
-							SelectedIndex = Items.Count - 1;
-							e.SuppressKeyPress = true;
-							return;
-						}
-						break;
-					case System.Windows.Forms.Keys.Down:
-						if (SelectedIndex == Items.Count - 1)
-						{
-							SelectedIndex = 0;
-							e.SuppressKeyPress = true;
-							return;
-						}
-						break;*/
+                        if (SelectedIndex == 0)
+                        {
+                            SelectedIndex = Items.Count - 1;
+                            e.SuppressKeyPress = true;
+                            return;
+                        }
+                        break;
+                    case System.Windows.Forms.Keys.Down:
+                        if (SelectedIndex == Items.Count - 1)
+                        {
+                            SelectedIndex = 0;
+                            e.SuppressKeyPress = true;
+                            return;
+                        }
+                        break;*/
             }
 
             OnKeyDown(e);

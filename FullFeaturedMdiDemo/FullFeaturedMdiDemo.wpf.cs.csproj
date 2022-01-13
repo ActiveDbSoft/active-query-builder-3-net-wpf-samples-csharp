@@ -6,7 +6,6 @@
     <Description>Active Query Builder 3 FullFeaturedMdi Demo</Description>
     <RootNamespace>FullFeaturedMdiDemo</RootNamespace>
 
-    <TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
     <OutputType>WinExe</OutputType>
 
     <!-- FastReport uses some types from System.Windows.Forms, so include it for WPF project -->
@@ -19,6 +18,8 @@
   <ItemGroup>
     <Resource Include="Resources\*.*" />
   </ItemGroup>
+
+  <!-- sample databases -->
   <ItemGroup>
     <Content Include="Nwind.mdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -31,29 +32,70 @@
     </None>
   </ItemGroup>
 
+  <!-- general demo utils -->
   <ItemGroup>
     <ProjectReference Include="..\GeneralAssembly_pro\GeneralAssembly_pro.wpf.cs.csproj" />
   </ItemGroup>
-	
-  <ItemGroup Condition="$(EnableActiveReportsSupport)">
-    <ProjectReference Include="..\GrapeCityExtension\GrapeCityExtension.wpf.cs.csproj" />
-  </ItemGroup>
-  <PropertyGroup Condition="$(EnableActiveReportsSupport)">
-    <DefineConstants>ENABLE_ACTIVEREPORTS_SUPPORT</DefineConstants>
-  </PropertyGroup>
 
-  <!-- reporting -->
+  <!-- references -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.8.0" />
-    <PackageReference Include="NPOI" Version="2.5.1" />
-    <PackageReference Include="Stimulsoft.Reports.Engine" Version="2021.2.3" />
-    <PackageReference Include="Stimulsoft.Reports.Wpf" Version="2021.2.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.9.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
+    <PackageReference Include="NPOI" Version="2.5.5" />
     <Reference Include="FastReport">
       <HintPath>$(AssetsPath)Third-Party Assemblies\FastReport.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+  <!-- GrapeCity ActiveReports -->
+  <ItemGroup Condition="!$(EnableActiveReportsSupport)">
+    <Compile Remove="Reports\ActiveReports\**\*.*" />
+    <EmbeddedResource Remove="Reports\ActiveReports\**\*.*" />
+    <Page Remove="Reports\ActiveReports\**\*.*" />
+  </ItemGroup>
+  <ItemGroup Condition="$(EnableActiveReportsSupport)">
+    <PackageReference Include="GrapeCity.ActiveReports" Version="$(ActiveReportsVersion)" />
+    <PackageReference Include="GrapeCity.ActiveReports.Viewer.Wpf" Version="$(ActiveReportsVersion)" />
+  </ItemGroup>
+  <PropertyGroup Condition="$(EnableActiveReportsSupport)">
+    <DefineConstants>$(DefineConstants);ENABLE_ACTIVEREPORTS_SUPPORT</DefineConstants>
+  </PropertyGroup>
+
+  <!-- StimulSoft Reports.Net -->
+  <ItemGroup Condition="!$(EnableReportsNetSupport)">
+    <Compile Remove="Reports\Reports.Net\**\*.*" />
+    <EmbeddedResource Remove="Reports\Reports.Net\**\*.*" />
+    <Page Remove="Reports\Reports.Net\**\*.*" />
+  </ItemGroup>
+  <ItemGroup Condition="$(EnableReportsNetSupport)">
+    <PackageReference Include="Stimulsoft.Reports.Engine" Version="$(ReportsNetVersion)" />
+    <PackageReference Include="Stimulsoft.Reports.Wpf" Version="$(ReportsNetVersion)" />
+  </ItemGroup>
+  <PropertyGroup Condition="$(EnableReportsNetSupport)">
+    <DefineConstants>$(DefineConstants);ENABLE_REPORTSNET_SUPPORT</DefineConstants>
+  </PropertyGroup>
+
+  <!-- TMS Software FlexCel -->
+  <ItemGroup Condition="!$(EnableFlexCelSupport)">
+    <Compile Remove="Reports\FlexCel\**\*.*" />
+    <EmbeddedResource Remove="Reports\FlexCel\**\*.*" />
+    <Page Remove="Reports\FlexCel\**\*.*" />
+  </ItemGroup>
+  <ItemGroup Condition="$(EnableFlexCelSupport) And $(TargetFramework.StartsWith('net4'))">
+    <Reference Include="TMS.FlexCel">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(AssetsPath)Third-Party Assemblies\FlexCel.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="$(EnableFlexCelSupport) And $(TargetFramework.StartsWith('netcore'))">
+    <Reference Include="TMS.FlexCel">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(AssetsPath)Third-Party Assemblies\FlexCel.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup Condition="$(EnableFlexCelSupport)">
+    <DefineConstants>$(DefineConstants);ENABLE_FLEXCEL_SUPPORT</DefineConstants>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">

@@ -718,6 +718,8 @@ namespace FullFeaturedMdiDemo.Common
 
         private void FillFastResult()
         {
+            if (SqlContext.MetadataContainer.LoadingOptions.OfflineMode)
+                return;
             var result = _transformerSql.Take("10");
 
             if (_transformerSql.Query == null)

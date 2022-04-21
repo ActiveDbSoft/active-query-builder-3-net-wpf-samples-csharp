@@ -271,6 +271,8 @@ namespace BasicDemo
 
         public void ResetQueryBuilder()
         {
+            queryBuilder.QueryView.HideInformationMessage();
+
             queryBuilder.ClearMetadata();
             queryBuilder.MetadataProvider = null;
             queryBuilder.SyntaxProvider = null;
@@ -279,6 +281,8 @@ namespace BasicDemo
 
         private void connect_OnClick(object sender, RoutedEventArgs e)
         {
+            queryBuilder.QueryView.HideInformationMessage();
+
             var form = new ConnectionEditWindow() {Owner = this};
             var result = form.ShowDialog();
             if (result.HasValue && result.Value)

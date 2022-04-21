@@ -78,6 +78,8 @@ namespace CriteriaBuilderCustomize
 
         private void ConnectTo_OnClick(object sender, RoutedEventArgs e)
         {
+            queryBuilder.QueryView.HideInformationMessage();
+
             var cf = new DatabaseConnectionWindow(_showHintConnection) { Owner = this };
             _showHintConnection = false;
             if (cf.ShowDialog() != true) return;
@@ -117,6 +119,8 @@ namespace CriteriaBuilderCustomize
 
         public void ResetQueryBuilder()
         {
+            queryBuilder.QueryView.HideInformationMessage();
+
             queryBuilder.ClearMetadata();
             queryBuilder.MetadataProvider = null;
             queryBuilder.SyntaxProvider = null;

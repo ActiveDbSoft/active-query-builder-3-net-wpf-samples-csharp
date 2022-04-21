@@ -408,6 +408,8 @@ namespace FullFeaturedDemo
 
         private void CommandNew_OnExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            QBuilder.QueryView.HideInformationMessage();
+
             var cf = new DatabaseConnectionWindow(_showHintConnection) { Owner = this };
 
             _showHintConnection = false;

@@ -403,6 +403,8 @@ namespace LoadMetadataDemo
 
         private void MenuItemConnectTo_OnClick(object sender, RoutedEventArgs e)
         {
+            QBuilder.QueryView.HideInformationMessage();
+
             var cf = new Connection.DatabaseConnectionWindow() { Owner = this };
 
             if (cf.ShowDialog() != true) return;

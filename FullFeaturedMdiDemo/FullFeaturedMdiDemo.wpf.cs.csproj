@@ -84,13 +84,11 @@
   <ItemGroup Condition="$(EnableFlexCelSupport) And $(TargetFramework.StartsWith('net4'))">
     <Reference Include="TMS.FlexCel">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(AssetsPath)Third-Party Assemblies\FlexCel.Net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="$(EnableFlexCelSupport) And $(TargetFramework.StartsWith('netcore'))">
     <Reference Include="TMS.FlexCel">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(AssetsPath)Third-Party Assemblies\FlexCel.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition="$(EnableFlexCelSupport)">

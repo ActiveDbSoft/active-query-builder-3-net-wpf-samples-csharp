@@ -25,7 +25,6 @@ using ActiveQueryBuilder.View.WPF;
 using ActiveQueryBuilder.View.WPF.ExpressionEditor;
 using ActiveQueryBuilder.View.WPF.QueryView;
 using FullFeaturedMdiDemo.CommonWindow;
-using FullFeaturedMdiDemo.Reports;
 using GeneralAssembly;
 using GeneralAssembly.Windows.QueryInformationWindows;
 using Microsoft.Win32;
@@ -311,7 +310,7 @@ namespace FullFeaturedMdiDemo.Common
 
             if (!TabItemFastResult.IsSelected || CheckBoxAutoRefreash.IsChecked == false) return;
 
-            _timerStartingExecuteSql.Change(600, Timeout.Infinite);            
+            _timerStartingExecuteSql.Change(600, Timeout.Infinite);
         }
 
         private void CheckParameters()
@@ -650,7 +649,7 @@ namespace FullFeaturedMdiDemo.Common
         {
             PropertiesQuery();
         }
-        
+
         private void ButtonAddObject_OnClick(object sender, RoutedEventArgs e)
         {
             AddObject();
@@ -844,10 +843,13 @@ namespace FullFeaturedMdiDemo.Common
             if (dataTable == null)
                 throw new ArgumentException(@"Argument cannot be null or empty.", "DataTable");
 
-            var reportWindow =
-                new FastReportWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
-
+#if ENABLE_FASTREPORT_SUPPORT
+            var reportWindow = new Reports.FastReportWindow(dataTable) { Owner = ActiveQueryBuilder.View.WPF.Helpers.FindVisualParent<Window>(this) };
             reportWindow.ShowDialog();
+#else
+            MessageBox.Show("To test the integration with FastReport, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableFastReportSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+                            "You may also need to activate the trial version of FastReport.NET on the Fast Reports website.", "FastReport support", MessageBoxButton.OK, MessageBoxImage.Information);
+#endif
         }
 
         private void CreateStimulsoftReport(DataTable dataTable)
@@ -864,8 +866,8 @@ namespace FullFeaturedMdiDemo.Common
 
             reportWindow.ShowDialog();
 #else
-            MessageBox.Show("To test the integration with Stimulsoft Reports.NET, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableSupportReportsNet\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
-                            "You may also need to activate the trial version of Reports.NET on the Stimulsoft website.", "Reports.NET reports support", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("To test the integration with Stimulsoft Reports.NET, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableReportsNetSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+                            "You may also need to activate the trial version of Reports.NET on the Stimulsoft website.", "Reports.NET support", MessageBoxButton.OK, MessageBoxImage.Information);
 #endif
         }
 
@@ -883,7 +885,7 @@ namespace FullFeaturedMdiDemo.Common
 
             reportWindow.ShowDialog();
 #else
-            MessageBox.Show("To test the integration with GrapeCity ActiveReports, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableSupportActiveReports\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
+            MessageBox.Show("To test the integration with GrapeCity ActiveReports, please open the \"Directory.Build.props\" file in the demo projects installation directory (usually \"%USERPROFILE%\\Documents\\Active Query Builder x.x .NET Examples\") with a text editor and set the \"EnableActiveReportsSupport\" flag to true. Then, open the Active Query Builder Demos solution with your IDE, compile and run the Full-featured MDI demo." + Environment.NewLine + Environment.NewLine +
                             "You may also need to activate the trial version of ActiveReports on the GrapeCity website.", "ActiveReports support", MessageBoxButton.OK, MessageBoxImage.Information);
 #endif
         }

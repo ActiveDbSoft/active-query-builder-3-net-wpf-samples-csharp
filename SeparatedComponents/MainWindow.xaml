@@ -58,7 +58,7 @@
                                                    Grid.Column="0" VerticalAlignment="Stretch" Width="236" BorderThickness="1"
                                                    BorderBrush="Gray" x:Name="databaseSchemaView1" Focusable="True"/>
         </Grid>
-		<TextBox Grid.Row="2" x:Name="textBox1" Height="93" Margin="4" Text="textBox1" LostFocus="TextBox1_LostFocus" TextChanged="TextBox1_OnTextChanged"/>
+		<TextBox Grid.Row="2" x:Name="textBox1" Height="93" Margin="4" Text="textBox1" LostFocus="TextBox1_LostFocus" TextChanged="TextBox1_OnTextChanged" AcceptsReturn="True"/>
         <common:SqlErrorBox Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,7,7" x:Name="ErrorBox"
                          GoToErrorPosition="ErrorBox_OnGoToErrorPosition" RevertValidText="ErrorBox_OnRevertValidText"/>
     </Grid>

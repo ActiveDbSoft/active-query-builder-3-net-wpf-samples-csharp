@@ -8,6 +8,13 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <!-- default TargetFrameworks -->
+  <PropertyGroup>
+    <DefaultDemosNetFramework>net48</DefaultDemosNetFramework>
+    <DefaultDemosNetCore>netcoreapp3.1</DefaultDemosNetCore>
+    <TargetFrameworks>$(DefaultDemosNetFramework);$(DefaultDemosNetCore)</TargetFrameworks>
+  </PropertyGroup>
+
   <!-- common props -->
   <PropertyGroup>
     <AssetsPath>$(MSBuildThisFileDirectory)assets\</AssetsPath>
@@ -44,6 +51,11 @@
     <PackageReference Include="ActiveQueryBuilder.View" Version="$(Version)" />
     <PackageReference Include="ActiveQueryBuilder.View.WPF" Version="$(Version)" />
   </ItemGroup>
+
+  <!-- enable FastReport support in Demos -->
+  <PropertyGroup>
+    <EnableFastReportSupport>false</EnableFastReportSupport>
+  </PropertyGroup>
 
   <!-- enable GrapeCity's ActiveReports support in Demos -->
   <PropertyGroup>
